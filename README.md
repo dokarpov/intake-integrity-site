@@ -22,7 +22,7 @@ The website uses a **synthetic family-record example**: two existing records sha
 
 The presentation includes a scroll-driven product story, a visual review card, and a pilot-request form.
 
-**Live demo:** Not published yet. A working GitHub Pages URL will be added after the complete website is deployed and verified.
+**Interactive Decision Lab:** [Open the browser simulation](https://dokarpov.github.io/intake-integrity-site/decision-lab.html) · [Homepage](https://dokarpov.github.io/intake-integrity-site/). The GitHub Pages URL has not yet been independently verified.
 
 ## Intended users
 
@@ -34,7 +34,7 @@ A discovery call, followed by a test using synthetic leads with representative f
 
 ## Current status
 
-**Product concept and website prototype.** The visual demonstration does not establish that production matching, integrations, locking, delivery guarantees, or audit logging are implemented. Those capabilities require separate technical verification.
+**Product concept and website prototype.** The interactive Decision Lab simulates evidence inspection, an abstention decision, reviewer justification, an unsafe override, and an audit trail. The visual demonstration does not establish that production matching, integrations, locking, delivery guarantees, or audit logging are implemented. Those capabilities require separate technical verification.
 
 ## Related work
 
