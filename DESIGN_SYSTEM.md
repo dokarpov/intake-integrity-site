@@ -1,34 +1,28 @@
-# Intake Integrity — Design system v1
+# Intake Integrity — Unified Design System v2
 
-## Design intent
-Editorial product storytelling, with a restrained, tactile, architectural interface. The product itself should be legible and calm; motion must explain decisions rather than distract from them.
+## Direction
+Neutral, Apple-inspired interface. Prioritize readable typography, calm hierarchy, few actions, and a clear next step. Avoid decorative outlines, colorful badges, excessive instructional copy and ornamental animation.
 
 ## Foundations
-| Token | Value | Usage |
-|---|---|---|
-| Paper | `#f5f4f0` | Primary page background |
-| Ink | `#222725` | Primary text and CTA |
-| Muted | `#626b65` | Supporting copy |
-| Line | `#d9ddd6` | Dividers and boundaries |
-| Violet | `#8469c9` | Decision emphasis |
-| Violet light | `#ede8fb` | Highlighted checkpoint |
-| Surface | `#ffffff` | Cards and interface |
-| Night | `#202924` | Mechanism section |
-| Radius | `18px` | Large surfaces |
-| Horizontal gutter | `clamp(22px, 5vw, 88px)` | Site margins |
+- Background: `#f5f5f7`
+- Primary surface: `#ffffff`
+- Primary text: `#1d1d1f`
+- Secondary text: `#6e6e73`
+- Subtle separators (only where needed): `#e8e8ed`
+- Secondary surface: `#ededf0`
+- Success: `#267b51`
+- Primary button: dark graphite `#1d1d1f`
+- Typography: `-apple-system, BlinkMacSystemFont, "SF Pro Display", "SF Pro Text", "Helvetica Neue", Arial, sans-serif`
+- Large surface radius: 20px; small interactive controls: 12px.
+- Surfaces are differentiated by tone and spacing, not visible borders.
 
-## Typography
-System sans stack: Inter, ui-sans-serif, system-ui, -apple-system, Segoe UI. Display headings: bold editorial typography, negative letter spacing, responsive `clamp()`. Supporting text: 1.5–1.7 line height.
-
-## Interaction
-- No false affordances: every button must perform an action.
-- Identity uncertainty must remain explicit; no automatic ambiguous write.
-- Reduced-motion users receive a non-animated experience.
-- Focus-visible outlines are mandatory.
-- Synthetic data must always be labeled.
+## Interaction rules
+1. Present a single dominant next action per state.
+2. Secondary actions remain available but visually subordinate.
+3. Avoid instructions when the interface can convey intent through labels and context.
+4. Show the actual CRM outcome; keep technical logs separate from the primary task.
+5. Do not imply production integrations or persisted data in the synthetic sandbox.
+6. Keyboard focus remains visible; motion respects reduced-motion preferences.
 
 ## Current implementation
-The homepage applies the above tokens in its inline CSS. Decision Lab is a separate prototype and has not yet been fully unified with this design system. Visual and functional QA are outstanding.
-
-## Next
-Extract shared CSS, harmonize Decision Lab typography/spacing/components, and test across breakpoints before declaring a stable v1.
+Both `index.html` and `decision-lab.html` now apply the neutral visual direction. They retain separate inline CSS, so token extraction and component consolidation remain outstanding. No claim of completed cross-device browser QA.
