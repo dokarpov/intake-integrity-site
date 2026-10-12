@@ -1,20 +1,31 @@
 # Intake Integrity
 
-An interactive website exploring how intake workflows can become more reliable, traceable, and easier to understand.
+**Reliable intake. Clear decisions. Traceable outcomes.**
 
-## Project structure
+Intake Integrity is an exploration of how teams can capture incoming information, identify missing context, and keep decisions connected to their supporting evidence.
 
-- `index.html` — website entry point
-- `style.css` — layout, typography, and responsive styles
-- `main.js` — interactions and animations
-- `img/` — image and video assets
-- `fonts/` — local web fonts
-- `vendor/` — GSAP and ScrollTrigger
+### Why it matters
 
-## Deployment
+Intake processes often begin with scattered requests, incomplete information, and unclear ownership. The concept investigates how a more structured experience could make it easier to understand what arrived, what is missing, and what should happen next.
 
-Designed for static hosting with GitHub Pages from the repository root on `main`.
+### Product direction
 
-**Status:** The website archive has not yet been uploaded to this repository. GitHub Pages should not be considered live until the assets and entry point are committed and deployment is verified.
+- **Structured intake** — make requests and their context easier to review.
+- **Evidence and completeness** — surface gaps before a decision is made.
+- **Traceable decisions** — connect outcomes to the information behind them.
+- **Clear handoffs** — help people understand the next step.
 
-[Project lab](https://github.com/dokarpov/intake-integrity-lab) · [GitHub profile](https://github.com/dokarpov)
+These are design directions, not claims of production-ready functionality or validated outcomes.
+
+### Explore
+
+**Website:** Publication in progress; no verified live URL yet.
+
+[Research and experiments](https://github.com/dokarpov/intake-integrity-lab) · [Creator's portfolio](https://github.com/dokarpov)
+
+### Project status
+
+Early-stage concept and interactive website. The website assets are not yet committed to this repository. Any test results and implementation notes should be documented separately from this product overview.
+
+---
+*An independent product experiment. No commercial traction or performance claims are implied.*
