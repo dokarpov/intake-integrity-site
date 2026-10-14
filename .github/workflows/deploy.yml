@@ -1,26 +1,45 @@
-name: Deploy static website to GitHub Pages
+name: Scan and deploy public demo
 on:
   push:
     branches: [main]
   workflow_dispatch:
 permissions:
   contents: read
-  pages: write
-  id-token: write
 concurrency:
   group: pages
   cancel-in-progress: true
 jobs:
+  verify:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Scan publishable files
+        run: python3 scripts/check_public.py
+      - name: Check public artifact allowlist
+        run: |
+          mkdir -p dist
+          cp index.html decision-lab.html setup.html dist/
+          test "$(find dist -type f | wc -l)" -eq 3
   deploy:
+    needs: verify
     environment:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}
     runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      pages: write
+      id-token: write
     steps:
       - uses: actions/checkout@v4
+      - name: Scan and build minimal public artifact
+        run: |
+          python3 scripts/check_public.py
+          mkdir -p dist
+          cp index.html decision-lab.html setup.html dist/
       - uses: actions/configure-pages@v5
       - uses: actions/upload-pages-artifact@v3
         with:
-          path: .
+          path: dist
       - id: deployment
         uses: actions/deploy-pages@v4
