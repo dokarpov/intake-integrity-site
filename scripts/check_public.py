@@ -5,12 +5,12 @@ ROOT = pathlib.Path(__file__).resolve().parents[1]
 FILES = ("index.html", "decision-lab.html", "setup.html")
 RULES = {
  "private key": re.compile(r"-----BEGIN (?:RSA |EC |OPENSSH |DSA )?PRIVATE KEY-----"),
- "credential assignment": re.compile(r"(?i)(?:api[_-]?key|client[_-]?secret|access[_-]?token|password)\\s*[:=]\\s*['\\\"][^'\\\"]{8,}['\\\"]"),
- "authorization bearer": re.compile(r"(?i)authorization\\s*[:=]\\s*['\\\"]?bearer\\s+[a-z0-9._-]{12,}"),
+ "credential assignment": re.compile(r"(?i)(?:api[_-]?key|client[_-]?secret|access[_-]?token|password)\s*[:=]\s*['\\\"][^'\\\"]{8,}['\\\"]"),
+ "authorization bearer": re.compile(r"(?i)authorization\s*[:=]\s*['\\\"]?bearer\s+[a-z0-9._-]{12,}"),
  "GitHub token": re.compile(r"gh[pousr]_[A-Za-z0-9_]{20,}"),
  "OpenAI key": re.compile(r"sk-(?:proj-)?[A-Za-z0-9_-]{20,}"),
  "legacy organization": re.compile(r"(?i)singularity|singular-226|skyeng|4dev"),
- "personal contact": re.compile(r"(?i)dokarpov@gmail\\.com"),
+ "personal contact": re.compile(r"(?i)dokarpov@gmail\.com"),
  "legacy sample": re.compile(r"(?i)maria ivanova|artem ivanov|79991234567"),
 }
 bad = []
