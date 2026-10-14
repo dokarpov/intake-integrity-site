@@ -19,7 +19,9 @@ jobs:
         run: |
           mkdir -p dist
           cp index.html decision-lab.html setup.html dist/
-          test "$(find dist -type f | wc -l)" -eq 3
+          mkdir -p dist/preview
+          cp preview/index.html preview/tokens.css dist/preview/
+          test "$(find dist -type f | wc -l)" -eq 5
   deploy:
     needs: verify
     environment:
