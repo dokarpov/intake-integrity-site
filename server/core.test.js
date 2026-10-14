@@ -1,0 +1,6 @@
+import test from 'node:test';import assert from 'node:assert/strict';import {decide,validateLead} from './core.js';import {HubSpot} from './hubspot.js';
+test('recognizes exactly one contact',()=>assert.deepEqual(decide([{id:'123'}]),{status:'existing',contactId:'123'}));
+test('never guesses on multiple matches',()=>assert.equal(decide([{id:1},{id:2}]).status,'review'));
+test('new lead path',()=>assert.equal(decide([]).status,'new'));
+test('validates input',()=>{assert.equal(validateLead({email:' A@EXAMPLE.COM ',enquiry:'Hello'}).email,'a@example.com');assert.throws(()=>validateLead({email:'bad',enquiry:'Hello'}))});
+test('HubSpot lookup and associated note payload',async()=>{const calls=[];const fake=async(url,opts)=>{calls.push({url,opts});return {ok:true,json:async()=>calls.length===1?{results:[{id:'42'}]}:{id:'99'}}};const hub=new HubSpot('test-token',fake);assert.equal((await hub.find('a@example.com'))[0].id,'42');assert.equal(await hub.createNote('42',{enquiry:'Hello'}),'99');const body=JSON.parse(calls[1].opts.body);assert.equal(body.associations[0].to.id,'42');assert.equal(body.associations[0].types[0].associationTypeId,202)})
