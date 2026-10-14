@@ -1,45 +1,23 @@
 # Intake Integrity
 
-**Uncertain leads go to a person. Clear matches pass automatically. Every decision is recorded.**
+A prototype for safer enrollment and customer intake. Applicants find or start an application; organizations configure field mappings and test identity-resolution scenarios.
 
-Intake Integrity is a proposed reliability layer between incoming sales leads and a CRM or 1C system. It is designed to prevent ambiguous identity matches from silently creating incorrect or duplicate records.
+## Public experiences
 
-## The problem
+- [Applicant flow](https://dokarpov.github.io/intake-integrity-site/decision-lab.html): synthetic matching and enrollment, entirely in the browser.
+- [Organization setup](https://dokarpov.github.io/intake-integrity-site/setup.html): choose a source (1C, CRM, or CSV), map fields, validate sample JSON, test matching, export a configuration.
+- [Overview](https://dokarpov.github.io/intake-integrity-site/).
 
-Sales teams receive leads with incomplete or overlapping identity information. When multiple existing records could match, automatically selecting one risks corrupting customer data. Sending everything to manual review, meanwhile, slows operations.
+## What is implemented
 
-## How the proposed workflow works
+Browser-only, illustrative flows with synthetic sample records. No real CRM connection, production identity verification, persistent audit log, authentication, secure server-side credential storage, or record writes. **Never enter real personal records or credentials into this public demo.**
 
-1. A new lead arrives from a sales workflow.
-2. The system compares it with existing records.
-3. Clear matches can proceed automatically; ambiguous matches are held.
-4. A reviewer selects the appropriate record or creates a new one and records the reason.
-5. The approved outcome is forwarded to the CRM or 1C, with a traceable decision record.
+## Public data and deployment policy
 
-## Interactive website
+Only `index.html`, `decision-lab.html`, and `setup.html` are published by the GitHub Pages workflow. Repository documentation, source scripts, and Git metadata are not copied into the deployed website. The deployment fails if `scripts/check_public.py` detects selected credential patterns or known legacy identifiers in the public HTML.
 
-The website uses a **synthetic family-record example**: two existing records share a parent's name and phone number, while a new child's name introduces ambiguity. The illustrated reviewer assigns the lead to the appropriate family and records the reason.
+This is a **limited preventive scan**, not a complete repository or historical security audit. GitHub commit history remains accessible, including earlier revisions. Do not assume that removing text from the current branch erases it from Git history, forks, caches, or deployed copies. If real credentials were exposed, rotate or revoke them before considering history rewriting. Rewriting shared Git history requires a separate coordinated procedure and is not performed automatically.
 
-The presentation includes a scroll-driven product story, a visual review card, and a pilot-request form.
+## Integration requirements
 
-**Interactive Decision Lab:** [Open the browser simulation](https://dokarpov.github.io/intake-integrity-site/decision-lab.html) · [Homepage](https://dokarpov.github.io/intake-integrity-site/). The GitHub Pages URL has not yet been independently verified.
-
-## Intended users
-
-Sales operations teams and organizations moving incoming leads into CRM or 1C, particularly where duplicate or incorrect record assignment creates operational risk.
-
-## Pilot concept
-
-A discovery call, followed by a test using synthetic leads with representative fields, and then evaluation against a 1C sandbox. This is a proposed pilot sequence, not a claim of completed customer validation.
-
-## Current status
-
-**Product concept and website prototype.** The interactive Decision Lab simulates evidence inspection, an abstention decision, reviewer justification, an unsafe override, and an audit trail. The visual demonstration does not establish that production matching, integrations, locking, delivery guarantees, or audit logging are implemented. Those capabilities require separate technical verification.
-
-## Related work
-
-[Research and validation repository](https://github.com/dokarpov/intake-integrity-lab) · [Creator's GitHub profile](https://github.com/dokarpov)
-
----
-
-*The website uses illustrative demo data. No production deployment, pilot results, or commercial traction is claimed here.*
+A live 1C connector requires a backend, an authorized test environment, a documented API contract, role-based access, encryption, server-side credential handling, idempotent writes, and end-to-end validation. The configuration export alone does not create an integration.
