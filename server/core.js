@@ -1,0 +1,4 @@
+export function normalizeEmail(s){return String(s||'').trim().toLowerCase()}
+export function normalizePhone(s){return String(s||'').replace(/[^0-9+]/g,'')}
+export function decide(matches){if(matches.length===0)return {status:'new'};if(matches.length===1)return {status:'existing',contactId:String(matches[0].id)};return {status:'review',reason:'multiple_matching_contacts'}}
+export function validateLead(body){const email=normalizeEmail(body?.email);if(!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email))throw Object.assign(new Error('Valid email required'),{status:400});const enquiry=String(body?.enquiry||'').trim();if(!enquiry||enquiry.length>4000)throw Object.assign(new Error('Enquiry must be 1–4000 characters'),{status:400});return {email,enquiry,firstName:String(body?.firstName||'').trim().slice(0,100),lastName:String(body?.lastName||'').trim().slice(0,100)}}
