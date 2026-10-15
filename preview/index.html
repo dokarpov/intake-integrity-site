@@ -120,7 +120,7 @@ h2{font-size:clamp(31px,8vw,38px);letter-spacing:-.045em}.intro p{font-size:16px
 .stats{margin-top:12px}.adapter{padding:18px}
 .footer{display:block}.footer span{display:block;margin-top:8px}
 }
-</style>
+.review-actions{display:grid;gap:12px;margin-top:18px}.review-actions label{font-size:13px;line-height:1.5}.review-actions select{width:100%;padding:13px;border:1px solid #b9bbc2;border-radius:9px;background:#fff}.review-actions button{padding:13px 16px;border:0;border-radius:10px;background:#202124;color:white;font:inherit;font-weight:650;cursor:pointer}.review-actions button:disabled{opacity:.4;cursor:not-allowed}.review-actions .secondary{background:#e9e9ee;color:#222}.review-actions .notice{font-size:13px;color:#555;line-height:1.55}.candidate{min-width:0}</style>
 </head>
 <body>
 <div class="page">
@@ -159,7 +159,7 @@ h2{font-size:clamp(31px,8vw,38px);letter-spacing:-.045em}.intro p{font-size:16px
 <p class="explanation" id="decision-description">The matching result will appear here. Existing, new and ambiguous leads follow the same process.</p>
 <div class="trace" id="decision-trace"><div class="trace-title">What the system checks</div><div class="trace-line"><b>Input</b><span>Customer name and email</span></div><div class="trace-line"><b>Reference</b><span>Synthetic customer index</span></div></div></div></div>
 <div class="sim-foot"><div><p id="sim-note">Demo uses fictional people and records. It neither changes nor accesses a CRM.</p>
-<div class="stats"><span class="progress"><i id="progress-bar"></i></span><span id="progress-text">0 of 3 processed</span></div></div>
+<div class="stats"><span class="progress"><i id="progress-bar"></i></span><span id="progress-text">0 of 3 resolved</span></div></div>
 <button class="action" id="process-next" type="button">Process this enquiry →</button></div></div></div></section>
 <section class="integrations" aria-labelledby="integrations-title"><div class="page integration-grid">
 <div><div class="eyebrow">Built around your CRM</div><h2 id="integrations-title">Your customer records stay yours.</h2>
@@ -181,7 +181,7 @@ const customers=[
 {id:'CRM-10042',name:'Alex Morgan',email:'alex@example.com',history:2},
 {id:'CRM-10052',name:'Sam Lee',email:'sam@example.com',history:3},
 {id:'CRM-10421',name:'Sam Lee',email:'sam@example.com',history:1}];
-const el=id=>document.getElementById(id);let cursor=0,busy=false;
+const el=id=>document.getElementById(id);let cursor=0,busy=false,heldCase=null,resolved=0;
 function matchingDecision(enquiry){
 const matching=customers.filter(c=>c.email.trim().toLowerCase()===enquiry.email.trim().toLowerCase());
 if(matching.length===1)return {kind:'linked',matching};
@@ -202,12 +202,12 @@ setText('case-index',String(index+1).padStart(2,'0')+' / 03');setText('decision-
 setText('status','Waiting');el('status').className='state-pill';setText('decision-title','Ready to check this enquiry.');
 setText('decision-description','The matching result will appear here. Existing, new and ambiguous leads follow the same process.');
 el('decision-trace').replaceChildren(makeTrace('What the system checks',[['Input','Customer name and email'],['Reference','Synthetic customer index']]));
-setText('process-next','Process this enquiry →');
+setText('process-next','Process this enquiry →');el('process-next').disabled=false;
 }
 function processCurrent(){
-if(busy)return;
+if(busy||heldCase)return;
 if(cursor>=enquiries.length){
-cursor=0;setText('progress-text','0 of 3 processed');el('progress-bar').style.width='0%';showIncoming(0);return;
+cursor=0;resolved=0;heldCase=null;setText('progress-text','0 of 3 resolved');el('progress-bar').style.width='0%';showIncoming(0);return;
 }
 busy=true;const button=el('process-next');button.disabled=true;
 setText('decision-title','Checking customer records…');setText('decision-description','Comparing incoming email with our sample index.');
@@ -225,14 +225,21 @@ const trace=el('decision-trace');trace.replaceChildren(makeTrace(decision.kind==
 if(decision.kind==='held'){
 const grid=document.createElement('div');grid.className='candidates';
 for(const c of decision.matching){const box=document.createElement('div');box.className='candidate';const title=document.createElement('b');title.textContent=c.id;const small=document.createElement('small');small.textContent=c.name+' · '+c.history+' past interactions';box.append(title,small);grid.append(box)}
-trace.append(grid);
+trace.append(grid);heldCase={enquiry,decision};
+const actions=document.createElement('div');actions.className='review-actions';actions.innerHTML='<div class="notice">Matching email alone does not verify identity. Do not attach either record until identity is confirmed through an independent channel.</div><button type="button" class="secondary" id="request-evidence">Request identity evidence (simulation)</button><label for="review-choice">Resolution after independent verification</label><select id="review-choice"><option value="">Choose an outcome</option><option value="CRM-10052">Verified: attach to CRM-10052</option><option value="CRM-10421">Verified: attach to CRM-10421</option><option value="new">Verified: create separate customer</option></select><label><input type="checkbox" id="review-confirm"> I independently verified this identity outside the demo (simulated attestation).</label><button type="button" id="resolve-case" disabled>Record reviewed decision</button><button type="button" class="secondary" id="keep-held">Keep on hold</button><p id="review-feedback" role="status" class="notice"></p>';
+trace.append(actions);
+const choice=actions.querySelector('#review-choice'),confirm=actions.querySelector('#review-confirm'),resolve=actions.querySelector('#resolve-case');const sync=()=>resolve.disabled=!(choice.value&&confirm.checked);choice.addEventListener('change',sync);confirm.addEventListener('change',sync);
+actions.querySelector('#request-evidence').addEventListener('click',()=>{actions.querySelector('#review-feedback').textContent='Evidence request recorded in this browser simulation. No message was sent. Case remains on hold.'});
+actions.querySelector('#keep-held').addEventListener('click',()=>{actions.querySelector('#review-feedback').textContent='Case remains unresolved in the review queue. No CRM record changed.'});
+resolve.addEventListener('click',()=>{if(!choice.value||!confirm.checked)return;const target=choice.value;heldCase=null;resolved++;setText('status','Reviewed · simulated');el('status').className='state-pill good';setText('decision-title',target==='new'?'Separate customer approved for creation.':'Identity verified for '+target+'.');setText('decision-description','Operator attestation recorded locally for this demonstration. No actual identity verification or CRM write occurred.');actions.replaceChildren(makeTrace('Review audit (browser only)',[['Decision',target==='new'?'Create separate record':'Attach to '+target],['Evidence','Operator attested to external verification'],['CRM write','None — synthetic demo']]));updateProgress();setText('process-next',cursor<enquiries.length?'Process next enquiry →':'Replay the sample ↺');el('process-next').disabled=false;});
 }
-cursor++;setText('progress-text',cursor+' of 3 processed');el('progress-bar').style.width=(cursor/enquiries.length*100)+'%';
-if(cursor<enquiries.length){setText('process-next','Process next enquiry →');setText('sim-note','Next in queue: '+enquiries[cursor].name+' · still synthetic. No CRM changes.')}
+cursor++;if(decision.kind!=='held')resolved++;updateProgress();
+if(decision.kind==='held'){setText('process-next','Resolve held case to continue');button.disabled=true;setText('sim-note','1 case awaiting review · no CRM write performed.')}else if(cursor<enquiries.length){setText('process-next','Process next enquiry →');setText('sim-note','Next in queue: '+enquiries[cursor].name+' · still synthetic. No CRM changes.')}
 else setText('process-next','Replay the sample ↺');
-button.disabled=false;busy=false;
+if(decision.kind!=='held')button.disabled=false;busy=false;
 },240);
 }
+function updateProgress(){setText('progress-text',resolved+' of 3 resolved'+(heldCase?' · 1 awaiting review':''));el('progress-bar').style.width=(resolved/enquiries.length*100)+'%';if(!heldCase&&resolved===enquiries.length)setText('sim-note','All three sample cases resolved. No CRM records were changed.');}
 el('process-next').addEventListener('click',()=>{
 if(cursor>=enquiries.length){setText('sim-note','Demo uses fictional people and records. It neither changes nor accesses a CRM.');processCurrent();return}
 if(cursor>0)showIncoming(cursor);
