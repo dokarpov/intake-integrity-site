@@ -129,13 +129,13 @@ h2{font-size:clamp(31px,8vw,38px);letter-spacing:-.045em}.intro p{font-size:16px
 <div class="hero-copy"><div class="eyebrow">The customer continuity layer</div>
 <h1 id="hero-title">Every lead.<br>One clean<br><span>customer record.</span></h1>
 <p class="lede">Know when a customer comes back. Connect their new enquiry to the right record—or hold an uncertain match before it reaches your CRM.</p>
-<a class="action" href="#experience">See a lead come through <span aria-hidden="true">↘</span></a>
+<a class="action" href="#experience">See a lead come through</a>
 <p class="support-copy">One continuous demo. No signup or CRM connection needed.</p></div>
 <div class="hero-visual" aria-label="Product preview showing a recognized returning customer"><div class="scene">
 <div class="app-frame"><div class="app-head"><strong>Customer continuity</strong><div class="dots" aria-hidden="true"><i></i><i></i><i></i></div></div>
 <div class="app-body"><div class="mini-label">INCOMING ENQUIRY</div><div class="customer-name">Alex Morgan</div><div class="customer-email">alex@example.com</div>
 <div class="divider"></div><div class="mini-label">FOUND IN CUSTOMER HISTORY</div><div class="record-summary"><div class="avatar" aria-hidden="true">AM</div><div><strong>Alex Morgan</strong><small>Customer #10042 · 2 earlier interactions</small></div></div>
-<div class="outcome-inline">✓ Existing customer recognized. Enquiry kept together.</div></div></div>
+<div class="outcome-inline">Existing customer recognized. Enquiry kept together.</div></div></div>
 <p class="note">Illustrative experience · no data sent to HubSpot</p>
 </div></div></section></main></div>
 <section class="intro" aria-labelledby="how-title"><div class="page">
@@ -152,7 +152,7 @@ h2{font-size:clamp(31px,8vw,38px);letter-spacing:-.045em}.intro p{font-size:16px
 <div class="box-heading"><strong id="incoming-title">Incoming enquiry</strong><span class="index" id="case-index">01 / 03</span></div>
 <div class="info-card"><div class="person" id="lead-name">Alex Morgan</div><div class="email" id="lead-email">alex@example.com</div>
 <p class="quote" id="lead-message">Could we pick up our last conversation?</p></div>
-<p class="flow-caption">From sample intake → customer record check</p></div>
+<p class="flow-caption">Sample intake and customer record check</p></div>
 <div class="result" aria-live="polite" aria-atomic="true"><div class="box-heading"><strong>Decision</strong><span class="index" id="decision-id">READY</span></div>
 <div class="res-head"><span class="state-pill" id="status">Waiting</span></div>
 <h3 id="decision-title">Ready to check this enquiry.</h3>
@@ -160,7 +160,7 @@ h2{font-size:clamp(31px,8vw,38px);letter-spacing:-.045em}.intro p{font-size:16px
 <div class="trace" id="decision-trace"><div class="trace-title">What the system checks</div><div class="trace-line"><b>Input</b><span>Customer name and email</span></div><div class="trace-line"><b>Reference</b><span>Synthetic customer index</span></div></div></div></div>
 <div class="sim-foot"><div><p id="sim-note">Demo uses fictional people and records. It neither changes nor accesses a CRM.</p>
 <div class="stats"><span class="progress"><i id="progress-bar"></i></span><span id="progress-text">0 of 3 resolved</span></div></div>
-<button class="action" id="process-next" type="button">Process this enquiry →</button></div></div></div></section>
+<button class="action" id="process-next" type="button">Process this enquiry</button></div></div></div></section>
 <section class="integrations" aria-labelledby="integrations-title"><div class="page integration-grid">
 <div><div class="eyebrow">Built around your CRM</div><h2 id="integrations-title">Your customer records stay yours.</h2>
 <p>Intake Integrity is designed to sit between incoming enquiries and the systems your team already uses. It is not a replacement CRM.</p></div>
@@ -168,7 +168,7 @@ h2{font-size:clamp(31px,8vw,38px);letter-spacing:-.045em}.intro p{font-size:16px
 <div class="adapter"><strong>HubSpot</strong><span>Connector in staging · not live</span></div>
 <div class="adapter"><strong>Salesforce</strong><span>Planned</span></div>
 <div class="adapter"><strong>Bitrix24 / 1C</strong><span>Planned</span></div></div>
-<p class="privacy"><span aria-hidden="true">◎</span><span><b>Safe to explore:</b> this public simulation uses fictional records entirely in the browser. Production authentication, integration, storage, permissions and GDPR controls need separate implementation and verification. Never enter real customer data here.</span></p>
+<p class="privacy"><span><b>Safe to explore:</b> this public simulation uses fictional records entirely in the browser. Production authentication, integration, storage, permissions and GDPR controls need separate implementation and verification. Never enter real customer data here.</span></p>
 </div></div></section>
 <footer class="footer page"><strong>intake/integrity</strong><span>Early product prototype · fictional records · no live customer integration</span></footer>
 <script>
@@ -202,7 +202,7 @@ setText('case-index',String(index+1).padStart(2,'0')+' / 03');setText('decision-
 setText('status','Waiting');el('status').className='state-pill';setText('decision-title','Ready to check this enquiry.');
 setText('decision-description','The matching result will appear here. Existing, new and ambiguous leads follow the same process.');
 el('decision-trace').replaceChildren(makeTrace('What the system checks',[['Input','Customer name and email'],['Reference','Synthetic customer index']]));
-setText('process-next','Process this enquiry →');el('process-next').disabled=false;
+setText('process-next','Process this enquiry');el('process-next').disabled=false;
 }
 function processCurrent(){
 if(busy||heldCase)return;
@@ -231,11 +231,11 @@ trace.append(actions);
 const choice=actions.querySelector('#review-choice'),confirm=actions.querySelector('#review-confirm'),resolve=actions.querySelector('#resolve-case');const sync=()=>resolve.disabled=!(choice.value&&confirm.checked);choice.addEventListener('change',sync);confirm.addEventListener('change',sync);
 actions.querySelector('#request-evidence').addEventListener('click',()=>{actions.querySelector('#review-feedback').textContent='Evidence request recorded in this browser simulation. No message was sent. Case remains on hold.'});
 actions.querySelector('#keep-held').addEventListener('click',()=>{actions.querySelector('#review-feedback').textContent='Case remains unresolved in the review queue. No CRM record changed.'});
-resolve.addEventListener('click',()=>{if(!choice.value||!confirm.checked)return;const target=choice.value;heldCase=null;resolved++;setText('status','Reviewed · simulated');el('status').className='state-pill good';setText('decision-title',target==='new'?'Separate customer approved for creation.':'Identity verified for '+target+'.');setText('decision-description','Operator attestation recorded locally for this demonstration. No actual identity verification or CRM write occurred.');actions.replaceChildren(makeTrace('Review audit (browser only)',[['Decision',target==='new'?'Create separate record':'Attach to '+target],['Evidence','Operator attested to external verification'],['CRM write','None — synthetic demo']]));updateProgress();setText('process-next',cursor<enquiries.length?'Process next enquiry →':'Replay the sample ↺');el('process-next').disabled=false;});
+resolve.addEventListener('click',()=>{if(!choice.value||!confirm.checked)return;const target=choice.value;heldCase=null;resolved++;setText('status','Reviewed · simulated');el('status').className='state-pill good';setText('decision-title',target==='new'?'Separate customer approved for creation.':'Identity verified for '+target+'.');setText('decision-description','Operator attestation recorded locally for this demonstration. No actual identity verification or CRM write occurred.');actions.replaceChildren(makeTrace('Review audit (browser only)',[['Decision',target==='new'?'Create separate record':'Attach to '+target],['Evidence','Operator attested to external verification'],['CRM write','None — synthetic demo']]));updateProgress();setText('process-next',cursor<enquiries.length?'Process next enquiry':'Replay the sample');el('process-next').disabled=false;});
 }
 cursor++;if(decision.kind!=='held')resolved++;updateProgress();
-if(decision.kind==='held'){setText('process-next','Resolve held case to continue');button.disabled=true;setText('sim-note','1 case awaiting review · no CRM write performed.')}else if(cursor<enquiries.length){setText('process-next','Process next enquiry →');setText('sim-note','Next in queue: '+enquiries[cursor].name+' · still synthetic. No CRM changes.')}
-else setText('process-next','Replay the sample ↺');
+if(decision.kind==='held'){setText('process-next','Resolve held case to continue');button.disabled=true;setText('sim-note','1 case awaiting review · no CRM write performed.')}else if(cursor<enquiries.length){setText('process-next','Process next enquiry');setText('sim-note','Next in queue: '+enquiries[cursor].name+' · still synthetic. No CRM changes.')}
+else setText('process-next','Replay the sample');
 if(decision.kind!=='held')button.disabled=false;busy=false;
 },240);
 }
