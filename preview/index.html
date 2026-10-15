@@ -207,7 +207,7 @@ setText('process-next','Process this enquiry →');el('process-next').disabled=f
 function processCurrent(){
 if(busy||heldCase)return;
 if(cursor>=enquiries.length){
-cursor=0;resolved=0;heldCase=null;setText('progress-text','0 of 3 resolved');el('progress-bar').style.width='0%';showIncoming(0);return;
+cursor=0;resolved=0;heldCase=null;setText('progress-text','0 of 3 resolved');el('progress-bar').style.width='0%';showIncoming(0);setText('sim-note','Demo reset. All cases are synthetic.');return;
 }
 busy=true;const button=el('process-next');button.disabled=true;
 setText('decision-title','Checking customer records…');setText('decision-description','Comparing incoming email with our sample index.');
