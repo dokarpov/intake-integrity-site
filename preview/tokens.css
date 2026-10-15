@@ -1,6 +1,6 @@
 :root{color-scheme:light;--bg:#f5f5f7;--surface:#fff;--ink:#1d1d1f;--muted:#626269;--quiet:#797982;--hairline:#e8e8ed;--good:#266f4a;--caution:#8b6325;--violet:#6c5a91;--shadow:0 28px 80px rgba(18,18,26,.08);--font:-apple-system,BlinkMacSystemFont,"SF Pro Display","SF Pro Text","Helvetica Neue",Arial,sans-serif}
 *,*::before,*::after{box-sizing:border-box}
-html{scroll-behavior:smooth;background:var(--bg);font-family:var(--font);color:var(--ink)}
+html{scroll-behavior:smooth;background:var(--bg);font-family:var(--font);color:var(--ink);-webkit-text-size-adjust:100%;text-size-adjust:100%}
 body{margin:0;min-width:320px;font-size:16px;line-height:1.52;-webkit-font-smoothing:antialiased}
 button,a{font:inherit}button{cursor:pointer}button:disabled{opacity:.65;cursor:wait}:focus-visible{outline:3px solid #7461bb;outline-offset:4px}
 @media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}*,*::before,*::after{animation-duration:.01ms!important;transition-duration:.01ms!important}}
