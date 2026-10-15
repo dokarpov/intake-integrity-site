@@ -4,6 +4,8 @@ A prototype for safer enrollment and customer intake. Applicants find or start a
 
 ## Public experiences
 
+- [Unified review preview](https://dokarpov.github.io/intake-integrity-site/preview/): mobile-first, one CTA and sequential fictional enquiries. Matching logic—not a user-selected scenario—determines existing/new/review. This is a review build; it has **not** replaced the production homepage.
+
 - [Applicant flow](https://dokarpov.github.io/intake-integrity-site/decision-lab.html): synthetic matching and enrollment, entirely in the browser.
 - [Organization setup](https://dokarpov.github.io/intake-integrity-site/setup.html): choose a source (1C, CRM, or CSV), map fields, validate sample JSON, test matching, export a configuration.
 - [Overview](https://dokarpov.github.io/intake-integrity-site/).
@@ -14,7 +16,7 @@ Browser-only, illustrative flows with synthetic sample records. No real CRM conn
 
 ## Public data and deployment policy
 
-Only `index.html`, `decision-lab.html`, and `setup.html` are published by the GitHub Pages workflow. Repository documentation, source scripts, and Git metadata are not copied into the deployed website. The deployment fails if `scripts/check_public.py` detects selected credential patterns or known legacy identifiers in the public HTML.
+Only `index.html`, `decision-lab.html`, `setup.html`, `preview/index.html`, and `preview/tokens.css` are published by the GitHub Pages workflow. Repository documentation, source scripts, and Git metadata are not copied into the deployed website. The deployment fails if `scripts/check_public.py` detects selected credential patterns or known legacy identifiers in these publishable files.
 
 This is a **limited preventive scan**, not a complete repository or historical security audit. GitHub commit history remains accessible, including earlier revisions. Do not assume that removing text from the current branch erases it from Git history, forks, caches, or deployed copies. If real credentials were exposed, rotate or revoke them before considering history rewriting. Rewriting shared Git history requires a separate coordinated procedure and is not performed automatically.
 
