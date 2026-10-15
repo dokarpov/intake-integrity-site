@@ -20,8 +20,8 @@ jobs:
           mkdir -p dist
           cp index.html decision-lab.html setup.html dist/
           mkdir -p dist/preview
-          cp preview/index.html preview/tokens.css preview/integrations.html preview/mvp.html dist/preview/
-          test "$(find dist -type f | wc -l)" -eq 7
+          cp preview/index.html preview/tokens.css preview/integrations.html dist/preview/
+          test "$(find dist -type f | wc -l)" -eq 6
   deploy:
     needs: verify
     environment:
@@ -39,8 +39,8 @@ jobs:
           python3 scripts/check_public.py
           mkdir -p dist/preview
           cp index.html decision-lab.html setup.html dist/
-          cp preview/index.html preview/tokens.css preview/integrations.html preview/mvp.html dist/preview/
-          test "$(find dist -type f | wc -l)" -eq 7
+          cp preview/index.html preview/tokens.css preview/integrations.html dist/preview/
+          test "$(find dist -type f | wc -l)" -eq 6
       - uses: actions/configure-pages@v5
       - uses: actions/upload-pages-artifact@v3
         with:
