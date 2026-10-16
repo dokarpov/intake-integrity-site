@@ -1,8 +1,5 @@
 name: MVP test gate (no deployment)
 on:
-  push:
-    branches: [testing/mvp-hardening]
-  pull_request:
   workflow_dispatch:
 permissions:
   contents: read
