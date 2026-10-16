@@ -57,13 +57,13 @@ export function resolve(state,id,{action,contactId,evidence,verified=false,now=n
 }
 export function parseCSV(text){
   if(typeof text!=='string'||text.length>200000)throw new Error('CSV too large');
-  const rows=[],row=[];let cell='',quoted=false;
+  const rows=[],row=[];let cell='',quoted=false,closed=false;
   for(let i=0;i<text.length;i++){const ch=text[i];
-    if(quoted){if(ch==='"'&&text[i+1]==='"'){cell+='"';i++}else if(ch==='"')quoted=false;else cell+=ch}
-    else if(ch==='"'){if(cell)throw new Error('Malformed CSV quoting');quoted=true}
-    else if(ch===','){row.push(cell);cell=''}
-    else if(ch==='\n'||ch==='\r'){if(ch==='\r'&&text[i+1]==='\n')i++;row.push(cell);rows.push([...row]);row.length=0;cell=''}
-    else cell+=ch;
+    if(quoted){if(ch==='"'&&text[i+1]==='"'){cell+='"';i++}else if(ch==='"'){quoted=false;closed=true}else cell+=ch}
+    else if(ch==='"'){if(cell||closed)throw new Error('Malformed CSV quoting');quoted=true}
+    else if(ch===','){row.push(cell);cell='';closed=false}
+    else if(ch==='\n'||ch==='\r'){if(ch==='\r'&&text[i+1]==='\n')i++;row.push(cell);rows.push([...row]);row.length=0;cell='';closed=false}
+    else {if(closed)throw new Error('Unexpected characters after CSV quote');cell+=ch;}
   }
   if(quoted)throw new Error('Unclosed CSV quote');
   if(cell||row.length){row.push(cell);rows.push([...row])}
