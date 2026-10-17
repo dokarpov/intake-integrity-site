@@ -4,360 +4,294 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="theme-color" content="#ffffff">
-<meta name="description" content="Intake Integrity helps connect returning enquiries to the right customer and holds uncertain matches for review.">
-<title>Intake Integrity — Know who is coming back</title>
-<link rel="stylesheet" href="./tokens.css">
-<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
+<meta name="description" content="Recognize returning customers, preserve the sales conversation and hold uncertain matches for review.">
+<title>Intake Integrity — Keep the conversation</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
 <style>
-.page{width:min(100% - 80px,1240px);margin-inline:auto}
-.topbar{height:88px;display:flex;align-items:center;justify-content:space-between;gap:16px}
-.logo{font-size:20px;font-weight:750;letter-spacing:-.065em;line-height:1.1}
-.logo span{color:#84848d;font-weight:500}
-.build-label{font-size:12px;font-weight:560;color:var(--muted);text-align:right}
-.hero{display:grid;grid-template-columns:minmax(0,.96fr) minmax(0,1.04fr);gap:clamp(34px,5vw,86px);align-items:center;padding-top:clamp(54px,7vw,110px);padding-bottom:clamp(80px,10vw,150px)}
-.hero-copy,.hero-visual,.showcase{min-width:0}
-.eyebrow{font-size:11px;letter-spacing:.16em;font-weight:750;text-transform:uppercase;color:#63636d}
+:root{color-scheme:light;--bg:#fff;--ink:#222;--muted:#555;--soft:#777;--rule:#e3e3e3;--faint:#f8f8f8;--display:"Space Grotesk",Arial,sans-serif;--body:"DM Sans",Arial,sans-serif}
+*,*::before,*::after{box-sizing:border-box}
+html{scroll-behavior:smooth;-webkit-text-size-adjust:100%;text-size-adjust:100%;background:#fff}
+body{margin:0;min-width:320px;background:#fff;color:var(--ink);font:400 16px/1.54 var(--body);-webkit-font-smoothing:antialiased}
+button,input,textarea,select{font:inherit}button{cursor:pointer}
+button:disabled{cursor:not-allowed;opacity:.58}
+:focus-visible{outline:2px solid #222;outline-offset:4px}
+.container{width:min(100% - 72px,1100px);margin-inline:auto}
+header{height:76px;display:flex;align-items:center;justify-content:space-between;gap:15px;border-bottom:1px solid var(--rule)}
+.logo{font:700 20px/1 var(--display);letter-spacing:-.075em;text-decoration:none;color:var(--ink)}
+.logo span{color:#999}
+.small-label{font-size:11px;letter-spacing:.075em;text-transform:uppercase;font-weight:700;color:#727272}
+.hero{padding:83px 0 81px;display:grid;grid-template-columns:minmax(0,1.2fr) minmax(0,.8fr);gap:70px;align-items:center}
 h1,h2,h3,p{margin-top:0}
-h1{margin:22px 0 26px;font-size:clamp(48px,5.4vw,80px);line-height:1.01;letter-spacing:-.064em;font-weight:740;max-width:670px}
-h1 span{color:#71717a}
-.lede{max-width:515px;font-size:clamp(17px,1.5vw,20px);line-height:1.58;color:var(--muted);margin-bottom:30px}
-.action{appearance:none;border:none;background:var(--ink);color:#fff;display:inline-flex;align-items:center;justify-content:center;gap:22px;min-height:51px;border-radius:13px;padding:14px 23px;text-decoration:none;font-weight:660;font-size:15px;white-space:normal;text-align:center;transition:transform .2s ease,background .2s ease}
-.action:hover{background:#39393c;transform:translateY(-2px)}.action:disabled{transform:none}
-.support-copy{font-size:12px;color:var(--quiet);margin-top:16px;margin-bottom:0}
-.scene{border-radius:26px;background:linear-gradient(150deg,#fff 20%,#ececf0 100%);padding:clamp(20px,3.7vw,43px);box-shadow:var(--shadow);min-width:0;position:relative;isolation:isolate}
-.scene:before{content:"";position:absolute;inset:0;border-radius:inherit;background:radial-gradient(ellipse at 100% 0%,#cec9db7a,transparent 53%);pointer-events:none;z-index:-1}
-.app-frame{background:#fff;border-radius:18px;box-shadow:0 12px 36px #19191c12;overflow:hidden}
-.app-head{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:16px 19px;border-bottom:1px solid var(--hairline)}
-.app-head strong{font-size:13px;letter-spacing:-.02em}
-.dots{display:flex;gap:5px}.dots i{height:7px;width:7px;border-radius:50%;background:#d8d8dd}
-.app-body{padding:clamp(20px,3vw,30px)}
-.mini-label{font-size:10px;font-weight:760;letter-spacing:.14em;color:var(--quiet)}
-.customer-name{font-size:clamp(24px,2.4vw,35px);line-height:1.15;letter-spacing:-.045em;font-weight:720;margin:12px 0 2px}
-.customer-email{font-size:13px;color:var(--muted);overflow-wrap:anywhere}
-.divider{height:1px;background:var(--hairline);margin:24px 0}
-.record-summary{display:flex;gap:13px;align-items:center}
-.avatar{display:grid;place-items:center;width:44px;height:44px;flex:0 0 44px;border-radius:13px;background:#e8e7ee;color:#625a72;font-size:13px;font-weight:740}
-.record-summary strong{font-size:14px;display:block}.record-summary small{font-size:12px;color:var(--muted);display:block;margin-top:3px}
-.outcome-inline{margin-top:19px;background:#eef5f0;border-radius:10px;padding:14px 15px;color:#226843;font-size:13px;line-height:1.4;font-weight:620}
-.note{font-size:12px;color:var(--quiet);text-align:center;margin-top:17px;margin-bottom:0}
-.intro{background:#fff;padding:clamp(68px,8vw,105px) 0}
-.intro-grid{display:grid;grid-template-columns:1fr 1fr;gap:52px;align-items:start}
-h2{font-size:clamp(34px,3.5vw,57px);line-height:1.08;letter-spacing:-.052em;font-weight:720;margin:18px 0 0;max-width:680px}
-.intro p{color:var(--muted);font-size:18px;line-height:1.65;max-width:520px;margin:10px 0 0}
-.steps{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:34px;margin-top:62px}
-.step-no{font-size:12px;color:var(--quiet);font-weight:720;letter-spacing:.08em;margin-bottom:21px}
-.steps h3{font-size:21px;letter-spacing:-.035em;font-weight:700;margin:0 0 8px}
-.steps p{font-size:15px;color:var(--muted);line-height:1.56;margin:0}
-.simulation{padding:clamp(85px,9vw,130px) 0;scroll-margin-top:24px}
-.sim-intro{max-width:740px;margin-bottom:34px}
-.sim-intro p{color:var(--muted);max-width:550px;font-size:17px;line-height:1.65;margin-top:17px}
-.sim-card{border-radius:26px;background:#fff;box-shadow:var(--shadow);overflow:hidden}
-.sim-top{padding:20px clamp(22px,3vw,38px);display:flex;justify-content:space-between;align-items:center;gap:18px;border-bottom:1px solid var(--hairline)}
-.sim-top strong{font-size:14px;letter-spacing:-.01em}.sim-top span{font-size:12px;color:var(--muted);text-align:right}
-.sim-grid{display:grid;grid-template-columns:minmax(0,.92fr) minmax(0,1.08fr)}
-.incoming{padding:clamp(23px,3vw,38px);background:#f8f8fa;min-width:0}
-.result{padding:clamp(23px,3vw,38px);min-width:0;display:flex;flex-direction:column}
-.box-heading{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:20px}
-.box-heading strong{font-size:13px}.index{font-size:12px;font-variant-numeric:tabular-nums;color:var(--quiet)}
-.info-card{padding:20px;border-radius:15px;background:#fff;box-shadow:0 3px 12px #1d1d1f08}
-.person{font-size:21px;line-height:1.15;letter-spacing:-.035em;font-weight:710;margin:0 0 7px;overflow-wrap:anywhere}
-.email{font-size:13px;color:var(--muted);overflow-wrap:anywhere}
-.quote{font-size:15px;line-height:1.55;margin:24px 0 2px;color:#404046}
-.quote::before{content:'“';font-size:22px;line-height:0;margin-right:3px;color:#91919b}
-.quote::after{content:'”';color:#91919b}
-.flow-caption{font-size:12px;color:var(--quiet);margin:18px 0 0}
-.res-head{display:flex;align-items:center;gap:11px;flex-wrap:wrap;margin-bottom:11px}
-.state-pill{font-size:12px;font-weight:700;padding:5px 10px;border-radius:8px;color:#5f5f69;background:#ededf0}
-.state-pill.good{color:#246846;background:#ebf4ee}.state-pill.hold{color:#805f2e;background:#f6f0e3}
-.result h3{font-size:clamp(24px,2.4vw,34px);letter-spacing:-.045em;line-height:1.15;margin:0 0 12px}
-.result .explanation{font-size:15px;color:var(--muted);line-height:1.56;margin:0 0 22px}
-.trace{border-radius:14px;background:#f6f6f8;padding:18px 20px;min-height:108px}
-.trace-title{font-size:11px;color:var(--quiet);font-weight:720;letter-spacing:.08em;text-transform:uppercase;margin-bottom:12px}
-.trace-line{display:flex;gap:13px;align-items:baseline;font-size:13px;line-height:1.5;margin:8px 0}
-.trace-line b{font-weight:650;min-width:100px}.trace-line span{color:var(--muted);overflow-wrap:anywhere}
-.candidates{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px;margin-top:12px}
-.candidate{padding:13px;border-radius:10px;background:#fff}
-.candidate b,.candidate small{display:block;font-size:12px}.candidate small{color:var(--muted);margin-top:4px}
-.sim-foot{display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:16px;padding:19px clamp(23px,3vw,38px);border-top:1px solid var(--hairline)}
-.sim-foot p{font-size:12px;color:var(--muted);margin:0;max-width:470px}
-.sim-foot .action{font-size:14px;min-height:45px;padding:11px 19px}
-.stats{display:flex;gap:20px;align-items:center;margin-top:19px;font-size:13px;color:var(--muted)}
-.progress{height:4px;width:86px;border-radius:5px;background:#e0e0e5;overflow:hidden;display:inline-block;vertical-align:middle}
-.progress i{display:block;height:100%;background:#38383d;width:0;transition:width .24s}
-.integrations{padding:clamp(70px,8vw,112px) 0;background:#fff}
-.integration-grid{display:grid;grid-template-columns:minmax(0,.9fr) minmax(0,1.1fr);gap:65px;align-items:start}
-.integrations p{font-size:17px;color:var(--muted);line-height:1.62;max-width:560px;margin-top:20px}
-.integrations h2{max-width:480px}.adapter-list{display:grid;gap:13px}
-.adapter{display:flex;justify-content:space-between;gap:16px;align-items:center;background:#f6f6f8;border-radius:14px;padding:20px 22px}
-.adapter strong{font-size:16px;letter-spacing:-.025em}.adapter span{font-size:12px;color:var(--muted);text-align:right}
-.privacy{display:flex;gap:14px;align-items:flex-start;margin-top:24px;font-size:13px;color:var(--muted);line-height:1.5}.privacy b{color:var(--ink)}
-.footer{display:flex;align-items:center;justify-content:space-between;gap:20px;padding-top:36px;padding-bottom:36px;color:var(--quiet);font-size:12px}
-.footer strong{color:var(--ink);font-size:15px;letter-spacing:-.05em}
-@media(max-width:950px){
-.page{width:min(100% - 52px,860px)}
-.hero{grid-template-columns:1fr;gap:50px;padding-top:55px;padding-bottom:95px}
-.hero-copy{max-width:720px}h1{max-width:620px;font-size:clamp(46px,7.2vw,70px)}
-.hero-visual{max-width:700px;width:100%}
-.intro-grid,.integration-grid{grid-template-columns:1fr;gap:18px}
-.intro-grid p{margin-top:0}.steps{gap:24px;margin-top:50px}
+h1,h2,h3{font-family:var(--display);font-weight:600;letter-spacing:-.055em;text-wrap:balance}
+h1{font-size:clamp(44px,5.2vw,70px);line-height:1.045;max-width:650px;margin:18px 0 24px}
+h1 span{color:#777}
+.hero p{max-width:580px;font-size:18px;line-height:1.65;color:var(--muted);margin:0 0 27px}
+.primary{appearance:none;border:1px solid #222;border-radius:7px;background:#222;color:#fff;padding:12px 20px;font-weight:700;font-size:14px;min-height:48px;display:inline-flex;align-items:center;justify-content:center;text-decoration:none;text-align:center}
+.primary:hover{background:#404040}.primary:focus-visible{outline-color:#555}
+.plain-link{appearance:none;border:0;background:none;padding:8px 0;color:#555;text-decoration:underline;text-underline-offset:4px;font-size:13px;font-weight:600}
+.hero-evidence{border-left:1px solid #d4d4d4;padding:4px 0 4px 26px}
+.hero-evidence p{font-size:14px;margin:11px 0 0;color:#565656;line-height:1.65}
+.hero-evidence b{font-family:var(--display);font-size:17px;font-weight:600;line-height:1.3;letter-spacing:-.03em}
+.hero-claim{margin-top:23px;padding-top:18px;border-top:1px solid var(--rule);color:#666;font-size:12px}
+.experience{padding:61px 0 87px;border-top:1px solid var(--rule);scroll-margin-top:15px}
+.experience-heading{max-width:700px;margin-bottom:32px}
+h2{font-size:clamp(32px,3.35vw,46px);line-height:1.14;margin:12px 0 11px}
+.experience-heading p{font-size:15px;color:var(--muted);line-height:1.65;margin:0}
+.flow{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.03fr);gap:0;border:1px solid #dcdcdc;border-radius:9px;overflow:hidden}
+.intake,.decision{padding:clamp(21px,3.2vw,35px);min-width:0}
+.intake{border-right:1px solid #e0e0e0}.panel-heading{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:22px}
+.panel-heading strong{font:600 17px/1.25 var(--display);letter-spacing:-.035em}
+.case-count{font:500 11px/1.4 ui-monospace,SFMono-Regular,Consolas,monospace;color:#666;white-space:nowrap}
+.field{margin:0 0 17px}
+.field label{display:block;font-size:12px;color:#4b4b4b;font-weight:700;margin-bottom:6px}
+.field input,.field textarea,.field select{display:block;border:1px solid #cfcfcf;background:#fff;color:#222;border-radius:5px;padding:11px 12px;width:100%;min-width:0;min-height:45px;font-size:15px;line-height:1.48}
+.field textarea{min-height:90px;resize:vertical}
+.field input:focus,.field textarea:focus,.field select:focus{border-color:#444;outline:0;box-shadow:0 0 0 2px #dedede}
+.provenance{font-size:12px;color:#6a6a6a;line-height:1.52;margin:0 0 23px}
+.intake-footer{border-top:1px solid var(--rule);padding-top:18px;display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap}
+.intake-footer .primary{width:100%}
+.status{font:600 11px/1.4 ui-monospace,SFMono-Regular,Consolas,monospace;color:#5d5d5d;letter-spacing:.02em;text-transform:uppercase}
+.decision h3{font-size:clamp(24px,2.7vw,33px);line-height:1.16;margin:0 0 11px}
+.summary{font-size:14px;line-height:1.63;color:var(--muted);margin:0 0 20px}
+.result-body[hidden],.review[hidden],.hold-note[hidden],#action-button[hidden]{display:none!important}
+.history{border-top:1px solid var(--rule);padding-top:18px;margin-top:22px}
+.history h4{font:600 15px/1.3 var(--display);letter-spacing:-.035em;margin:0 0 17px}
+.detail{display:grid;grid-template-columns:116px minmax(0,1fr);gap:12px;padding:10px 0;border-top:1px solid #ededed;align-items:start;font-size:13px;line-height:1.55}
+.detail:first-of-type{border-top:0}
+.detail dt{color:#777;margin:0}.detail dd{margin:0;color:#242424;overflow-wrap:anywhere;font-weight:500}
+.intent{padding:16px 0;border-top:1px solid var(--rule);border-bottom:1px solid var(--rule);font-size:14px;line-height:1.58;overflow-wrap:anywhere}
+.intent b{display:block;font-size:11px;color:#777;text-transform:uppercase;letter-spacing:.07em;margin-bottom:5px}
+.evidence{font-size:12px;color:#666;line-height:1.6;margin:16px 0 0}
+.review{border-top:1px solid #ddd;margin-top:21px;padding-top:19px}
+.review h4{font:600 16px/1.3 var(--display);letter-spacing:-.035em;margin:0 0 9px}
+.review p{font-size:13px;line-height:1.57;color:#555;margin:0 0 16px}
+.candidate-list{display:grid;gap:11px;margin:16px 0 22px}
+.candidate{border:1px solid #dedede;border-radius:6px;padding:13px}
+.candidate strong{display:block;font:600 14px/1.35 var(--display)}
+.candidate p{margin:5px 0 0;font-size:12px;line-height:1.5}
+.verify{display:flex;align-items:flex-start;gap:9px;font-size:13px;color:#444;line-height:1.48;margin:8px 0 17px}
+.verify input{width:17px;height:17px;flex:0 0 17px;accent-color:#222;margin:2px 0}
+.review .primary{width:100%}
+.hold-note{padding:12px 0 0;color:#666;font-size:12px;line-height:1.6}
+.history-toggle{margin-top:29px;border-top:1px solid var(--rule);padding:15px 0}
+.history-toggle summary{cursor:pointer;font-size:13px;font-weight:700;color:#444;list-style:none}
+.history-toggle summary::after{content:"";display:inline-block;margin-left:9px;border-bottom:1px solid;border-right:1px solid;width:7px;height:7px;transform:rotate(45deg);vertical-align:3px}
+.history-toggle[open] summary::after{transform:rotate(225deg);vertical-align:0}
+.event{font-size:12px;padding:10px 0;border-bottom:1px solid #eee;line-height:1.5;color:#555}
+.endnote{padding:31px 0 50px;color:#6b6b6b;font-size:12px;line-height:1.7;border-top:1px solid #e5e5e5}
+.endnote strong{color:#333}
+.footerline{display:flex;justify-content:space-between;gap:26px;flex-wrap:wrap}
+@media(max-width:850px){.hero{grid-template-columns:1fr;gap:32px;padding:60px 0 64px}.hero-evidence{max-width:600px}h1{font-size:clamp(40px,7.4vw,60px)}}
+@media(max-width:640px){
+.container{width:calc(100% - 36px)}
+header{height:66px}.logo{font-size:19px}
+.hero{padding:48px 0 52px;gap:30px}
+h1{font-size:clamp(37px,9.6vw,46px);line-height:1.075;letter-spacing:-.055em;margin:14px 0 19px}
+.hero p{font-size:16px;line-height:1.58;margin-bottom:22px}
+.hero-evidence{padding-left:15px}.hero-evidence b{font-size:15px}
+.hero-evidence p{font-size:13px}
+.experience{padding:49px 0 63px}
+h2{font-size:clamp(29px,7.3vw,36px)}
+.experience-heading p{font-size:14px}
+.flow{grid-template-columns:1fr;border-radius:7px}
+.intake,.decision{padding:21px 19px}
+.intake{border-right:none;border-bottom:1px solid #e0e0e0}
+.panel-heading{margin-bottom:18px}
+.detail{grid-template-columns:99px minmax(0,1fr);gap:10px}
+.endnote{padding:25px 0 38px}
 }
-@media(max-width:620px){
-.page{width:calc(100% - 40px)}.topbar{height:70px}.logo{font-size:18px}.build-label{font-size:11px;max-width:140px}
-.hero{padding-top:50px;padding-bottom:80px;gap:39px}
-h1{font-size:clamp(37px,10.3vw,48px);line-height:1.045;letter-spacing:-.055em;margin:17px 0 19px}
-.lede{font-size:16px;line-height:1.58;margin-bottom:23px}
-.action{min-height:49px;font-size:14px;gap:17px}
-.scene{border-radius:18px;padding:17px}.app-head{padding:13px 15px}.app-body{padding:18px}
-.customer-name{font-size:25px}.intro,.integrations{padding:75px 0}
-h2{font-size:clamp(31px,8vw,38px);letter-spacing:-.045em}.intro p{font-size:16px}
-.steps{grid-template-columns:1fr;gap:30px;margin-top:39px}
-.step-no{margin-bottom:9px}.steps h3{font-size:19px}.steps p{font-size:14px}
-.simulation{padding:76px 0}.sim-intro p{font-size:15px}
-.sim-top{padding:16px 18px}.sim-top span{font-size:11px}.sim-grid{grid-template-columns:1fr}
-.incoming,.result{padding:20px}.incoming{border-bottom:1px solid var(--hairline)}
-.info-card{padding:16px}.person{font-size:19px}.quote{margin-top:18px}.flow-caption{margin-top:12px}
-.result h3{font-size:27px}.trace-line{display:block}.trace-line b{display:block}
-.sim-foot{padding:18px 20px}.sim-foot .action{width:100%}
-.stats{margin-top:12px}.adapter{padding:18px}
-.footer{display:block}.footer span{display:block;margin-top:8px}
-}
-.review-actions{display:grid;gap:12px;margin-top:18px}.review-actions label{font-size:13px;line-height:1.5}.review-actions select{width:100%;padding:13px;border:1px solid #b9bbc2;border-radius:9px;background:#fff}.review-actions button{padding:13px 16px;border:0;border-radius:10px;background:#202124;color:white;font:inherit;font-weight:650;cursor:pointer}.review-actions button:disabled{opacity:.4;cursor:not-allowed}.review-actions .secondary{background:#e9e9ee;color:#222}.review-actions .notice{font-size:13px;color:#555;line-height:1.55}.candidate{min-width:0}</style>
-<style>
-:root{
- --bg:#ffffff; --surface:#ffffff; --ink:#232323; --muted:#555555; --quiet:#666666; --hairline:#e4e4e4;
- --good:#303030;--caution:#5c554c;--violet:#393939;--shadow:0 14px 35px rgba(0,0,0,.035);
- --font:"DM Sans","Arial",sans-serif;
- --font-head:"Space Grotesk","Arial",sans-serif;
- --font-data:"IBM Plex Mono",monospace;
-}
-html{font-family:var(--font);background:var(--bg);color:var(--ink);-webkit-text-size-adjust:100%;text-size-adjust:100%}
-body{font:400 16px/1.58 var(--font);background:var(--bg);color:var(--ink);overflow-x:clip}
-h1,h2,h3,.logo,.customer-name,.person,.result h3,.app-head strong,.steps h3,.adapter strong{font-family:var(--font-head)}
-h1,h2,h3{font-optical-sizing:auto;font-kerning:normal;text-wrap:balance;overflow-wrap:normal;word-break:normal}
-.page{width:min(100% - 96px,1180px)}
-.topbar{height:84px;border-bottom:1px solid var(--hairline)}
-.logo{font-size:21px;font-weight:700;letter-spacing:-.07em}
-.logo span{color:#777777}
-.build-label{font-family:var(--font-data);font-size:10px;font-weight:500;letter-spacing:0;line-height:1.45;max-width:195px}
-.eyebrow,.mini-label,.step-no,.trace-title,.index,.state-pill,.sim-top span,.box-heading strong{
- font-family:var(--font-data);letter-spacing:.04em;font-weight:500
-}
-.eyebrow{font-size:11px;letter-spacing:.045em;color:#666666;text-transform:uppercase}
-.hero{grid-template-columns:minmax(0,1fr) minmax(0,1.02fr);gap:clamp(30px,5.5vw,86px);padding-top:clamp(58px,6vw,90px);padding-bottom:clamp(76px,7vw,116px)}
-h1{font-size:clamp(45px,5vw,68px);line-height:1.045;letter-spacing:-.058em;font-weight:600;margin:20px 0 28px;max-width:575px}
-h1 span{color:#757575}
-.lede{font-size:clamp(16px,1.38vw,18px);line-height:1.64;max-width:475px;margin-bottom:29px}
-.action{font-family:var(--font);font-size:14px;font-weight:700;letter-spacing:-.01em;border-radius:8px;min-height:49px;padding:13px 19px;background:#252525;gap:10px;box-shadow:none}
-.action:hover{background:#424242}
-.support-copy{font-family:var(--font-data);font-size:10px;letter-spacing:0;line-height:1.65;max-width:400px;margin-top:18px}
-.scene{border-radius:8px;background:#ffffff;padding:clamp(18px,3.3vw,37px);box-shadow:none;border:1px solid #e1e1e1}
-.scene:before{background:none}
-.app-frame{border-radius:8px;background:#ffffff;border:1px solid #dddddd;box-shadow:none}
-.app-head{padding:15px 18px;border-color:#e4e4e4}
-.app-head strong{font-size:14px;font-weight:600;letter-spacing:-.035em}
-.dots i{border-radius:2px;background:#d5d5d5;width:6px;height:6px}
-.app-body{padding:clamp(20px,3vw,28px)}
-.mini-label{font-size:10px;color:#666666;letter-spacing:.07em}
-.customer-name{font-weight:600;font-size:clamp(24px,2.3vw,32px);letter-spacing:-.048em;line-height:1.12}
-.customer-email{font-size:13px;color:#5b5b5b}
-.divider{background:#e5e5e5}
-.avatar{border-radius:6px;background:#f3f3f3;color:#444444;font-family:var(--font-data);font-size:13px;font-weight:500}
-.record-summary strong{font-family:var(--font-head);font-weight:600;font-size:15px}
-.record-summary small{font-size:12px}
-.outcome-inline{border-radius:5px;background:#ffffff;color:#262626;font-size:13px;font-weight:600;border-top:1px solid #e0e0e0;padding:14px 0 0}
-.note{font-family:var(--font-data);font-size:10px;line-height:1.6;color:#666666}
-.intro{background:#ffffff;padding:90px 0}
-.intro-grid{gap:clamp(38px,6vw,90px)}
-h2{font-size:clamp(32px,3.15vw,49px);font-weight:600;line-height:1.12;letter-spacing:-.047em;margin:16px 0 0}
-.intro p,.integrations p{font-size:16px;line-height:1.7}
-.steps{gap:clamp(26px,4vw,65px);margin-top:58px;border-top:1px solid var(--hairline);padding-top:29px}
-.step-no{font-size:11px;color:#666666;margin-bottom:19px}
-.steps h3{font-size:20px;font-weight:600;letter-spacing:-.04em}
-.steps p{font-size:14px}
-.simulation{padding:92px 0 115px}
-.sim-intro{margin-bottom:29px}
-.sim-intro p{font-size:16px;line-height:1.65}
-.sim-card{box-shadow:none;border:1px solid #e1e1e1;border-radius:9px;background:#ffffff}
-.sim-top{border-color:#e4e4e4}
-.sim-top strong{font-family:var(--font-head);font-size:15px;font-weight:600}
-.sim-top span{font-family:var(--font-data);font-size:10px}
-.incoming{background:#ffffff}
-.info-card{background:#ffffff;border:1px solid #e4e4e4;border-radius:6px;box-shadow:none}
-.person{font-size:22px;font-weight:600;letter-spacing:-.044em}
-.email,.flow-caption,.trace-line,.candidate{font-size:12px}
-.quote{font-size:14px;line-height:1.65}
-.result h3{font-size:clamp(23px,2.2vw,29px);font-weight:600;line-height:1.19;letter-spacing:-.047em}
-.result .explanation{font-size:14px;line-height:1.6}
-.state-pill{border-radius:4px;font-size:11px}.state-pill.good,.state-pill.hold{background:#fff;color:#404040;border:1px solid #dedede}
-.trace{background:#ffffff;border-radius:5px;border:1px solid #e5e5e5}
-.trace-title{font-size:10px;color:#666666}
-.trace-line b{font-family:var(--font-data);font-size:11px;font-weight:500}
-.candidate{border:1px solid #e5e5e5;border-radius:5px}
-.sim-foot{border-color:#e4e4e4}
-.sim-foot p{font-size:11px;line-height:1.55}
-.progress{background:#e4e4e4}.progress i{background:#414141}
-.integrations{padding:88px 0;background:#ffffff}
-.integration-grid{gap:clamp(38px,5vw,80px)}
-.adapter{border:1px solid #e2e2e2;border-radius:5px;background:#ffffff;padding:18px 20px}
-.adapter strong{font-size:16px;font-weight:600}
-.adapter span{font-family:var(--font-data);font-size:10px;line-height:1.5}
-.privacy{gap:8px}.privacy b{font-weight:700}
-.footer{font-family:var(--font-data);font-size:10px;line-height:1.6;border-top:1px solid #e5e5e5}
-.footer strong{font-family:var(--font-head);font-size:17px}
-.review-actions button{border-radius:6px;background:#252525;font-family:var(--font)}
-.review-actions select{font-family:var(--font);border-radius:6px}
-@media(max-width:950px){
-.page{width:min(100% - 60px,830px)}
-.hero{grid-template-columns:1fr;gap:35px;padding-top:58px;padding-bottom:83px}
-.hero-copy{max-width:720px}h1{font-size:clamp(43px,6.4vw,62px);max-width:660px}
-.hero-visual{max-width:625px}
-}
-@media(max-width:620px){
-.page{width:calc(100% - 40px)}
-.topbar{height:67px}.logo{font-size:18px}.build-label{font-size:9px;max-width:145px}
-.hero{padding-top:53px;padding-bottom:76px;gap:31px}
-h1{font-size:clamp(37px,10.05vw,47px);line-height:1.065;letter-spacing:-.052em;margin:18px 0 20px;max-width:100%}
-.lede{font-size:16px;line-height:1.58;margin-bottom:25px}
-.action{font-size:14px;min-height:48px;padding:12px 17px}
-.scene{padding:14px;border-radius:7px}.app-frame{border-radius:5px}
-.app-head{padding:12px 14px}.app-body{padding:18px}
-.customer-name{font-size:25px}
-.intro,.integrations{padding:74px 0}
-h2{font-size:clamp(28px,7.7vw,36px);line-height:1.14}
-.intro p,.integrations p{font-size:15px}
-.steps{gap:26px;margin-top:35px;padding-top:22px}
-.step-no{margin-bottom:9px}
-.simulation{padding:77px 0 88px}
-.sim-intro p{font-size:15px}
-.sim-top{padding:15px 18px}.sim-top span{font-size:9px}
-.incoming,.result{padding:19px}
-.result h3{font-size:25px}
-.sim-foot{padding:18px}
-.footer{padding-block:28px}
-}
+@media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}}
 </style>
 </head>
 <body>
-<div class="page">
-<header class="topbar"><div class="logo">intake<span>/</span>integrity</div></header>
-<main><section class="hero" aria-labelledby="hero-title">
-<div class="hero-copy"><div class="eyebrow">The customer continuity layer</div>
-<h1 id="hero-title">Know who is<br><span>coming back.</span></h1>
-<p class="lede">Know when a customer comes back. Connect their new enquiry to the right record—or hold an uncertain match before it reaches your CRM.</p>
-<a class="action" href="#experience">See it in action</a>
-<p class="support-copy">See how one process handles every enquiry.</p></div>
-<div class="hero-visual" aria-label="Product preview showing a recognized returning customer"><div class="scene">
-<div class="app-frame"><div class="app-head"><strong>Customer continuity</strong><div class="dots" aria-hidden="true"><i></i><i></i><i></i></div></div>
-<div class="app-body"><div class="mini-label">INCOMING ENQUIRY</div><div class="customer-name">Alex Morgan</div><div class="customer-email">alex@example.com</div>
-<div class="divider"></div><div class="mini-label">FOUND IN CUSTOMER HISTORY</div><div class="record-summary"><div class="avatar" aria-hidden="true">AM</div><div><strong>Alex Morgan</strong><small>Customer #10042 · 2 earlier interactions</small></div></div>
-<div class="outcome-inline">Existing customer recognized. Enquiry kept together.</div></div></div>
-
-</div></div></section></main></div>
-<section class="intro" aria-labelledby="how-title"><div class="page">
-<div class="intro-grid"><div><div class="eyebrow">How it works</div><h2 id="how-title">One decision before your CRM changes.</h2></div>
-<p>Enquiries arrive from your existing channels. Intake Integrity checks the customer history, connects what belongs together and leaves uncertain identities untouched for a person to review.</p></div>
-<div class="steps"><div><div class="step-no">01 / INCOMING</div><h3>A lead arrives</h3><p>From a form, email or another connected intake source.</p></div>
-<div><div class="step-no">02 / MATCH</div><h3>The system checks</h3><p>It examines known identifiers and possible competing records.</p></div>
-<div><div class="step-no">03 / ROUTE</div><h3>One safe outcome</h3><p>Connect to an existing customer, propose a new one, or hold for review.</p></div></div></div></section>
-<section class="simulation" id="experience" aria-labelledby="experience-title"><div class="page">
-<div class="sim-intro"><div class="eyebrow">See the product</div><h2 id="experience-title">A lead arrives. The system decides.</h2>
-<p>See what happens when someone returns, when a customer is new, or when two records could match. The system makes the initial decision.</p></div>
-<div class="sim-card"><div class="sim-top"><strong>Incoming enquiries</strong></div>
-<div class="sim-grid"><div class="incoming" aria-labelledby="incoming-title">
-<div class="box-heading"><strong id="incoming-title">Incoming enquiry</strong><span class="index" id="case-index">01 / 03</span></div>
-<div class="info-card"><div class="person" id="lead-name">Alex Morgan</div><div class="email" id="lead-email">alex@example.com</div>
-<p class="quote" id="lead-message">Could we pick up our last conversation?</p></div>
-<p class="flow-caption">Customer record check</p></div>
-<div class="result" aria-live="polite" aria-atomic="true"><div class="box-heading"><strong>Decision</strong><span class="index" id="decision-id">READY</span></div>
-<div class="res-head"><span class="state-pill" id="status">Waiting</span></div>
-<h3 id="decision-title">Ready to check this enquiry.</h3>
-<p class="explanation" id="decision-description">The matching result will appear here. Existing, new and ambiguous leads follow the same process.</p>
-<div class="trace" id="decision-trace"><div class="trace-title">What the system checks</div><div class="trace-line"><b>Input</b><span>Customer name and email</span></div><div class="trace-line"><b>Reference</b><span>Customer records</span></div></div></div></div>
-<div class="sim-foot"><div><p id="sim-note">This example uses fictional customer records.</p>
-<div class="stats"><span class="progress"><i id="progress-bar"></i></span><span id="progress-text">0 of 3 resolved</span></div></div>
-<button class="action" id="process-next" type="button">Process this enquiry</button></div></div></div></section>
-<section class="integrations" aria-labelledby="integrations-title"><div class="page integration-grid">
-<div><div class="eyebrow">Built around your CRM</div><h2 id="integrations-title">Your customer records stay yours.</h2>
-<p>Intake Integrity is designed to sit between incoming enquiries and the systems your team already uses. It is not a replacement CRM.</p></div>
-<div><div class="adapter-list"><div class="adapter"><strong>HubSpot</strong></div><div class="adapter"><strong>Salesforce</strong></div><div class="adapter"><strong>Bitrix24 / 1C</strong></div></div>
-<p class="privacy">Connections to these platforms are in development and are not available in this example.</p>
-</div></div></section>
-<footer class="footer page"><strong>intake/integrity</strong><span>Interactive example using fictional customer records. No customer data is accessed or changed.</span></footer>
+<div class="container">
+<header><a href="#top" class="logo" aria-label="Intake Integrity home">intake<span>/</span>integrity</a></header>
+<main>
+<section class="hero" id="top">
+<div>
+<div class="small-label">Sales continuity</div>
+<h1>Keep the conversation.<br><span>Not another contact.</span></h1>
+<p>An enquiry arrives. See who the customer is, what was promised and who needs to act next. Uncertain matches wait for review rather than silently changing a CRM record.</p>
+<a href="#experience" class="primary">Explore an enquiry</a>
+</div>
+<div class="hero-evidence">
+<b>Three failures worth preventing</b>
+<p>A returning enquiry loses the original context. An imported lead loses the promise made at an event. Two salespeople approach the same buyer without knowing about each other.</p>
+<div class="hero-claim">The product hypothesis is to prevent those gaps at the point of intake.</div>
+</div>
+</section>
+<section class="experience" id="experience" aria-labelledby="experience-title">
+<div class="experience-heading">
+<div class="small-label">Inside the experience</div>
+<h2 id="experience-title">One enquiry. One clear next step.</h2>
+<p>Inspect an incoming enquiry and see the decision. The system selects the route from its available evidence; you do not choose a scenario or matching outcome.</p>
+</div>
+<div class="flow">
+<div class="intake">
+<div class="panel-heading"><strong>Incoming enquiry</strong><span class="case-count" id="case-count">01 / 03</span></div>
+<form id="intake-form">
+<div class="field"><label for="lead-name">Name</label><input id="lead-name" name="name" required maxlength="120" autocomplete="off" value="Alex Morgan"></div>
+<div class="field"><label for="lead-email">Email</label><input id="lead-email" name="email" type="email" required maxlength="254" autocomplete="off" value="alex@example.com"></div>
+<div class="field"><label for="lead-message">What the customer said</label><textarea id="lead-message" name="message" required maxlength="1000">Following up on the revised quote you promised last week.</textarea></div>
+<p class="provenance" id="source">Source: authenticated account enquiry</p>
+<div class="intake-footer"><button class="primary" id="action-button" type="submit">Check customer history</button></div>
+</form>
+</div>
+<div class="decision" aria-live="polite">
+<div class="panel-heading"><strong>Decision</strong><span class="status" id="decision-status">Waiting</span></div>
+<h3 id="decision-title">Ready to check</h3>
+<p class="summary" id="decision-description">The new enquiry has not been linked to a customer yet.</p>
+<div class="result-body" id="result-body" hidden>
+<div class="intent"><b>Incoming context</b><span id="captured-message"></span></div>
+<div class="history" id="customer-history"></div>
+<p class="evidence" id="evidence"></p>
+</div>
+<div class="review" id="review" hidden>
+<h4>Verify before linking</h4>
+<p>Several records could match. The enquiry stays on hold and no record is selected automatically.</p>
+<div class="candidate-list" id="candidate-list"></div>
+<div class="field"><label for="resolution">Verified destination</label><select id="resolution"><option value="">Select after checking identity</option></select></div>
+<div class="field"><label for="verification-note">How was identity confirmed?</label><textarea id="verification-note" placeholder="Document the independent check" maxlength="500"></textarea></div>
+<label class="verify"><input type="checkbox" id="verified">I independently confirmed which customer this is.</label>
+<button class="primary" id="record-decision" type="button" disabled>Record reviewed decision</button>
+<button class="plain-link" id="leave-hold" type="button">Keep on hold</button>
+<p class="hold-note" id="review-feedback" role="status" hidden></p>
+</div>
+</div>
+</div>
+<details class="history-toggle" id="decision-history"><summary>Decision history <span id="history-count"></span></summary><div id="events"></div></details>
+</section>
+</main>
+<footer class="endnote">
+<div class="footerline"><strong>intake/integrity</strong><span>Illustrative example with fictional customer records. No live CRM access or record changes.</span></div>
+</footer>
+</div>
 <script>
 'use strict';
-const enquiries=[
-{id:'ENQ-001',name:'Alex Morgan',email:'alex@example.com',message:'Could we pick up our last conversation?'},
-{id:'ENQ-002',name:'Taylor Reed',email:'taylor@example.com',message:'I would like to learn about your services.'},
-{id:'ENQ-003',name:'Sam Lee',email:'sam@example.com',message:'Please contact me about my account.'}];
+const fixtures=[
+ {name:'Alex Morgan',email:'alex@example.com',message:'Following up on the revised quote you promised last week.',source:'Authenticated account enquiry',trustedId:'CRM-10042'},
+ {name:'Taylor Reed',email:'taylor@example.com',message:'We met at the event. Could you send the pricing and implementation notes?',source:'Event intake',trustedId:null},
+ {name:'Sam Lee',email:'sam@example.com',message:'Two colleagues contacted me separately. Who owns our discussion?',source:'Website enquiry',trustedId:null}
+];
 const customers=[
-{id:'CRM-10042',name:'Alex Morgan',email:'alex@example.com',history:2},
-{id:'CRM-10052',name:'Sam Lee',email:'sam@example.com',history:3},
-{id:'CRM-10421',name:'Sam Lee',email:'sam@example.com',history:1}];
-const el=id=>document.getElementById(id);let cursor=0,busy=false,heldCase=null,resolved=0;
-function matchingDecision(enquiry){
-const matching=customers.filter(c=>c.email.trim().toLowerCase()===enquiry.email.trim().toLowerCase());
-if(matching.length===1)return {kind:'linked',matching};
-if(matching.length>1)return {kind:'held',matching};
-return {kind:'proposed',matching:[]};
+ {id:'CRM-10042',name:'Alex Morgan',email:'alex@example.com',company:'Northstar Studio',owner:'Nina',last:'Discussed proposal scope',promise:'Send revised quote',next:'Prepare and send updated quote',history:'Previous email conversation and account record'},
+ {id:'CRM-10052',name:'Sam Lee',email:'sam@example.com',company:'Studio North',owner:'Mia',last:'Discovery call completed',promise:'Confirm integration scope',next:'Await customer clarification',history:'Existing opportunity'},
+ {id:'CRM-10421',name:'Sam Lee',email:'sam@example.com',company:'Studio South',owner:'Luca',last:'Met at webinar',promise:'Send demo details',next:'Follow up after demo',history:'Separate opportunity'}
+];
+const $=id=>document.getElementById(id);
+let cursor=0,mode='check',held=null,actions=[];
+const clean=s=>String(s==null?'':s).trim();
+const normalize=s=>clean(s).toLowerCase();
+function classify(input,fixture){
+ const matches=customers.filter(c=>normalize(c.email)===normalize(input.email));
+ const trusted=fixture.trustedId&&normalize(fixture.email)===normalize(input.email)&&normalize(fixture.name)===normalize(input.name);
+ if(trusted&&matches.length===1&&matches[0].id===fixture.trustedId)return {kind:'existing',matches,reason:'Authenticated account reference and matching contact email'};
+ if(matches.length===0)return {kind:'new',matches,reason:'No CRM contact matches the supplied email'};
+ return {kind:'review',matches,reason:matches.length>1?'Multiple competing customer records':'Email match without independent account verification'};
 }
-function setText(id,value){el(id).textContent=value}
-function makeTrace(label,rows){
-const block=document.createElement('div'),h=document.createElement('div');
-h.className='trace-title';h.textContent=label;block.append(h);
-for(const [key,value] of rows){const line=document.createElement('div');line.className='trace-line';const b=document.createElement('b');b.textContent=key;const span=document.createElement('span');span.textContent=value;line.append(b,span);block.append(line)}
-return block;
+function text(id,s){$(id).textContent=s}
+function node(tag,cls,value){const e=document.createElement(tag);if(cls)e.className=cls;if(value!=null)e.textContent=value;return e}
+function detail(label,value){const frag=document.createDocumentFragment();frag.append(node('dt','',label),node('dd','',value));return frag}
+function currentInput(){return {name:clean($('lead-name').value),email:normalize($('lead-email').value),message:clean($('lead-message').value)}}
+function log(action,summary){actions.unshift({action,summary});text('history-count', '('+actions.length+')');const e=$('events');e.replaceChildren(...actions.map(x=>node('div','event',x.action+': '+x.summary)))}
+function summaryDetails(items){
+ const h=$('customer-history');h.replaceChildren();
+ if(!items.length)return;
+ h.append(node('h4','',items.length===1?'Customer context':'Competing customer records'));
+ for(const c of items){
+  const wrapper=node('div','');const dl=node('dl','');
+  dl.append(detail('Customer',c.name+' · '+c.company),detail('Owner',c.owner),detail('Last contact',c.last),detail('Promise',c.promise),detail('Next action',c.next));
+  wrapper.append(dl);h.append(wrapper);
+ }
 }
-function showIncoming(index){
-const enquiry=enquiries[index];
-setText('lead-name',enquiry.name);setText('lead-email',enquiry.email);setText('lead-message',enquiry.message);
-setText('case-index',String(index+1).padStart(2,'0')+' / 03');setText('decision-id','READY');
-setText('status','Waiting');el('status').className='state-pill';setText('decision-title','Ready to check this enquiry.');
-setText('decision-description','The matching result will appear here. Existing, new and ambiguous leads follow the same process.');
-el('decision-trace').replaceChildren(makeTrace('What the system checks',[['Input','Customer name and email'],['Reference','Customer records']]));
-setText('process-next','Process this enquiry');el('process-next').disabled=false;
+function setupSample(i){
+ const f=fixtures[i];cursor=i;mode='check';held=null;
+ text('case-count',String(i+1).padStart(2,'0')+' / 03');
+ $('lead-name').value=f.name;$('lead-email').value=f.email;$('lead-message').value=f.message;
+ text('source','Source: '+f.source);text('decision-status','Waiting');text('decision-title','Ready to check');
+ text('decision-description','The new enquiry has not been linked to a customer yet.');
+ $('result-body').hidden=true;$('review').hidden=true;$('review-feedback').hidden=true;
+ $('action-button').hidden=false;text('action-button','Check customer history');$('action-button').disabled=false;
 }
-function processCurrent(){
-if(busy||heldCase)return;
-if(cursor>=enquiries.length){
-cursor=0;resolved=0;heldCase=null;setText('progress-text','0 of 3 resolved');el('progress-bar').style.width='0%';showIncoming(0);setText('sim-note','Ready to start again.');return;
+function advance(){setupSample((cursor+1)%fixtures.length)}
+function process(input){
+ const decision=classify(input,fixtures[cursor]);const match=decision.matches;
+ text('captured-message',input.message);
+ $('result-body').hidden=false;$('review').hidden=true;held=null;summaryDetails([]);
+ text('evidence','Evidence: '+decision.reason+'.');
+ if(decision.kind==='existing'){
+  const c=match[0];text('decision-status','Existing customer');
+  text('decision-title','Keep the conversation together.');
+  text('decision-description','This enquiry belongs with the existing customer and their open follow-up. Do not start a second conversation.');
+  summaryDetails([c]);log('Matched',input.name+' · '+c.id+' · owner '+c.owner);
+ }else if(decision.kind==='new'){
+  text('decision-status','New customer proposed');text('decision-title','No existing customer found.');
+  text('decision-description','Keep the event context and promised materials with this enquiry. A new record can be proposed after validation.');
+  log('Proposed',input.name+' · new contact pending validation');
+ }else{
+  held={input,matches:match};text('decision-status','Needs review');
+  text('decision-title','Pause before changing a record.');
+  text('decision-description',match.length>1?'Two customer histories could fit. A duplicate outreach or wrong owner assignment would lose context.':'A shared email alone does not establish identity. Ask for independent confirmation.');
+  summaryDetails(match);buildReview(match);$('review').hidden=false;
+  log('Held',input.name+' · '+match.length+' possible contact'+(match.length===1?'':'s'));
+ }
+ mode=decision.kind==='review'?'review':'next';$('action-button').hidden=decision.kind==='review';
+ if(decision.kind!=='review')text('action-button',cursor===fixtures.length-1?'Start again':'Next enquiry');
 }
-busy=true;const button=el('process-next');button.disabled=true;
-setText('decision-title','Checking customer records…');setText('decision-description','Comparing the enquiry with existing customers.');
-const enquiry=enquiries[cursor];
-window.setTimeout(()=>{
-const decision=matchingDecision(enquiry);setText('decision-id',enquiry.id);
-el('status').className='state-pill '+(decision.kind==='held'?'hold':'good');
-const details={
-linked:{status:'Existing customer',title:'Enquiry connected to Alex Morgan.',description:'One customer matches this email. The new conversation would be attached to the existing record.',rows:[['Identity','CRM-10042 · exact email match'],['History','2 earlier enquiries kept together'],['Next step','Attach enquiry to existing customer']]},
-proposed:{status:'New customer',title:'A new customer is proposed.',description:'No existing customer matches this email. A new contact would be created after validation.',rows:[['Matches','No existing customer with this email'],['Next step','Create a new customer and attach enquiry'],['Record changes','None in this example']]},
-held:{status:'Review required',title:'This enquiry is held, not guessed.',description:'Two records share the same email. The system does not choose either one or merge them automatically.',rows:[['Matches','2 competing customer records'],['Next step','Human verifies identity before any write'],['Record changes','None while the case is on hold']]}
-}[decision.kind];
-setText('status',details.status);setText('decision-title',details.title);setText('decision-description',details.description);
-const trace=el('decision-trace');trace.replaceChildren(makeTrace(decision.kind==='held'?'Identity needs review':'Matching evidence',details.rows));
-if(decision.kind==='held'){
-const grid=document.createElement('div');grid.className='candidates';
-for(const c of decision.matching){const box=document.createElement('div');box.className='candidate';const title=document.createElement('b');title.textContent=c.id;const small=document.createElement('small');small.textContent=c.name+' · '+c.history+' past interactions';box.append(title,small);grid.append(box)}
-trace.append(grid);heldCase={enquiry,decision};
-const actions=document.createElement('div');actions.className='review-actions';actions.innerHTML='<div class="notice">Matching email alone does not verify identity. Do not attach either record until identity is confirmed through an independent channel.</div><button type="button" class="secondary" id="request-evidence">Request more information</button><label for="review-choice">After confirming their identity</label><select id="review-choice"><option value="">Choose an outcome</option><option value="CRM-10052">Attach to CRM-10052</option><option value="CRM-10421">Attach to CRM-10421</option><option value="new">Create a separate customer</option></select><label><input type="checkbox" id="review-confirm"> I have confirmed the customer’s identity.</label><button type="button" id="resolve-case" disabled>Record reviewed decision</button><button type="button" class="secondary" id="keep-held">Keep on hold</button><p id="review-feedback" role="status" class="notice"></p>';
-trace.append(actions);
-const choice=actions.querySelector('#review-choice'),confirm=actions.querySelector('#review-confirm'),resolve=actions.querySelector('#resolve-case');const sync=()=>resolve.disabled=!(choice.value&&confirm.checked);choice.addEventListener('change',sync);confirm.addEventListener('change',sync);
-actions.querySelector('#request-evidence').addEventListener('click',()=>{actions.querySelector('#review-feedback').textContent='No message is sent from this example. The enquiry remains on hold.'});
-actions.querySelector('#keep-held').addEventListener('click',()=>{actions.querySelector('#review-feedback').textContent='The enquiry remains on hold until its identity is confirmed.'});
-resolve.addEventListener('click',()=>{if(!choice.value||!confirm.checked)return;const target=choice.value;heldCase=null;resolved++;setText('status','Reviewed');el('status').className='state-pill good';setText('decision-title',target==='new'?'Separate customer approved for creation.':'Identity verified for '+target+'.');setText('decision-description','Decision recorded for this example. No real customer record was changed.');actions.replaceChildren(makeTrace('Review decision',[['Decision',target==='new'?'Create separate record':'Attach to '+target],['Verification','Confirmed by reviewer'],['Customer record','Unchanged in this example']]));updateProgress();setText('process-next',cursor<enquiries.length?'Process next enquiry':'Replay the sample');el('process-next').disabled=false;});
+function buildReview(matches){
+ const list=$('candidate-list');list.replaceChildren();
+ for(const c of matches){
+  const wrap=node('div','candidate');
+  wrap.append(node('strong','',c.name+' · '+c.company),node('p','',c.id+' · Owner: '+c.owner+' · '+c.history));list.append(wrap);
+ }
+ const select=$('resolution');select.replaceChildren(node('option','','Select after checking identity'));select.firstChild.value='';
+ for(const c of matches){const op=node('option','',c.name+' · '+c.company+' · '+c.id);op.value=c.id;select.append(op)}
+ const op=node('option','','Create a separate customer');op.value='new';select.append(op);
+ $('verification-note').value='';$('verified').checked=false;$('record-decision').disabled=true;
+ $('review-feedback').hidden=true;
 }
-cursor++;if(decision.kind!=='held')resolved++;updateProgress();
-if(decision.kind==='held'){setText('process-next','Resolve held case to continue');button.disabled=true;setText('sim-note','One enquiry needs review.')}else if(cursor<enquiries.length){setText('process-next','Process next enquiry');setText('sim-note','Next enquiry: '+enquiries[cursor].name+'')}
-else setText('process-next','Replay the sample');
-if(decision.kind!=='held')button.disabled=false;busy=false;
-},240);
+function syncReview(){
+ $('record-decision').disabled=!held||!$('resolution').value||!$('verified').checked||clean($('verification-note').value).length<12;
 }
-function updateProgress(){setText('progress-text',resolved+' of 3 resolved'+(heldCase?' · 1 awaiting review':''));el('progress-bar').style.width=(resolved/enquiries.length*100)+'%';if(!heldCase&&resolved===enquiries.length)setText('sim-note','All three examples completed.');}
-el('process-next').addEventListener('click',()=>{
-if(cursor>=enquiries.length){setText('sim-note','This example uses fictional customer records.');processCurrent();return}
-if(cursor>0)showIncoming(cursor);
-processCurrent();
+$('resolution').addEventListener('change',syncReview);
+$('verification-note').addEventListener('input',syncReview);
+$('verified').addEventListener('change',syncReview);
+$('record-decision').addEventListener('click',()=>{
+ if(!held||$('record-decision').disabled)return;
+ const chosen=$('resolution').value,selected=held.matches.find(c=>c.id===chosen);
+ const description=selected?'Link to '+selected.company:'Create separate customer';
+ log('Reviewed',held.input.name+' · '+description+' · verification noted');
+ text('decision-status','Review recorded');text('decision-title','The decision is documented.');
+ text('decision-description','The review preserves the enquiry and its reason for resolution. No CRM data was changed in this example.');
+ $('review').hidden=true;held=null;mode='next';$('action-button').hidden=false;
+ text('action-button',cursor===fixtures.length-1?'Start again':'Next enquiry');
 });
-Object.defineProperty(window,'intakeDemoCheck',{value:(email)=>matchingDecision({email:String(email)}).kind,writable:false});
+$('leave-hold').addEventListener('click',()=>{
+ if(!held)return;
+ log('On hold',held.input.name+' · no customer selected');
+ held=null;mode='next';$('review').hidden=true;$('action-button').hidden=false;
+ text('action-button',cursor===fixtures.length-1?'Start again':'Next enquiry');
+ text('decision-description','The enquiry remains unassigned and awaits verification. No CRM record was changed.');
+});
+$('intake-form').addEventListener('submit',e=>{
+ e.preventDefault();
+ if(mode==='next'){advance();return}
+ if(mode!=='check')return;
+ const input=currentInput();
+ if(!input.name||!input.message||!$('lead-email').validity.valid)return;
+ process(input);
+});
+for(const id of ['lead-name','lead-email','lead-message']){
+ $(id).addEventListener('input',()=>{
+  if(mode!=='check'){mode='check';held=null;$('result-body').hidden=true;$('review').hidden=true;
+  $('action-button').hidden=false;text('action-button','Check customer history');text('decision-status','Waiting');text('decision-title','Ready to check');
+  text('decision-description','Check the updated enquiry against the customer history.')}
+ });
+}
+setupSample(0);
+Object.defineProperty(window,'intakePreviewTest',{value:{classifyEmail:(email,ref)=>classify({name:'Alex Morgan',email}, {name:'Alex Morgan',email, trustedId:ref}).kind,caseCount:()=>fixtures.length}});
 </script>
 </body>
 </html>
