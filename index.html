@@ -1,3 +1,240 @@
-<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="theme-color" content="#f5f4f0"><meta name="description" content="Intake Integrity is a proposed pre-write decision checkpoint for customer identity. See how clear matches pass, ambiguous identities wait for review, and decisions stay traceable."><title>Intake Integrity — The right record. Or no guess.</title><style>
-:root{--paper:#f5f4f0;--ink:#222725;--muted:#626b65;--line:#d9ddd6;--violet:#8469c9;--violet-light:#ede8fb;--surface:#fff;--night:#202924;--radius:18px;--space:clamp(22px,5vw,88px);font-family:Inter,ui-sans-serif,system-ui,-apple-system,Segoe UI,sans-serif;color:var(--ink);background:var(--paper)}*{box-sizing:border-box}html{scroll-behavior:smooth}body{margin:0}a{color:inherit}button{font:inherit}header{height:86px;display:flex;align-items:center;justify-content:space-between;padding:0 var(--space);border-bottom:1px solid var(--line)}.brand{font-weight:850;font-size:22px;letter-spacing:-.065em}.brand span{color:var(--violet)}nav{display:flex;gap:24px;align-items:center}nav a{text-decoration:none;font-size:13px;font-weight:650}.pill{border:1px solid var(--ink);border-radius:40px;padding:11px 17px;text-decoration:none;font-weight:700;font-size:13px}.pill.dark{background:var(--ink);color:#fff}.eyebrow{text-transform:uppercase;font-size:11px;letter-spacing:.18em;font-weight:800;color:#6b55a8}.hero{padding:clamp(80px,10vw,150px) var(--space) 95px;min-height:720px;position:relative;overflow:hidden}.hero:after{content:"";position:absolute;z-index:-1;width:65vw;height:65vw;right:-18vw;top:-25vw;border-radius:50%;background:radial-gradient(circle at 35% 35%,#fff 0%,#ddd3f2 27%,#bdc5bc 45%,#f5f4f000 70%);filter:blur(16px)}h1{font-size:clamp(68px,11vw,172px);line-height:.87;letter-spacing:-.09em;max-width:1250px;margin:30px 0 40px;font-weight:750}h1 em{font-style:normal;color:var(--violet)}.hero-copy{max-width:640px;color:var(--muted);font-size:clamp(19px,2.2vw,25px);line-height:1.5}.cta-row{display:flex;gap:13px;flex-wrap:wrap;margin-top:30px}.cta{display:inline-flex;align-items:center;justify-content:center;text-decoration:none;border-radius:7px;padding:17px 24px;background:var(--ink);color:#fff;font-weight:750}.cta.secondary{background:transparent;color:var(--ink);border:1px solid #a8b1a7}.section{padding:clamp(80px,9vw,145px) var(--space)}.section h2{font-size:clamp(43px,7vw,98px);line-height:.99;letter-spacing:-.075em;margin:19px 0 26px;max-width:1050px;font-weight:740}.section-lead{font-size:clamp(17px,2vw,22px);line-height:1.65;color:var(--muted);max-width:770px}.night{background:var(--night);color:#f4f6f1}.night .eyebrow{color:#c5b6ff}.night .section-lead{color:#b6c2b9}.visual{margin-top:55px;border:1px solid #536056;border-radius:20px;padding:clamp(18px,4vw,45px);background:radial-gradient(ellipse at 60% 10%,#465c50 0%,transparent 55%),#28362f}.flow{display:grid;grid-template-columns:1fr auto 1fr auto 1fr;gap:18px;align-items:center}.node{border:1px solid #78877a;border-radius:13px;background:#f6f6f0;color:#263027;padding:24px;min-height:155px}.node small{display:block;font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:#687369}.node strong{display:block;font-size:clamp(18px,2vw,29px);line-height:1.15;margin:14px 0 8px}.node p{font-size:13px;line-height:1.5;color:#657068;margin:0}.node.highlight{background:#e9e1fb;border-color:#c4b6ed}.arrow{font-size:30px;color:#d1ddd2}.branch{margin-top:20px;display:flex;justify-content:center;gap:10px;flex-wrap:wrap}.tag{font-size:13px;padding:12px 16px;border-radius:40px;background:#ffffff14;border:1px solid #ffffff35}.tag b{color:#e3cfff}.cards{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:15px;margin-top:50px}.card{background:#fff;border:1px solid var(--line);border-radius:var(--radius);padding:clamp(23px,3vw,38px);min-height:270px}.card small{font-size:11px;letter-spacing:.15em;color:var(--violet);font-weight:800}.card h3{font-size:clamp(23px,3vw,36px);letter-spacing:-.055em;line-height:1.1;margin:25px 0}.card p{color:var(--muted);font-size:15px;line-height:1.7}.demo-wrap{display:grid;grid-template-columns:minmax(260px,.8fr) minmax(0,1.2fr);gap:38px;align-items:center}.demo-preview{border:1px solid #c9cec6;border-radius:20px;background:#fff;padding:24px;box-shadow:0 30px 100px #28372a15}.preview-bar{display:flex;justify-content:space-between;font-size:11px;color:#7b837d;letter-spacing:.08em;border-bottom:1px solid var(--line);padding-bottom:16px}.preview-lead{font-size:28px;letter-spacing:-.055em;font-weight:750;margin:27px 0 16px}.preview-item{border:1px solid #e0e3dd;border-radius:9px;padding:15px;margin:9px 0;display:flex;justify-content:space-between;gap:10px;font-size:13px}.preview-item span{color:#8a70c7;font-weight:700}.preview-alert{background:#f1ecfc;padding:17px;border-radius:9px;color:#5d4b90;font-size:13px;line-height:1.5;margin-top:17px}.evidence{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-top:50px}.evidence .card{min-height:200px}.footer{padding:50px var(--space);border-top:1px solid var(--line);display:flex;justify-content:space-between;gap:30px;flex-wrap:wrap;font-size:13px;color:var(--muted)}.disclaimer{font-size:12px;line-height:1.7;color:#aebdb1;margin-top:30px}a:focus-visible{outline:3px solid var(--violet);outline-offset:4px}@media(max-width:900px){.flow{grid-template-columns:1fr}.arrow{text-align:center;transform:rotate(90deg)}.cards,.demo-wrap{grid-template-columns:1fr}.hero{min-height:620px}}@media(max-width:650px){header{height:72px}nav a:not(.pill){display:none}h1{font-size:clamp(59px,14vw,90px)}.hero{min-height:580px;padding-top:90px}.cards,.evidence{grid-template-columns:1fr}.section{padding-top:85px;padding-bottom:85px}.node{min-height:auto}.preview-lead{font-size:24px}}@media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}}
-</style></head><body><header><div class="brand">intake<span>/</span>integrity</div><nav><a href="#mechanism">How it works</a><a href="#product">Product</a><a href="./decision-lab.html" class="pill dark">Enter Decision Lab ↗</a></nav></header><main><section class="hero"><div class="eyebrow">Identity integrity / before the CRM write</div><h1>The right record.<br><em>Or no guess.</em></h1><p class="hero-copy">One wrong customer match can distort an entire history. Intake Integrity explores a safer checkpoint: verify the evidence, stop uncertain assignments, and let people resolve the exceptions.</p><div class="cta-row"><a class="cta" href="./decision-lab.html">Experience the Decision Lab ↗</a><a class="cta secondary" href="#mechanism">See the mechanism ↓</a></div></section><section class="section night" id="mechanism"><div class="eyebrow">The product, explained</div><h2>Put a decision checkpoint between intake and CRM.</h2><p class="section-lead">Not another CRM. Not a generic form builder. A proposed identity-decision layer that distinguishes a clear match from an unsafe guess before a customer record is assigned.</p><div class="visual" role="img" aria-label="Incoming lead flows through a decision checkpoint before a proposed CRM write"><div class="flow"><div class="node"><small>01 / Input</small><strong>Incoming lead</strong><p>Form, spreadsheet, sales workflow or integration</p></div><div class="arrow">→</div><div class="node highlight"><small>02 / Decision checkpoint</small><strong>Match or abstain</strong><p>Inspect identifiers and competing candidates</p></div><div class="arrow">→</div><div class="node"><small>03 / Output</small><strong>CRM / 1C</strong><p>Only a reviewed or eligible decision proceeds</p></div></div><div class="branch"><span class="tag"><b>Clear</b> → eligible to pass</span><span class="tag"><b>Ambiguous</b> → hold for a person</span><span class="tag"><b>New</b> → propose creation</span></div></div><p class="disclaimer">Illustrative target architecture. Production CRM connectors, durable delivery and matching guarantees are not implemented in this website.</p></section><section class="section"><div class="eyebrow">Why this matters</div><h2>The cost isn't the duplicate. It's the wrong decision.</h2><div class="cards"><article class="card"><small>01 / IDENTITY</small><h3>Shared details aren't proof.</h3><p>Households, reused phone numbers and partial names can produce multiple plausible customer records.</p></article><article class="card"><small>02 / CONTROL</small><h3>Automation must know when to stop.</h3><p>When evidence is insufficient, an explicit hold is safer than silently choosing the closest match.</p></article><article class="card"><small>03 / ACCOUNTABILITY</small><h3>A decision needs a reason.</h3><p>Reviewers need context, options, and a trace of what was decided—not another opaque merge.</p></article></div></section><section class="section" id="product" style="background:#ecebe5"><div class="demo-wrap"><div><div class="eyebrow">Inside the experience</div><h2>See the evidence. Make the call.</h2><p class="section-lead">The Decision Lab is an interactive simulation of the product's most important moment: two possible identities, insufficient proof, and a human who can hold or resolve the lead.</p><div class="cta-row"><a class="cta" href="./decision-lab.html">Open interactive demo ↗</a></div></div><div class="demo-preview" aria-label="Preview of the identity review interface"><div class="preview-bar"><strong>DECISION LAB / LEAD-002</strong><span>REVIEW REQUIRED</span></div><div class="preview-lead">Who does Jordan M. belong to?</div><div class="preview-item"><strong>Family 101</strong><span>Shared phone</span></div><div class="preview-item"><strong>Family 102</strong><span>Shared phone</span></div><div class="preview-alert">⚑ Automatic assignment blocked. Two records share an identifier; identity remains unverified.</div></div></div></section><section class="section"><div class="eyebrow">What the lab demonstrates</div><h2>Three cases. Real choices. Visible consequences.</h2><div class="cards"><article class="card"><small>CASE 01</small><h3>One clear match.</h3><p>Inspect agreeing identifiers and simulate an eligible automatic route—or hold it.</p></article><article class="card"><small>CASE 02</small><h3>Two competing identities.</h3><p>Inspect candidates, request evidence, document a human decision, or see the danger of forcing a match.</p></article><article class="card"><small>CASE 03</small><h3>No existing match.</h3><p>See why creating a new identity is different from attaching a lead to the wrong record.</p></article></div></section><section class="section night"><div class="eyebrow">Research-informed direction</div><h2>Designed around the failure, not the dashboard.</h2><p class="section-lead">CRM matching, deduplication and review already exist. Our hypothesis is narrower: a transparent pre-write checkpoint for high-risk identity decisions, especially where incoming leads flow into legacy systems. This is a positioning hypothesis, not validated market differentiation.</p><div class="evidence"><article class="card"><small>COMPETITIVE CONTEXT</small><h3>Matching is a mature category.</h3><p>Products such as LeanData and Insycle already address matching and duplicate management. We should compete on a specific unresolved workflow, not claim to have invented matching.</p><a href="https://www.leandata.com/" target="_blank" rel="noopener noreferrer">LeanData ↗</a> · <a href="https://www.insycle.com/" target="_blank" rel="noopener noreferrer">Insycle ↗</a></article><article class="card"><small>VALIDATION QUESTION</small><h3>Where does the wrong write happen?</h3><p>Next: test actual intake cases with CRM administrators and integrators, compare native rules, and measure exception frequency and review time.</p><a href="https://www.awwwards.com/websites/storytelling/" target="_blank" rel="noopener noreferrer">Visual storytelling references ↗</a></article></div></section><section class="section"><div class="eyebrow">Explore a pilot</div><h2>Bring one messy identity case.</h2><p class="section-lead">We're looking for representative workflows to test whether a pre-write checkpoint prevents costly misassignments without slowing down straightforward leads.</p><div class="cta-row"><a class="cta" href="./setup.html">Explore setup ↗</a><a class="cta secondary" href="./decision-lab.html">Try the simulation</a></div></section></main><footer class="footer"><strong>intake/integrity</strong><span>Early-stage product concept · Synthetic demonstration · No production integration claimed</span></footer></body></html>
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#ffffff">
+<meta name="description" content="Recognize returning customers, preserve the sales conversation and hold uncertain matches for review.">
+<title>Intake Integrity — Keep the conversation</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{color-scheme:light;--bg:#fff;--ink:#222;--muted:#555;--soft:#777;--rule:#e3e3e3;--faint:#f8f8f8;--display:"Space Grotesk",Arial,sans-serif;--body:"DM Sans",Arial,sans-serif}
+*,*::before,*::after{box-sizing:border-box}
+html{scroll-behavior:smooth;-webkit-text-size-adjust:100%;text-size-adjust:100%;background:#fff}
+body{margin:0;min-width:320px;background:#fff;color:var(--ink);font:400 16px/1.54 var(--body);-webkit-font-smoothing:antialiased}
+button,input,textarea,select{font:inherit}button{cursor:pointer}
+button:disabled{cursor:not-allowed;opacity:.58}
+:focus-visible{outline:2px solid #222;outline-offset:4px}
+.container{width:min(100% - 72px,1100px);margin-inline:auto}
+header{height:76px;display:flex;align-items:center;justify-content:space-between;gap:15px;border-bottom:1px solid var(--rule)}
+.logo{font:700 20px/1 var(--display);letter-spacing:-.075em;text-decoration:none;color:var(--ink)}
+.logo span{color:#999}
+.small-label{font-size:11px;letter-spacing:.075em;text-transform:uppercase;font-weight:700;color:#727272}
+.hero{padding:83px 0 81px;display:grid;grid-template-columns:minmax(0,1.2fr) minmax(0,.8fr);gap:70px;align-items:center}
+h1,h2,h3,p{margin-top:0}
+h1,h2,h3{font-family:var(--display);font-weight:600;letter-spacing:-.055em;text-wrap:balance}
+h1{font-size:clamp(44px,5.2vw,70px);line-height:1.045;max-width:650px;margin:18px 0 24px}
+h1 span{color:#777}
+.hero p{max-width:580px;font-size:18px;line-height:1.65;color:var(--muted);margin:0 0 27px}
+.primary{appearance:none;border:1px solid #222;border-radius:7px;background:#222;color:#fff;padding:12px 20px;font-weight:700;font-size:14px;min-height:48px;display:inline-flex;align-items:center;justify-content:center;text-decoration:none;text-align:center}
+.primary:hover{background:#404040}.primary:focus-visible{outline-color:#555}
+.plain-link{appearance:none;border:0;background:none;padding:8px 0;color:#555;text-decoration:underline;text-underline-offset:4px;font-size:13px;font-weight:600}
+.hero-evidence{border-left:1px solid #d4d4d4;padding:4px 0 4px 26px}
+.hero-evidence p{font-size:14px;margin:11px 0 0;color:#565656;line-height:1.65}
+.hero-evidence b{font-family:var(--display);font-size:17px;font-weight:600;line-height:1.3;letter-spacing:-.03em}
+.hero-claim{margin-top:23px;padding-top:18px;border-top:1px solid var(--rule);color:#666;font-size:12px}
+.experience{padding:61px 0 87px;border-top:1px solid var(--rule);scroll-margin-top:15px}
+.experience-heading{max-width:700px;margin-bottom:32px}
+h2{font-size:clamp(32px,3.35vw,46px);line-height:1.14;margin:12px 0 11px}
+.experience-heading p{font-size:15px;color:var(--muted);line-height:1.65;margin:0}
+.flow{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.03fr);gap:0;border:1px solid #dcdcdc;border-radius:9px;overflow:hidden}
+.intake,.decision{padding:clamp(21px,3.2vw,35px);min-width:0}
+.intake{border-right:1px solid #e0e0e0}.panel-heading{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:22px}
+.panel-heading strong{font:600 17px/1.25 var(--display);letter-spacing:-.035em}
+.case-count{font:500 11px/1.4 ui-monospace,SFMono-Regular,Consolas,monospace;color:#666;white-space:nowrap}
+.field{margin:0 0 17px}
+.field label{display:block;font-size:12px;color:#4b4b4b;font-weight:700;margin-bottom:6px}
+.field input,.field textarea,.field select{display:block;border:1px solid #cfcfcf;background:#fff;color:#222;border-radius:5px;padding:11px 12px;width:100%;min-width:0;min-height:45px;font-size:15px;line-height:1.48}
+.field textarea{min-height:90px;resize:vertical}
+.field input:focus,.field textarea:focus,.field select:focus{border-color:#444;outline:0;box-shadow:0 0 0 2px #dedede}
+.provenance{font-size:12px;color:#6a6a6a;line-height:1.52;margin:0 0 23px}
+.intake-footer{border-top:1px solid var(--rule);padding-top:18px;display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap}
+.intake-footer .primary{width:100%}
+.status{font:600 11px/1.4 ui-monospace,SFMono-Regular,Consolas,monospace;color:#5d5d5d;letter-spacing:.02em;text-transform:uppercase}
+.decision h3{font-size:clamp(24px,2.7vw,33px);line-height:1.16;margin:0 0 11px}
+.summary{font-size:14px;line-height:1.63;color:var(--muted);margin:0 0 20px}
+.result-body[hidden],.review[hidden],.hold-note[hidden],#action-button[hidden]{display:none!important}
+.history{border-top:1px solid var(--rule);padding-top:18px;margin-top:22px}
+.history h4{font:600 15px/1.3 var(--display);letter-spacing:-.035em;margin:0 0 17px}
+.detail{display:grid;grid-template-columns:116px minmax(0,1fr);gap:12px;padding:10px 0;border-top:1px solid #ededed;align-items:start;font-size:13px;line-height:1.55}
+.detail:first-of-type{border-top:0}
+.detail dt{color:#777;margin:0}.detail dd{margin:0;color:#242424;overflow-wrap:anywhere;font-weight:500}
+.intent{padding:16px 0;border-top:1px solid var(--rule);border-bottom:1px solid var(--rule);font-size:14px;line-height:1.58;overflow-wrap:anywhere}
+.intent b{display:block;font-size:11px;color:#777;text-transform:uppercase;letter-spacing:.07em;margin-bottom:5px}
+.evidence{font-size:12px;color:#666;line-height:1.6;margin:16px 0 0}
+.review{border-top:1px solid #ddd;margin-top:21px;padding-top:19px}
+.review h4{font:600 16px/1.3 var(--display);letter-spacing:-.035em;margin:0 0 9px}
+.review p{font-size:13px;line-height:1.57;color:#555;margin:0 0 16px}
+.candidate-list{display:grid;gap:11px;margin:16px 0 22px}
+.candidate{border:1px solid #dedede;border-radius:6px;padding:13px}
+.candidate strong{display:block;font:600 14px/1.35 var(--display)}
+.candidate p{margin:5px 0 0;font-size:12px;line-height:1.5}
+.verify{display:flex;align-items:flex-start;gap:9px;font-size:13px;color:#444;line-height:1.48;margin:8px 0 17px}
+.verify input{width:17px;height:17px;flex:0 0 17px;accent-color:#222;margin:2px 0}
+.review .primary{width:100%}
+.hold-note{padding:12px 0 0;color:#666;font-size:12px;line-height:1.6}
+.history-toggle{margin-top:29px;border-top:1px solid var(--rule);padding:15px 0}
+.history-toggle summary{cursor:pointer;font-size:13px;font-weight:700;color:#444;list-style:none}
+.history-toggle summary::after{content:"";display:inline-block;margin-left:9px;border-bottom:1px solid;border-right:1px solid;width:7px;height:7px;transform:rotate(45deg);vertical-align:3px}
+.history-toggle[open] summary::after{transform:rotate(225deg);vertical-align:0}
+.event{font-size:12px;padding:10px 0;border-bottom:1px solid #eee;line-height:1.5;color:#555}
+.endnote{padding:31px 0 50px;color:#6b6b6b;font-size:12px;line-height:1.7;border-top:1px solid #e5e5e5}
+.endnote strong{color:#333}
+.footerline{display:flex;justify-content:space-between;gap:26px;flex-wrap:wrap}
+@media(max-width:850px){.hero{grid-template-columns:1fr;gap:32px;padding:60px 0 64px}.hero-evidence{max-width:600px}h1{font-size:clamp(40px,7.4vw,60px)}}
+@media(max-width:640px){
+.container{width:calc(100% - 36px)}
+header{height:66px}.logo{font-size:19px}
+.hero{padding:48px 0 52px;gap:30px}
+h1{font-size:clamp(37px,9.6vw,46px);line-height:1.075;letter-spacing:-.055em;margin:14px 0 19px}
+.hero p{font-size:16px;line-height:1.58;margin-bottom:22px}
+.hero-evidence{padding-left:15px}.hero-evidence b{font-size:15px}
+.hero-evidence p{font-size:13px}
+.experience{padding:49px 0 63px}
+h2{font-size:clamp(29px,7.3vw,36px)}
+.experience-heading p{font-size:14px}
+.flow{grid-template-columns:1fr;border-radius:7px}
+.intake,.decision{padding:21px 19px}
+.intake{border-right:none;border-bottom:1px solid #e0e0e0}
+.panel-heading{margin-bottom:18px}
+.detail{grid-template-columns:99px minmax(0,1fr);gap:10px}
+.endnote{padding:25px 0 38px}
+}
+@media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}}
+</style>
+<style id="exception-first">
+:root{--ink:#242424;--muted:#616161;--line:#e4e4e4}
+html,body{background:#fff!important;color:var(--ink);-webkit-text-size-adjust:100%;text-size-adjust:100%}
+body{overflow-x:hidden;font-family:"DM Sans",Arial,sans-serif}
+.shell{width:min(calc(100% - 76px),1110px);margin:0 auto}
+.topbar{border-bottom:1px solid var(--line);height:72px;display:flex;align-items:center}
+.logo{font:700 20px "Space Grotesk",Arial,sans-serif;letter-spacing:-.075em}.logo span{color:#999}
+.intro{padding:55px 0 31px;max-width:650px;background:#fff}
+.intro h1{font:600 clamp(40px,5vw,63px)/1.07 "Space Grotesk",Arial,sans-serif;letter-spacing:-.057em;margin:14px 0 16px}
+.intro h1 span{color:#777}
+.intro p{font-size:16px;line-height:1.62;color:#555;margin:0}
+.eyebrow{font-size:11px;letter-spacing:.08em;text-transform:uppercase;font-weight:700;color:#777}
+.queue-title{display:flex;gap:15px;justify-content:space-between;align-items:baseline;flex-wrap:wrap;border-bottom:1px solid var(--line);padding:14px 0 19px}
+.queue-title h2{font:600 23px "Space Grotesk",Arial,sans-serif;letter-spacing:-.04em;margin:0}
+.queue-title p{font-size:13px;color:#666;margin:0}
+.workspace{display:grid;grid-template-columns:minmax(0,.9fr) minmax(0,1.1fr);gap:37px;align-items:start}
+.inbox{min-width:0}.case-btn{width:100%;display:block;background:#fff;border:0;border-bottom:1px solid var(--line);text-align:left;border-radius:0;color:#242424;padding:18px 10px 19px 0}
+.case-btn[aria-current=true]{box-shadow:inset 3px 0 #242424;padding-left:13px}
+.case-btn:hover{background:#fafafa}
+.case-kind{display:block;color:#777;font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.025em}
+.case-btn strong{display:block;font:600 18px "Space Grotesk",Arial,sans-serif;letter-spacing:-.035em;margin:5px 0}
+.case-btn small{color:#656565;display:block;font-size:13px;line-height:1.55}
+.case-pane{min-width:0;border-bottom:1px solid var(--line);padding:27px 0 35px}
+.case-pane[hidden],#proof[hidden]{display:none!important}
+.case-pane h3{font:600 clamp(23px,2.5vw,31px)/1.17 "Space Grotesk",Arial,sans-serif;letter-spacing:-.047em;margin:0 0 11px}
+.case-pane p{font-size:14px;line-height:1.6;color:#5a5a5a}
+.incoming-note{border-top:1px solid var(--line);border-bottom:1px solid var(--line);padding:15px 0;margin:19px 0;font-size:14px;line-height:1.6}
+.incoming-note b{display:block;font-size:11px;color:#777;text-transform:uppercase;letter-spacing:.06em;margin-bottom:5px}
+.case-subhead{font:600 16px "Space Grotesk",Arial,sans-serif;letter-spacing:-.035em;margin:22px 0 10px}
+.candidates{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;margin-bottom:17px}
+.candidate{border:1px solid var(--line);padding:13px;border-radius:5px;min-width:0;font-size:13px;line-height:1.5}
+.candidate b{display:block;font:600 15px "Space Grotesk",Arial,sans-serif}.candidate small{display:block;color:#666;margin-top:5px}
+.details-row{display:grid;grid-template-columns:95px minmax(0,1fr);gap:12px;border-bottom:1px solid #ededed;padding:10px 0;font-size:13px;line-height:1.5}
+.details-row dt{color:#777}.details-row dd{margin:0;overflow-wrap:anywhere}
+.primary-action{min-height:47px;background:#242424;color:#fff;border:1px solid #242424;border-radius:6px;padding:11px 19px;font-weight:700;font-size:14px}
+.primary-action:hover{background:#444}
+.case-actions{margin-top:21px}
+.form-field{margin:0 0 16px}.form-field label{display:block;font-size:12px;font-weight:700;margin-bottom:6px;color:#444}
+.form-field input,.form-field textarea,.form-field select{border:1px solid #cacaca;background:#fff;color:#222;display:block;width:100%;padding:11px 12px;border-radius:5px;font-size:15px}
+.form-field textarea{min-height:82px}
+.verify{display:flex;gap:9px;align-items:flex-start;font-size:13px;line-height:1.5;color:#444;margin-bottom:16px}
+.verify input{flex:0 0 17px;width:17px;height:17px;margin:2px 0;accent-color:#222}
+#proof{border-top:1px solid var(--line);margin-top:20px;padding-top:19px}
+.small-note{font-size:12px;color:#686868;line-height:1.65;margin:15px 0}
+.utilities{display:flex;flex-wrap:wrap;gap:25px;padding:25px 0 35px;border-top:1px solid var(--line)}
+.utilities details{flex:1 1 275px;min-width:0}.utilities summary{cursor:pointer;font-size:14px;font-weight:700}.utilities p{font-size:13px;color:#666;line-height:1.65}
+.utilities form{margin-top:18px}.audit-line{border-bottom:1px solid #eee;padding:10px 0;font-size:12px;color:#555;line-height:1.5}
+.footer{border-top:1px solid var(--line);padding:25px 0 50px;font-size:12px;line-height:1.7;color:#6a6a6a}
+.reset{border:0;background:transparent;color:#666;text-decoration:underline;text-underline-offset:3px;font-size:12px;margin-left:12px}
+@media(max-width:900px){.workspace{grid-template-columns:1fr;gap:0}.case-pane{padding-top:24px}.intro{padding:43px 0 26px}}
+@media(max-width:620px){.shell{width:calc(100% - 38px)}.topbar{height:66px}.logo{font-size:19px}.intro{padding:37px 0 26px}.intro h1{font-size:clamp(36px,9.2vw,46px)}.intro p{font-size:14px}.queue-title h2{font-size:20px}.queue-title p{font-size:12px}.case-btn strong{font-size:17px}.case-pane h3{font-size:25px}.candidates{grid-template-columns:1fr}.primary-action{width:100%}.details-row{grid-template-columns:90px minmax(0,1fr)}}
+</style></head>
+<body><div class="shell">
+<header class="topbar"><div class="logo">intake<span>/</span>integrity</div></header>
+<main><section class="intro"><div class="eyebrow">Before your CRM changes</div><h1>Keep the conversation.<br><span>Not another contact.</span></h1>
+<p>Each incoming enquiry should find the right customer and preserve previous commitments. When identity is uncertain, the system holds the decision rather than guessing.</p></section>
+<section class="queue-title"><h2 id="attention">Needs attention</h2><p id="attention-desc">Only the cases that need a person.</p></section>
+<div class="workspace"><div class="inbox" id="inbox" role="group" aria-label="Cases requiring attention"></div>
+<article class="case-pane" id="case-pane" aria-live="polite"><h3 id="case-heading"></h3><p id="case-reason"></p>
+<div class="incoming-note"><b>Incoming enquiry</b><span id="case-message"></span></div>
+<div id="context"></div><div id="case-actions" class="case-actions"></div><div id="proof" hidden></div><p id="feedback" class="small-note" role="status"></p></article></div>
+<div class="utilities"><details id="try"><summary>Try an incoming enquiry</summary><p>Use fictional details; the system chooses the route automatically.</p>
+<form id="form"><div class="form-field"><label for="new-name">Name</label><input id="new-name" required maxlength="120" value="Alex Morgan"></div>
+<div class="form-field"><label for="new-email">Email</label><input id="new-email" type="email" required maxlength="254" value="alex@example.com"></div>
+<div class="form-field"><label for="new-message">Enquiry</label><textarea id="new-message" required maxlength="1000">Following up on our earlier quote.</textarea></div>
+<button class="primary-action" type="submit">Check enquiry</button></form></details>
+<details id="audit"><summary>Decision history</summary><div id="audit-items"></div></details></div></main>
+<footer class="footer">Example with fictional customer records. No live CRM access, messages, or record writes. Not a production identity-verification service.<button id="reset" class="reset" type="button">Reset example</button></footer>
+</div><script>
+'use strict';
+const KEY='intake-exceptions-v1',$=id=>document.getElementById(id),el=(t,c,v)=>{const n=document.createElement(t);if(c)n.className=c;if(v!=null)n.textContent=v;return n},normalize=x=>String(x||'').trim().toLowerCase();
+const seeded=()=>({version:1,seq:205,customers:[
+{id:'CRM-10042',name:'Alex Morgan',email:'alex@example.com',company:'Northstar Studio',owner:'Nina',last:'Proposal scope reviewed',promise:'Send revised quote',next:'Nina to send the quote'},
+{id:'CRM-10052',name:'Sam Lee',email:'sam@example.com',company:'Studio North',owner:'Mia',last:'Discovery call',promise:'Confirm API scope',next:'Follow up after verification'},
+{id:'CRM-10421',name:'Sam Lee',email:'sam@example.com',company:'Studio South',owner:'Luca',last:'Webinar',promise:'Send walkthrough',next:'Demo follow-up'},
+{id:'CRM-10632',name:'Nora Chen',email:'nora@example.com',company:'Example Labs',owner:'Ari',last:'Pricing request',promise:'Send pricing summary',next:'Ari to send summary'}],
+cases:[
+{id:'ENQ-201',name:'Sam Lee',email:'sam@example.com',source:'Website',message:'Two colleagues contacted me separately. Who owns our discussion?',status:'review',reason:'Two possible customer records'},
+{id:'ENQ-202',name:'Taylor Reed',email:'taylor@example.com',source:'Event import',message:'We met at an event. Could you send the pricing and implementation notes?',status:'new',reason:'No existing customer matches'},
+{id:'ENQ-203',name:'Nora Chen',email:'nora@example.com',source:'Account follow-up',message:'Checking when the pricing summary will arrive.',status:'delivery_unknown',key:'delivery-203',reason:'Delivery acknowledgement was lost'},
+{id:'ENQ-200',name:'Alex Morgan',email:'alex@example.com',source:'Verified account reference',message:'Following up on the revised quote.',status:'linked',contactId:'CRM-10042',reason:'Verified account reference and matching email'}],
+ledger:{'delivery-203':{contactId:'CRM-10632',attempts:1,writes:1}},
+audit:[{event:'Verified account match',detail:'Alex Morgan linked to CRM-10042; earlier commitments preserved.'}]});
+let state;try{let s=JSON.parse(localStorage.getItem(KEY));state=s?.version===1&&Array.isArray(s.cases)&&Array.isArray(s.customers)&&s.ledger?s:seeded()}catch{state=seeded()}
+let selected='',editing=false,feedback='';
+const candidates=email=>state.customers.filter(c=>normalize(c.email)===normalize(email));
+const waiting=()=>state.cases.filter(c=>['review','new','delivery_unknown','delivery_check'].includes(c.status));
+const log=(event,detail)=>state.audit.unshift({event,detail});
+const save=()=>{try{localStorage.setItem(KEY,JSON.stringify(state))}catch{}render()};
+function line(area,label,value){const r=el('dl','details-row');r.append(el('dt',null,label),el('dd',null,value));area.append(r)}
+function queue(){const open=waiting(),list=$('inbox');list.replaceChildren();$('attention').textContent=open.length?open.length+' need attention':'No decisions waiting';$('attention-desc').textContent=open.length?'Only cases that require a decision.':'All example cases resolved.';
+if(!open.length){selected='';$('case-pane').hidden=true;return}if(!open.some(x=>x.id===selected))selected=open[0].id;$('case-pane').hidden=false;
+for(const item of open){const b=el('button','case-btn');b.type='button';b.dataset.id=item.id;b.setAttribute('aria-current',String(item.id===selected));b.append(el('span','case-kind',item.status==='review'?'Identity conflict':item.status==='new'?'New customer approval':'Delivery exception'),el('strong',null,item.name+' · '+item.email),el('small',null,item.status==='review'?'Confirm customer identity and ownership':item.status==='new'?'Check contact permission before creation':'Reconcile the original delivery receipt'));b.addEventListener('click',()=>{selected=item.id;editing=false;feedback='';render();if(innerWidth<=900)$('case-pane').scrollIntoView({block:'start'})});list.append(b)}
+}
+function showContext(item){const root=$('context');root.replaceChildren();const matches=candidates(item.email);root.append(el('h4','case-subhead',matches.length>1?'Possible customer records':matches.length===1?'Existing customer context':'Customer lookup'));
+if(!matches.length){root.append(el('p','small-note','No customer found. The original message and source are retained.'));return}
+const grid=el('div','candidates');for(const c of matches){const card=el('div','candidate');card.append(el('b',null,c.name+' · '+c.company),el('small',null,'Owner: '+c.owner+' · '+c.id));grid.append(card)}root.append(grid);
+if(matches.length===1){const c=matches[0];line(root,'Last contact',c.last);line(root,'Promise',c.promise);line(root,'Next action',c.next)}
+else root.append(el('p','small-note','A shared identifier is not identity proof. No record or owner has been selected.'));
+}
+function resolve(item){const dest=item.status==='new'?'new':$('destination')?.value,verified=$('verified')?.checked,permission=$('permission')?.checked,evidence=$('evidence')?.value.trim()||'';
+if(!dest||!verified||evidence.length<12||(dest==='new'&&!permission)){feedback='Independent verification and any required permission must be confirmed.';$('feedback').textContent=feedback;return}
+if(dest!=='new'&&!candidates(item.email).some(c=>c.id===dest)){feedback='Choose a verified matching customer.';$('feedback').textContent=feedback;return}
+if(dest==='new'){if(item.status==='new'&&candidates(item.email).length){feedback='Matching customer appeared. Review identity first.';$('feedback').textContent=feedback;return}
+const id='CRM-'+state.seq++;state.customers.push({id,name:item.name,email:item.email,company:'Not provided',owner:'Unassigned',last:item.source,promise:'Respond to enquiry',next:'Assign owner and respond'});item.status='created';item.contactId=id;log('New contact approved',item.id+' · '+id+' · permission checked')}
+else{item.status='linked';item.contactId=dest;log('Identity verified',item.id+' · '+dest+' · independent check recorded')}
+selected='';editing=false;feedback='';save();
+}
+function showProof(item){const root=$('proof');root.replaceChildren();root.hidden=!editing;if(!editing)return;
+if(item.status==='review'){const f=el('div','form-field'),label=el('label',null,'Verified destination'),select=el('select');label.htmlFor='destination';select.id='destination';const initial=el('option',null,'Select after verification');initial.value='';select.append(initial);
+for(const c of candidates(item.email)){const o=el('option',null,c.company+' · '+c.id);o.value=c.id;select.append(o)}const separate=el('option',null,'Create separate customer');separate.value='new';select.append(separate);f.append(label,select);root.append(f)}
+const fld=el('div','form-field'),lab=el('label',null,'Independent verification evidence'),ta=el('textarea');lab.htmlFor='evidence';ta.id='evidence';ta.maxLength=500;ta.placeholder='Example: Confirmed customer identity through an independent callback';fld.append(lab,ta);root.append(fld);
+const verify=el('label','verify'),v=el('input');v.type='checkbox';v.id='verified';verify.append(v,el('span',null,'I independently verified this customer.'));root.append(verify);
+const consent=el('label','verify'),p=el('input');p.type='checkbox';p.id='permission';consent.append(p,el('span',null,'Permission to contact is confirmed.'));root.append(consent);
+const btn=el('button','primary-action','Record decision');btn.type='button';btn.id='resolve';btn.disabled=true;root.append(btn);
+const sync=()=>{const dest=item.status==='new'?'new':$('destination').value;consent.hidden=dest!=='new';btn.disabled=!(dest&&v.checked&&ta.value.trim().length>=12&&(dest!=='new'||p.checked))};
+for(const [x,event] of [[ta,'input'],[v,'change'],[p,'change']])x.addEventListener(event,sync);
+if(item.status==='review')$('destination').addEventListener('change',sync);sync();btn.addEventListener('click',()=>resolve(item));
+}
+function details(){const item=state.cases.find(x=>x.id===selected);if(!item)return;
+$('case-heading').textContent=item.status==='review'?'Identity needs review':item.status==='new'?'New customer approval':item.status==='delivery_check'?'Delivery remains on hold':'Check delivery outcome';
+$('case-reason').textContent=item.reason;$('case-message').textContent=item.message+' ('+item.source+')';showContext(item);
+const actions=$('case-actions');actions.replaceChildren();
+if(item.status==='delivery_unknown'){const b=el('button','primary-action','Check delivery receipt');b.type='button';b.addEventListener('click',()=>{const r=state.ledger[item.key];if(!r){item.status='delivery_check';item.reason='Receipt unknown; blind retry blocked';log('Delivery held',item.id+' · no safe receipt available')}else{r.attempts++;item.status='delivered';item.contactId=r.contactId;log('Delivery reconciled',item.id+' · one original simulated write; safe replay confirmed')}selected='';editing=false;feedback='';save()});actions.append(b,el('p','small-note','In this example the previous write succeeded but its acknowledgement was lost. Looking up the original delivery key avoids a duplicate.'))}
+else if(item.status==='delivery_check')actions.append(el('p','small-note','The receipt is still unknown. No blind retry is attempted.'));
+else if(!editing){const b=el('button','primary-action',item.status==='review'?'Review identity':'Review new record');b.type='button';b.addEventListener('click',()=>{editing=true;details()});actions.append(b)}
+showProof(item);$('feedback').textContent=feedback;
+}
+function render(){queue();details();$('audit-items').replaceChildren(...state.audit.map(x=>el('div','audit-line',x.event+': '+x.detail)))}
+$('form').addEventListener('submit',event=>{event.preventDefault();const name=$('new-name').value.trim(),email=normalize($('new-email').value),message=$('new-message').value.trim();if(!name||!email||!message)return;
+const matches=candidates(email),reason=matches.length>1?'Multiple customer records share this email':matches.length===1?'Email alone is not independent identity proof':'No existing customer matches',status=matches.length?'review':'new',id='ENQ-'+state.seq++;
+state.cases.unshift({id,name,email,message,status,source:'Example intake',reason});log('Enquiry checked',id+' · '+reason);selected=id;editing=false;feedback='';save();$('try').open=false;$('case-pane').scrollIntoView({block:'start'})});
+$('reset').addEventListener('click',()=>{state=seeded();selected='';editing=false;feedback='';save()});render();
+</script></body></html>
