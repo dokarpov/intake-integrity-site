@@ -1,25 +1,30 @@
-# Intake Integrity
+# Intake Integrity — public experience
 
-A prototype for safer enrollment and customer intake. Applicants find or start an application; organizations configure field mappings and test identity-resolution scenarios.
+**Know who is coming back without assigning an enquiry to the wrong person.**
 
-## Public experiences
+This is a set of **browser-only research experiences using fictional records**. It presents the operator-facing identity decision in a simpler way than the more extensive [engineering reference](https://github.com/dokarpov/intake-integrity-lab).
 
-- [Unified review preview](https://dokarpov.github.io/intake-integrity-site/preview/): mobile-first, one CTA and sequential fictional enquiries. Matching logic—not a user-selected scenario—determines existing/new/review. This is a review build; it has **not** replaced the production homepage.
+## Start with the customer problem
 
-- [Applicant flow](https://dokarpov.github.io/intake-integrity-site/decision-lab.html): synthetic matching and enrollment, entirely in the browser.
-- [Organization setup](https://dokarpov.github.io/intake-integrity-site/setup.html): choose a source (1C, CRM, or CSV), map fields, validate sample JSON, test matching, export a configuration.
-- [Overview](https://dokarpov.github.io/intake-integrity-site/).
+1. [Product overview](https://dokarpov.github.io/intake-integrity-site/) — why a pre-write identity checkpoint may matter.
+2. [Guided review preview](https://dokarpov.github.io/intake-integrity-site/preview/) — one entry flow processing synthetic enquiries with an automatic or held-for-review result. This is a **review build**, not the replacement production homepage.
 
-## What is implemented
+## Specialized explorations
 
-Browser-only, illustrative flows with synthetic sample records. No real CRM connection, production identity verification, persistent audit log, authentication, secure server-side credential storage, or record writes. **Never enter real personal records or credentials into this public demo.**
+- [Decision Lab](https://dokarpov.github.io/intake-integrity-site/decision-lab.html) — synthetic enrollment/identity scenario; not a real applicant lookup.
+- [Organization configuration](https://dokarpov.github.io/intake-integrity-site/setup.html) — fictional mappings and a configuration export; **not** a CRM or 1C connection.
 
-## Public data and deployment policy
+**Current limits:** no real CRM writes, identity certification, server-side credentials, authentication, durable production ledger or connected customer database in these public pages. Do not input real personal records or credentials.
 
-Only `index.html`, `decision-lab.html`, `setup.html`, `preview/index.html`, and `preview/tokens.css` are published by the GitHub Pages workflow. Repository documentation, source scripts, and Git metadata are not copied into the deployed website. The deployment fails if `scripts/check_public.py` detects selected credential patterns or known legacy identifiers in these publishable files.
+## Product and implementation boundary
 
-This is a **limited preventive scan**, not a complete repository or historical security audit. GitHub commit history remains accessible, including earlier revisions. Do not assume that removing text from the current branch erases it from Git history, forks, caches, or deployed copies. If real credentials were exposed, rotate or revoke them before considering history rewriting. Rewriting shared Git history requires a separate coordinated procedure and is not performed automatically.
+- **Problem:** phone numbers, households and incomplete identifiers can describe more than one person.
+- **Decision:** continue when permitted by evidence; preserve uncertainty and route ambiguous cases to a human.
+- **Implementation:** the separate [Intake Integrity Lab](https://github.com/dokarpov/intake-integrity-lab) demonstrates server-side constraints, consent, review routing, delivery idempotency and evidence controls. Its tests are not evidence of customer deployment.
+- **Validation still needed:** actual operator usability, exception volume, downstream error prevention, integration behavior and support cost.
 
-## Integration requirements
+## Publication safety
 
-A live 1C connector requires a backend, an authorized test environment, a documented API contract, role-based access, encryption, server-side credential handling, idempotent writes, and end-to-end validation. The configuration export alone does not create an integration.
+The intended public artifact allowlist is in the site deployment workflow and checker. A pattern scan is a partial preventive control, not a credential or Git-history audit. Do not assume a standard GitHub Pages build uses the same allowlist as a dedicated deployment workflow; verify the **deployed** artifact and workflow outcome separately.
+
+If credentials were ever exposed, revoke or rotate them first. Hiding a page or rewriting a file does not erase public Git history, forks or caches.
