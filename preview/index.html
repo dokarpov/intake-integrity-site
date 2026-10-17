@@ -104,194 +104,137 @@ h2{font-size:clamp(29px,7.3vw,36px)}
 }
 @media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}}
 </style>
-</head>
-<body>
-<div class="container">
-<header><a href="#top" class="logo" aria-label="Intake Integrity home">intake<span>/</span>integrity</a></header>
-<main>
-<section class="hero" id="top">
-<div>
-<div class="small-label">Sales continuity</div>
-<h1>Keep the conversation.<br><span>Not another contact.</span></h1>
-<p>An enquiry arrives. See who the customer is, what was promised and who needs to act next. Uncertain matches wait for review rather than silently changing a CRM record.</p>
-<a href="#experience" class="primary">Explore an enquiry</a>
-</div>
-<div class="hero-evidence">
-<b>Three failures worth preventing</b>
-<p>A returning enquiry loses the original context. An imported lead loses the promise made at an event. Two salespeople approach the same buyer without knowing about each other.</p>
-<div class="hero-claim">The product hypothesis is to prevent those gaps at the point of intake.</div>
-</div>
-</section>
-<section class="experience" id="experience" aria-labelledby="experience-title">
-<div class="experience-heading">
-<div class="small-label">Inside the experience</div>
-<h2 id="experience-title">One enquiry. One clear next step.</h2>
-<p>Inspect an incoming enquiry and see the decision. The system selects the route from its available evidence; you do not choose a scenario or matching outcome.</p>
-</div>
-<div class="flow">
-<div class="intake">
-<div class="panel-heading"><strong>Incoming enquiry</strong><span class="case-count" id="case-count">01 / 03</span></div>
-<form id="intake-form">
-<div class="field"><label for="lead-name">Name</label><input id="lead-name" name="name" required maxlength="120" autocomplete="off" value="Alex Morgan"></div>
-<div class="field"><label for="lead-email">Email</label><input id="lead-email" name="email" type="email" required maxlength="254" autocomplete="off" value="alex@example.com"></div>
-<div class="field"><label for="lead-message">What the customer said</label><textarea id="lead-message" name="message" required maxlength="1000">Following up on the revised quote you promised last week.</textarea></div>
-<p class="provenance" id="source">Source: authenticated account enquiry</p>
-<div class="intake-footer"><button class="primary" id="action-button" type="submit">Check customer history</button></div>
-</form>
-</div>
-<div class="decision" aria-live="polite">
-<div class="panel-heading"><strong>Decision</strong><span class="status" id="decision-status">Waiting</span></div>
-<h3 id="decision-title">Ready to check</h3>
-<p class="summary" id="decision-description">The new enquiry has not been linked to a customer yet.</p>
-<div class="result-body" id="result-body" hidden>
-<div class="intent"><b>Incoming context</b><span id="captured-message"></span></div>
-<div class="history" id="customer-history"></div>
-<p class="evidence" id="evidence"></p>
-</div>
-<div class="review" id="review" hidden>
-<h4>Verify before linking</h4>
-<p>Several records could match. The enquiry stays on hold and no record is selected automatically.</p>
-<div class="candidate-list" id="candidate-list"></div>
-<div class="field"><label for="resolution">Verified destination</label><select id="resolution"><option value="">Select after checking identity</option></select></div>
-<div class="field"><label for="verification-note">How was identity confirmed?</label><textarea id="verification-note" placeholder="Document the independent check" maxlength="500"></textarea></div>
-<label class="verify"><input type="checkbox" id="verified">I independently confirmed which customer this is.</label>
-<button class="primary" id="record-decision" type="button" disabled>Record reviewed decision</button>
-<button class="plain-link" id="leave-hold" type="button">Keep on hold</button>
-<p class="hold-note" id="review-feedback" role="status" hidden></p>
-</div>
-</div>
-</div>
-<details class="history-toggle" id="decision-history"><summary>Decision history <span id="history-count"></span></summary><div id="events"></div></details>
-</section>
-</main>
-<footer class="endnote">
-<div class="footerline"><strong>intake/integrity</strong><span>Illustrative example with fictional customer records. No live CRM access or record changes.</span></div>
-</footer>
-</div>
-<script>
+<style id="exception-first">
+:root{--ink:#242424;--muted:#616161;--line:#e4e4e4}
+html,body{background:#fff!important;color:var(--ink);-webkit-text-size-adjust:100%;text-size-adjust:100%}
+body{overflow-x:hidden;font-family:"DM Sans",Arial,sans-serif}
+.shell{width:min(calc(100% - 76px),1110px);margin:0 auto}
+.topbar{border-bottom:1px solid var(--line);height:72px;display:flex;align-items:center}
+.logo{font:700 20px "Space Grotesk",Arial,sans-serif;letter-spacing:-.075em}.logo span{color:#999}
+.intro{padding:55px 0 31px;max-width:650px;background:#fff}
+.intro h1{font:600 clamp(40px,5vw,63px)/1.07 "Space Grotesk",Arial,sans-serif;letter-spacing:-.057em;margin:14px 0 16px}
+.intro h1 span{color:#777}
+.intro p{font-size:16px;line-height:1.62;color:#555;margin:0}
+.eyebrow{font-size:11px;letter-spacing:.08em;text-transform:uppercase;font-weight:700;color:#777}
+.queue-title{display:flex;gap:15px;justify-content:space-between;align-items:baseline;flex-wrap:wrap;border-bottom:1px solid var(--line);padding:14px 0 19px}
+.queue-title h2{font:600 23px "Space Grotesk",Arial,sans-serif;letter-spacing:-.04em;margin:0}
+.queue-title p{font-size:13px;color:#666;margin:0}
+.workspace{display:grid;grid-template-columns:minmax(0,.9fr) minmax(0,1.1fr);gap:37px;align-items:start}
+.inbox{min-width:0}.case-btn{width:100%;display:block;background:#fff;border:0;border-bottom:1px solid var(--line);text-align:left;border-radius:0;color:#242424;padding:18px 10px 19px 0}
+.case-btn[aria-current=true]{box-shadow:inset 3px 0 #242424;padding-left:13px}
+.case-btn:hover{background:#fafafa}
+.case-kind{display:block;color:#777;font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.025em}
+.case-btn strong{display:block;font:600 18px "Space Grotesk",Arial,sans-serif;letter-spacing:-.035em;margin:5px 0}
+.case-btn small{color:#656565;display:block;font-size:13px;line-height:1.55}
+.case-pane{min-width:0;border-bottom:1px solid var(--line);padding:27px 0 35px}
+.case-pane[hidden],#proof[hidden]{display:none!important}
+.case-pane h3{font:600 clamp(23px,2.5vw,31px)/1.17 "Space Grotesk",Arial,sans-serif;letter-spacing:-.047em;margin:0 0 11px}
+.case-pane p{font-size:14px;line-height:1.6;color:#5a5a5a}
+.incoming-note{border-top:1px solid var(--line);border-bottom:1px solid var(--line);padding:15px 0;margin:19px 0;font-size:14px;line-height:1.6}
+.incoming-note b{display:block;font-size:11px;color:#777;text-transform:uppercase;letter-spacing:.06em;margin-bottom:5px}
+.case-subhead{font:600 16px "Space Grotesk",Arial,sans-serif;letter-spacing:-.035em;margin:22px 0 10px}
+.candidates{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;margin-bottom:17px}
+.candidate{border:1px solid var(--line);padding:13px;border-radius:5px;min-width:0;font-size:13px;line-height:1.5}
+.candidate b{display:block;font:600 15px "Space Grotesk",Arial,sans-serif}.candidate small{display:block;color:#666;margin-top:5px}
+.details-row{display:grid;grid-template-columns:95px minmax(0,1fr);gap:12px;border-bottom:1px solid #ededed;padding:10px 0;font-size:13px;line-height:1.5}
+.details-row dt{color:#777}.details-row dd{margin:0;overflow-wrap:anywhere}
+.primary-action{min-height:47px;background:#242424;color:#fff;border:1px solid #242424;border-radius:6px;padding:11px 19px;font-weight:700;font-size:14px}
+.primary-action:hover{background:#444}
+.case-actions{margin-top:21px}
+.form-field{margin:0 0 16px}.form-field label{display:block;font-size:12px;font-weight:700;margin-bottom:6px;color:#444}
+.form-field input,.form-field textarea,.form-field select{border:1px solid #cacaca;background:#fff;color:#222;display:block;width:100%;padding:11px 12px;border-radius:5px;font-size:15px}
+.form-field textarea{min-height:82px}
+.verify{display:flex;gap:9px;align-items:flex-start;font-size:13px;line-height:1.5;color:#444;margin-bottom:16px}
+.verify input{flex:0 0 17px;width:17px;height:17px;margin:2px 0;accent-color:#222}
+#proof{border-top:1px solid var(--line);margin-top:20px;padding-top:19px}
+.small-note{font-size:12px;color:#686868;line-height:1.65;margin:15px 0}
+.utilities{display:flex;flex-wrap:wrap;gap:25px;padding:25px 0 35px;border-top:1px solid var(--line)}
+.utilities details{flex:1 1 275px;min-width:0}.utilities summary{cursor:pointer;font-size:14px;font-weight:700}.utilities p{font-size:13px;color:#666;line-height:1.65}
+.utilities form{margin-top:18px}.audit-line{border-bottom:1px solid #eee;padding:10px 0;font-size:12px;color:#555;line-height:1.5}
+.footer{border-top:1px solid var(--line);padding:25px 0 50px;font-size:12px;line-height:1.7;color:#6a6a6a}
+.reset{border:0;background:transparent;color:#666;text-decoration:underline;text-underline-offset:3px;font-size:12px;margin-left:12px}
+@media(max-width:900px){.workspace{grid-template-columns:1fr;gap:0}.case-pane{padding-top:24px}.intro{padding:43px 0 26px}}
+@media(max-width:620px){.shell{width:calc(100% - 38px)}.topbar{height:66px}.logo{font-size:19px}.intro{padding:37px 0 26px}.intro h1{font-size:clamp(36px,9.2vw,46px)}.intro p{font-size:14px}.queue-title h2{font-size:20px}.queue-title p{font-size:12px}.case-btn strong{font-size:17px}.case-pane h3{font-size:25px}.candidates{grid-template-columns:1fr}.primary-action{width:100%}.details-row{grid-template-columns:90px minmax(0,1fr)}}
+</style></head>
+<body><div class="shell">
+<header class="topbar"><div class="logo">intake<span>/</span>integrity</div></header>
+<main><section class="intro"><div class="eyebrow">Before your CRM changes</div><h1>Keep the conversation.<br><span>Not another contact.</span></h1>
+<p>Each incoming enquiry should find the right customer and preserve previous commitments. When identity is uncertain, the system holds the decision rather than guessing.</p></section>
+<section class="queue-title"><h2 id="attention">Needs attention</h2><p id="attention-desc">Only the cases that need a person.</p></section>
+<div class="workspace"><div class="inbox" id="inbox" role="group" aria-label="Cases requiring attention"></div>
+<article class="case-pane" id="case-pane" aria-live="polite"><h3 id="case-heading"></h3><p id="case-reason"></p>
+<div class="incoming-note"><b>Incoming enquiry</b><span id="case-message"></span></div>
+<div id="context"></div><div id="case-actions" class="case-actions"></div><div id="proof" hidden></div><p id="feedback" class="small-note" role="status"></p></article></div>
+<div class="utilities"><details id="try"><summary>Try an incoming enquiry</summary><p>Use fictional details; the system chooses the route automatically.</p>
+<form id="form"><div class="form-field"><label for="new-name">Name</label><input id="new-name" required maxlength="120" value="Alex Morgan"></div>
+<div class="form-field"><label for="new-email">Email</label><input id="new-email" type="email" required maxlength="254" value="alex@example.com"></div>
+<div class="form-field"><label for="new-message">Enquiry</label><textarea id="new-message" required maxlength="1000">Following up on our earlier quote.</textarea></div>
+<button class="primary-action" type="submit">Check enquiry</button></form></details>
+<details id="audit"><summary>Decision history</summary><div id="audit-items"></div></details></div></main>
+<footer class="footer">Example with fictional customer records. No live CRM access, messages, or record writes. Not a production identity-verification service.<button id="reset" class="reset" type="button">Reset example</button></footer>
+</div><script>
 'use strict';
-const fixtures=[
- {name:'Alex Morgan',email:'alex@example.com',message:'Following up on the revised quote you promised last week.',source:'Authenticated account enquiry',trustedId:'CRM-10042'},
- {name:'Taylor Reed',email:'taylor@example.com',message:'We met at the event. Could you send the pricing and implementation notes?',source:'Event intake',trustedId:null},
- {name:'Sam Lee',email:'sam@example.com',message:'Two colleagues contacted me separately. Who owns our discussion?',source:'Website enquiry',trustedId:null}
-];
-const customers=[
- {id:'CRM-10042',name:'Alex Morgan',email:'alex@example.com',company:'Northstar Studio',owner:'Nina',last:'Discussed proposal scope',promise:'Send revised quote',next:'Prepare and send updated quote',history:'Previous email conversation and account record'},
- {id:'CRM-10052',name:'Sam Lee',email:'sam@example.com',company:'Studio North',owner:'Mia',last:'Discovery call completed',promise:'Confirm integration scope',next:'Await customer clarification',history:'Existing opportunity'},
- {id:'CRM-10421',name:'Sam Lee',email:'sam@example.com',company:'Studio South',owner:'Luca',last:'Met at webinar',promise:'Send demo details',next:'Follow up after demo',history:'Separate opportunity'}
-];
-const $=id=>document.getElementById(id);
-let cursor=0,mode='check',held=null,actions=[];
-const clean=s=>String(s==null?'':s).trim();
-const normalize=s=>clean(s).toLowerCase();
-function classify(input,fixture){
- const matches=customers.filter(c=>normalize(c.email)===normalize(input.email));
- const trusted=fixture.trustedId&&normalize(fixture.email)===normalize(input.email)&&normalize(fixture.name)===normalize(input.name);
- if(trusted&&matches.length===1&&matches[0].id===fixture.trustedId)return {kind:'existing',matches,reason:'Authenticated account reference and matching contact email'};
- if(matches.length===0)return {kind:'new',matches,reason:'No CRM contact matches the supplied email'};
- return {kind:'review',matches,reason:matches.length>1?'Multiple competing customer records':'Email match without independent account verification'};
+const KEY='intake-exceptions-v1',$=id=>document.getElementById(id),el=(t,c,v)=>{const n=document.createElement(t);if(c)n.className=c;if(v!=null)n.textContent=v;return n},normalize=x=>String(x||'').trim().toLowerCase();
+const seeded=()=>({version:1,seq:205,customers:[
+{id:'CRM-10042',name:'Alex Morgan',email:'alex@example.com',company:'Northstar Studio',owner:'Nina',last:'Proposal scope reviewed',promise:'Send revised quote',next:'Nina to send the quote'},
+{id:'CRM-10052',name:'Sam Lee',email:'sam@example.com',company:'Studio North',owner:'Mia',last:'Discovery call',promise:'Confirm API scope',next:'Follow up after verification'},
+{id:'CRM-10421',name:'Sam Lee',email:'sam@example.com',company:'Studio South',owner:'Luca',last:'Webinar',promise:'Send walkthrough',next:'Demo follow-up'},
+{id:'CRM-10632',name:'Nora Chen',email:'nora@example.com',company:'Example Labs',owner:'Ari',last:'Pricing request',promise:'Send pricing summary',next:'Ari to send summary'}],
+cases:[
+{id:'ENQ-201',name:'Sam Lee',email:'sam@example.com',source:'Website',message:'Two colleagues contacted me separately. Who owns our discussion?',status:'review',reason:'Two possible customer records'},
+{id:'ENQ-202',name:'Taylor Reed',email:'taylor@example.com',source:'Event import',message:'We met at an event. Could you send the pricing and implementation notes?',status:'new',reason:'No existing customer matches'},
+{id:'ENQ-203',name:'Nora Chen',email:'nora@example.com',source:'Account follow-up',message:'Checking when the pricing summary will arrive.',status:'delivery_unknown',key:'delivery-203',reason:'Delivery acknowledgement was lost'},
+{id:'ENQ-200',name:'Alex Morgan',email:'alex@example.com',source:'Verified account reference',message:'Following up on the revised quote.',status:'linked',contactId:'CRM-10042',reason:'Verified account reference and matching email'}],
+ledger:{'delivery-203':{contactId:'CRM-10632',attempts:1,writes:1}},
+audit:[{event:'Verified account match',detail:'Alex Morgan linked to CRM-10042; earlier commitments preserved.'}]});
+let state;try{let s=JSON.parse(localStorage.getItem(KEY));state=s?.version===1&&Array.isArray(s.cases)&&Array.isArray(s.customers)&&s.ledger?s:seeded()}catch{state=seeded()}
+let selected='',editing=false,feedback='';
+const candidates=email=>state.customers.filter(c=>normalize(c.email)===normalize(email));
+const waiting=()=>state.cases.filter(c=>['review','new','delivery_unknown','delivery_check'].includes(c.status));
+const log=(event,detail)=>state.audit.unshift({event,detail});
+const save=()=>{try{localStorage.setItem(KEY,JSON.stringify(state))}catch{}render()};
+function line(area,label,value){const r=el('dl','details-row');r.append(el('dt',null,label),el('dd',null,value));area.append(r)}
+function queue(){const open=waiting(),list=$('inbox');list.replaceChildren();$('attention').textContent=open.length?open.length+' need attention':'No decisions waiting';$('attention-desc').textContent=open.length?'Only cases that require a decision.':'All example cases resolved.';
+if(!open.length){selected='';$('case-pane').hidden=true;return}if(!open.some(x=>x.id===selected))selected=open[0].id;$('case-pane').hidden=false;
+for(const item of open){const b=el('button','case-btn');b.type='button';b.dataset.id=item.id;b.setAttribute('aria-current',String(item.id===selected));b.append(el('span','case-kind',item.status==='review'?'Identity conflict':item.status==='new'?'New customer approval':'Delivery exception'),el('strong',null,item.name+' · '+item.email),el('small',null,item.status==='review'?'Confirm customer identity and ownership':item.status==='new'?'Check contact permission before creation':'Reconcile the original delivery receipt'));b.addEventListener('click',()=>{selected=item.id;editing=false;feedback='';render();if(innerWidth<=900)$('case-pane').scrollIntoView({block:'start'})});list.append(b)}
 }
-function text(id,s){$(id).textContent=s}
-function node(tag,cls,value){const e=document.createElement(tag);if(cls)e.className=cls;if(value!=null)e.textContent=value;return e}
-function detail(label,value){const frag=document.createDocumentFragment();frag.append(node('dt','',label),node('dd','',value));return frag}
-function currentInput(){return {name:clean($('lead-name').value),email:normalize($('lead-email').value),message:clean($('lead-message').value)}}
-function log(action,summary){actions.unshift({action,summary});text('history-count', '('+actions.length+')');const e=$('events');e.replaceChildren(...actions.map(x=>node('div','event',x.action+': '+x.summary)))}
-function summaryDetails(items){
- const h=$('customer-history');h.replaceChildren();
- if(!items.length)return;
- h.append(node('h4','',items.length===1?'Customer context':'Competing customer records'));
- for(const c of items){
-  const wrapper=node('div','');const dl=node('dl','');
-  dl.append(detail('Customer',c.name+' · '+c.company),detail('Owner',c.owner),detail('Last contact',c.last),detail('Promise',c.promise),detail('Next action',c.next));
-  wrapper.append(dl);h.append(wrapper);
- }
+function showContext(item){const root=$('context');root.replaceChildren();const matches=candidates(item.email);root.append(el('h4','case-subhead',matches.length>1?'Possible customer records':matches.length===1?'Existing customer context':'Customer lookup'));
+if(!matches.length){root.append(el('p','small-note','No customer found. The original message and source are retained.'));return}
+const grid=el('div','candidates');for(const c of matches){const card=el('div','candidate');card.append(el('b',null,c.name+' · '+c.company),el('small',null,'Owner: '+c.owner+' · '+c.id));grid.append(card)}root.append(grid);
+if(matches.length===1){const c=matches[0];line(root,'Last contact',c.last);line(root,'Promise',c.promise);line(root,'Next action',c.next)}
+else root.append(el('p','small-note','A shared identifier is not identity proof. No record or owner has been selected.'));
 }
-function setupSample(i){
- const f=fixtures[i];cursor=i;mode='check';held=null;
- text('case-count',String(i+1).padStart(2,'0')+' / 03');
- $('lead-name').value=f.name;$('lead-email').value=f.email;$('lead-message').value=f.message;
- text('source','Source: '+f.source);text('decision-status','Waiting');text('decision-title','Ready to check');
- text('decision-description','The new enquiry has not been linked to a customer yet.');
- $('result-body').hidden=true;$('review').hidden=true;$('review-feedback').hidden=true;
- $('action-button').hidden=false;text('action-button','Check customer history');$('action-button').disabled=false;
+function resolve(item){const dest=item.status==='new'?'new':$('destination')?.value,verified=$('verified')?.checked,permission=$('permission')?.checked,evidence=$('evidence')?.value.trim()||'';
+if(!dest||!verified||evidence.length<12||(dest==='new'&&!permission)){feedback='Independent verification and any required permission must be confirmed.';$('feedback').textContent=feedback;return}
+if(dest!=='new'&&!candidates(item.email).some(c=>c.id===dest)){feedback='Choose a verified matching customer.';$('feedback').textContent=feedback;return}
+if(dest==='new'){if(item.status==='new'&&candidates(item.email).length){feedback='Matching customer appeared. Review identity first.';$('feedback').textContent=feedback;return}
+const id='CRM-'+state.seq++;state.customers.push({id,name:item.name,email:item.email,company:'Not provided',owner:'Unassigned',last:item.source,promise:'Respond to enquiry',next:'Assign owner and respond'});item.status='created';item.contactId=id;log('New contact approved',item.id+' · '+id+' · permission checked')}
+else{item.status='linked';item.contactId=dest;log('Identity verified',item.id+' · '+dest+' · independent check recorded')}
+selected='';editing=false;feedback='';save();
 }
-function advance(){setupSample((cursor+1)%fixtures.length)}
-function process(input){
- const decision=classify(input,fixtures[cursor]);const match=decision.matches;
- text('captured-message',input.message);
- $('result-body').hidden=false;$('review').hidden=true;held=null;summaryDetails([]);
- text('evidence','Evidence: '+decision.reason+'.');
- if(decision.kind==='existing'){
-  const c=match[0];text('decision-status','Existing customer');
-  text('decision-title','Keep the conversation together.');
-  text('decision-description','This enquiry belongs with the existing customer and their open follow-up. Do not start a second conversation.');
-  summaryDetails([c]);log('Matched',input.name+' · '+c.id+' · owner '+c.owner);
- }else if(decision.kind==='new'){
-  text('decision-status','New customer proposed');text('decision-title','No existing customer found.');
-  text('decision-description','Keep the event context and promised materials with this enquiry. A new record can be proposed after validation.');
-  log('Proposed',input.name+' · new contact pending validation');
- }else{
-  held={input,matches:match};text('decision-status','Needs review');
-  text('decision-title','Pause before changing a record.');
-  text('decision-description',match.length>1?'Two customer histories could fit. A duplicate outreach or wrong owner assignment would lose context.':'A shared email alone does not establish identity. Ask for independent confirmation.');
-  summaryDetails(match);buildReview(match);$('review').hidden=false;
-  log('Held',input.name+' · '+match.length+' possible contact'+(match.length===1?'':'s'));
- }
- mode=decision.kind==='review'?'review':'next';$('action-button').hidden=decision.kind==='review';
- if(decision.kind!=='review')text('action-button',cursor===fixtures.length-1?'Start again':'Next enquiry');
+function showProof(item){const root=$('proof');root.replaceChildren();root.hidden=!editing;if(!editing)return;
+if(item.status==='review'){const f=el('div','form-field'),label=el('label',null,'Verified destination'),select=el('select');label.htmlFor='destination';select.id='destination';const initial=el('option',null,'Select after verification');initial.value='';select.append(initial);
+for(const c of candidates(item.email)){const o=el('option',null,c.company+' · '+c.id);o.value=c.id;select.append(o)}const separate=el('option',null,'Create separate customer');separate.value='new';select.append(separate);f.append(label,select);root.append(f)}
+const fld=el('div','form-field'),lab=el('label',null,'Independent verification evidence'),ta=el('textarea');lab.htmlFor='evidence';ta.id='evidence';ta.maxLength=500;ta.placeholder='Example: Confirmed customer identity through an independent callback';fld.append(lab,ta);root.append(fld);
+const verify=el('label','verify'),v=el('input');v.type='checkbox';v.id='verified';verify.append(v,el('span',null,'I independently verified this customer.'));root.append(verify);
+const consent=el('label','verify'),p=el('input');p.type='checkbox';p.id='permission';consent.append(p,el('span',null,'Permission to contact is confirmed.'));root.append(consent);
+const btn=el('button','primary-action','Record decision');btn.type='button';btn.id='resolve';btn.disabled=true;root.append(btn);
+const sync=()=>{const dest=item.status==='new'?'new':$('destination').value;consent.hidden=dest!=='new';btn.disabled=!(dest&&v.checked&&ta.value.trim().length>=12&&(dest!=='new'||p.checked))};
+for(const [x,event] of [[ta,'input'],[v,'change'],[p,'change']])x.addEventListener(event,sync);
+if(item.status==='review')$('destination').addEventListener('change',sync);sync();btn.addEventListener('click',()=>resolve(item));
 }
-function buildReview(matches){
- const list=$('candidate-list');list.replaceChildren();
- for(const c of matches){
-  const wrap=node('div','candidate');
-  wrap.append(node('strong','',c.name+' · '+c.company),node('p','',c.id+' · Owner: '+c.owner+' · '+c.history));list.append(wrap);
- }
- const select=$('resolution');select.replaceChildren(node('option','','Select after checking identity'));select.firstChild.value='';
- for(const c of matches){const op=node('option','',c.name+' · '+c.company+' · '+c.id);op.value=c.id;select.append(op)}
- const op=node('option','','Create a separate customer');op.value='new';select.append(op);
- $('verification-note').value='';$('verified').checked=false;$('record-decision').disabled=true;
- $('review-feedback').hidden=true;
+function details(){const item=state.cases.find(x=>x.id===selected);if(!item)return;
+$('case-heading').textContent=item.status==='review'?'Identity needs review':item.status==='new'?'New customer approval':item.status==='delivery_check'?'Delivery remains on hold':'Check delivery outcome';
+$('case-reason').textContent=item.reason;$('case-message').textContent=item.message+' ('+item.source+')';showContext(item);
+const actions=$('case-actions');actions.replaceChildren();
+if(item.status==='delivery_unknown'){const b=el('button','primary-action','Check delivery receipt');b.type='button';b.addEventListener('click',()=>{const r=state.ledger[item.key];if(!r){item.status='delivery_check';item.reason='Receipt unknown; blind retry blocked';log('Delivery held',item.id+' · no safe receipt available')}else{r.attempts++;item.status='delivered';item.contactId=r.contactId;log('Delivery reconciled',item.id+' · one original simulated write; safe replay confirmed')}selected='';editing=false;feedback='';save()});actions.append(b,el('p','small-note','In this example the previous write succeeded but its acknowledgement was lost. Looking up the original delivery key avoids a duplicate.'))}
+else if(item.status==='delivery_check')actions.append(el('p','small-note','The receipt is still unknown. No blind retry is attempted.'));
+else if(!editing){const b=el('button','primary-action',item.status==='review'?'Review identity':'Review new record');b.type='button';b.addEventListener('click',()=>{editing=true;details()});actions.append(b)}
+showProof(item);$('feedback').textContent=feedback;
 }
-function syncReview(){
- $('record-decision').disabled=!held||!$('resolution').value||!$('verified').checked||clean($('verification-note').value).length<12;
-}
-$('resolution').addEventListener('change',syncReview);
-$('verification-note').addEventListener('input',syncReview);
-$('verified').addEventListener('change',syncReview);
-$('record-decision').addEventListener('click',()=>{
- if(!held||$('record-decision').disabled)return;
- const chosen=$('resolution').value,selected=held.matches.find(c=>c.id===chosen);
- const description=selected?'Link to '+selected.company:'Create separate customer';
- log('Reviewed',held.input.name+' · '+description+' · verification noted');
- text('decision-status','Review recorded');text('decision-title','The decision is documented.');
- text('decision-description','The review preserves the enquiry and its reason for resolution. No CRM data was changed in this example.');
- $('review').hidden=true;held=null;mode='next';$('action-button').hidden=false;
- text('action-button',cursor===fixtures.length-1?'Start again':'Next enquiry');
-});
-$('leave-hold').addEventListener('click',()=>{
- if(!held)return;
- log('On hold',held.input.name+' · no customer selected');
- held=null;mode='next';$('review').hidden=true;$('action-button').hidden=false;
- text('action-button',cursor===fixtures.length-1?'Start again':'Next enquiry');
- text('decision-description','The enquiry remains unassigned and awaits verification. No CRM record was changed.');
-});
-$('intake-form').addEventListener('submit',e=>{
- e.preventDefault();
- if(mode==='next'){advance();return}
- if(mode!=='check')return;
- const input=currentInput();
- if(!input.name||!input.message||!$('lead-email').validity.valid)return;
- process(input);
-});
-for(const id of ['lead-name','lead-email','lead-message']){
- $(id).addEventListener('input',()=>{
-  if(mode!=='check'){mode='check';held=null;$('result-body').hidden=true;$('review').hidden=true;
-  $('action-button').hidden=false;text('action-button','Check customer history');text('decision-status','Waiting');text('decision-title','Ready to check');
-  text('decision-description','Check the updated enquiry against the customer history.')}
- });
-}
-setupSample(0);
-Object.defineProperty(window,'intakePreviewTest',{value:{classifyEmail:(email,ref)=>classify({name:'Alex Morgan',email}, {name:'Alex Morgan',email, trustedId:ref}).kind,caseCount:()=>fixtures.length}});
-</script>
-</body>
-</html>
+function render(){queue();details();$('audit-items').replaceChildren(...state.audit.map(x=>el('div','audit-line',x.event+': '+x.detail)))}
+$('form').addEventListener('submit',event=>{event.preventDefault();const name=$('new-name').value.trim(),email=normalize($('new-email').value),message=$('new-message').value.trim();if(!name||!email||!message)return;
+const matches=candidates(email),reason=matches.length>1?'Multiple customer records share this email':matches.length===1?'Email alone is not independent identity proof':'No existing customer matches',status=matches.length?'review':'new',id='ENQ-'+state.seq++;
+state.cases.unshift({id,name,email,message,status,source:'Example intake',reason});log('Enquiry checked',id+' · '+reason);selected=id;editing=false;feedback='';save();$('try').open=false;$('case-pane').scrollIntoView({block:'start'})});
+$('reset').addEventListener('click',()=>{state=seeded();selected='';editing=false;feedback='';save()});render();
+</script></body></html>
