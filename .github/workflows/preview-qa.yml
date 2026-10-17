@@ -1,0 +1,35 @@
+name: Intake preview browser QA
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'preview/index.html'
+      - 'scripts/preview.spec.cjs'
+      - '.github/workflows/preview-qa.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  browser:
+    runs-on: ubuntu-latest
+    timeout-minutes: 12
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Install browser test dependencies
+        run: |
+          npm install --no-save @playwright/test
+          npx playwright install --with-deps chromium
+      - name: Start static HTTP server
+        run: |
+          python3 -m http.server 4173 --bind 127.0.0.1 > /tmp/intake-server.log 2>&1 &
+          for i in $(seq 1 25); do
+            if curl --fail --silent http://127.0.0.1:4173/preview/ > /dev/null; then exit 0; fi
+            sleep 1
+          done
+          cat /tmp/intake-server.log
+          exit 1
+      - name: Test mobile, desktop and matching decisions
+        run: npx playwright test scripts/preview.spec.cjs --browser chromium --workers=1 --reporter=line
