@@ -1,5 +1,12 @@
 const { test, expect } = require('@playwright/test');
 const home='http://127.0.0.1:4173/preview/';
+// Fail immediately with a useful route diagnostic instead of waiting 30 seconds for missing controls.
+test.beforeEach(async ({page}) => {
+ const response = await page.goto(home, {waitUntil:'domcontentloaded'});
+ expect(response, 'Preview route did not return a response').not.toBeNull();
+ expect(response.status(), 'Preview route returned an HTTP error').toBeLessThan(400);
+ await expect(page.locator('#product-screen'), 'Expected the current product preview at /preview/').toBeAttached();
+});
 const sizes=[{width:320,height:700},{width:375,height:812},{width:390,height:844},{width:430,height:932},{width:768,height:1024},{width:1280,height:840}];
 for(const viewport of sizes){
  test('mobile-first white layout '+viewport.width,async({browser})=>{
