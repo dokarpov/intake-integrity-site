@@ -107,7 +107,7 @@ h2{font-size:clamp(29px,7.3vw,36px)}
 /* Application boundary: quiet, neutral, visually separate from the public narrative. */
 .workspace{border:1px solid #e3e3e3;border-radius:14px;overflow:hidden;background:#fff;isolation:isolate}
 @media(max-width:640px){.workspace{border-radius:10px}.shell{max-width:100%;overflow-x:clip}}
-</style>
+.site-nav-link{color:#222;text-decoration:underline;text-underline-offset:4px;font:600 13px/1.4 var(--body)}.site-nav-link:focus-visible{outline:2px solid #222;outline-offset:4px}@media(max-width:420px){.site-nav-link{font-size:12px}.topbar{gap:12px}} </style>
 <style id="exception-first">
 :root{--ink:#242424;--muted:#616161;--line:#e4e4e4}
 html,body{background:#fff!important;color:var(--ink);-webkit-text-size-adjust:100%;text-size-adjust:100%}
@@ -161,7 +161,7 @@ body{overflow-x:hidden;font-family:"DM Sans",Arial,sans-serif}
 @media(max-width:620px){.shell{width:calc(100% - 38px)}.topbar{height:66px}.logo{font-size:19px}.intro{padding:37px 0 26px}.intro h1{font-size:clamp(36px,9.2vw,46px)}.intro p{font-size:14px}.queue-title h2{font-size:20px}.queue-title p{font-size:12px}.case-btn strong{font-size:17px}.case-pane h3{font-size:25px}.candidates{grid-template-columns:1fr}.primary-action{width:100%}.details-row{grid-template-columns:90px minmax(0,1fr)}}
 </style></head>
 <body><div class="shell">
-<header class="topbar"><div class="logo">intake<span>/</span>integrity</div></header>
+<header class="topbar"><div class="logo">intake<span>/</span>integrity</div><a class="site-nav-link" href="./mvp/">Explore scenarios</a></header>
 <main><section class="intro"><div class="eyebrow">Before your CRM changes</div><h1>Keep the conversation.<br><span>Not another contact.</span></h1>
 <p>Each incoming enquiry should find the right customer and preserve previous commitments. When identity is uncertain, the system holds the decision rather than guessing.</p></section>
 <section class="queue-title"><h2 id="attention">Needs attention</h2><p id="attention-desc">Only the cases that need a person.</p></section>
@@ -175,7 +175,7 @@ body{overflow-x:hidden;font-family:"DM Sans",Arial,sans-serif}
 <div class="form-field"><label for="new-message">Enquiry</label><textarea id="new-message" required maxlength="1000">Following up on our earlier quote.</textarea></div>
 <button class="primary-action" type="submit">Check enquiry</button></form></details>
 <details id="audit"><summary>Decision history</summary><div id="audit-items"></div></details></div></main>
-<footer class="footer">Example with fictional customer records. No live CRM access, messages, or record writes. Not a production identity-verification service.<button id="reset" class="reset" type="button">Reset example</button></footer>
+<footer class="footer">Illustrative customer records. No real customer data or CRM changes.<button id="reset" class="reset" type="button">Reset example</button></footer>
 </div><script>
 'use strict';
 const KEY='intake-exceptions-v1',$=id=>document.getElementById(id),el=(t,c,v)=>{const n=document.createElement(t);if(c)n.className=c;if(v!=null)n.textContent=v;return n},normalize=x=>String(x||'').trim().toLowerCase();
