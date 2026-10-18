@@ -18,6 +18,31 @@ for(const viewport of sizes){
   await context.close();
  });
 }
+
+test('prototype is one visually distinct screen, not blended with the website',async({page})=>{
+ await page.goto(home);
+ const frame=page.locator('#product-screen');
+ await expect(frame).toBeVisible();
+ await expect(frame.locator('.product-screen-bar')).toContainText('Customer inbox');
+ await expect(frame.locator('#inbox')).toBeVisible();
+ await expect(frame.locator('#case-pane')).toBeVisible();
+ await expect(frame.locator('#try')).toBeVisible();
+ await expect(frame.locator('#audit')).toBeVisible();
+ await expect(frame.locator('#reset')).toHaveCount(1);
+ const metrics=await page.evaluate(()=>{
+  const frame=document.getElementById('product-screen');
+  const intro=document.querySelector('section.intro');
+  const a=frame.getBoundingClientRect(),b=intro.getBoundingClientRect();
+  const style=getComputedStyle(frame),bar=getComputedStyle(frame.querySelector('.product-screen-bar'));
+  return {gap:a.top-b.bottom,border:parseFloat(style.borderTopWidth),radius:parseFloat(style.borderTopLeftRadius),outerBg:getComputedStyle(document.body).backgroundColor,barBg:bar.backgroundColor};
+ });
+ expect(metrics.gap).toBeGreaterThan(5);
+ expect(metrics.border).toBeGreaterThanOrEqual(1);
+ expect(metrics.radius).toBeGreaterThanOrEqual(7);
+ expect(metrics.outerBg).toBe('rgb(255, 255, 255)');
+ expect(metrics.barBg).toBe('rgb(247, 247, 247)');
+});
+
 test('ambiguous identity held until independent verification and explicit selection',async({page})=>{
  await page.goto(home);
  await expect(page.locator('#case-heading')).toHaveText('Identity needs review');
