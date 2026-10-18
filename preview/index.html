@@ -155,11 +155,33 @@ body{overflow-x:hidden;font-family:"DM Sans",Arial,sans-serif}
 .reset{border:0;background:transparent;color:#666;text-decoration:underline;text-underline-offset:3px;font-size:12px;margin-left:12px}
 @media(max-width:900px){.workspace{grid-template-columns:1fr;gap:0}.case-pane{padding-top:24px}.intro{padding:43px 0 26px}}
 @media(max-width:620px){.shell{width:calc(100% - 38px)}.topbar{height:66px}.logo{font-size:19px}.intro{padding:37px 0 26px}.intro h1{font-size:clamp(36px,9.2vw,46px)}.intro p{font-size:14px}.queue-title h2{font-size:20px}.queue-title p{font-size:12px}.case-btn strong{font-size:17px}.case-pane h3{font-size:25px}.candidates{grid-template-columns:1fr}.primary-action{width:100%}.details-row{grid-template-columns:90px minmax(0,1fr)}}
+
+/* One bounded, clearly identified product surface. Website canvas stays pure white. */
+.product-stage{padding:12px 0 77px}
+.product-stage-label{font-size:11px;font-weight:700;letter-spacing:.075em;text-transform:uppercase;color:#737373;margin:0 0 15px}
+.product-screen{background:#fff;border:1px solid #bfc0c2;border-radius:12px;overflow:hidden;box-shadow:0 18px 48px rgba(18,18,18,.075)}
+.product-screen-bar{min-height:53px;padding:13px clamp(18px,3vw,32px);display:flex;align-items:center;justify-content:space-between;gap:12px;border-bottom:1px solid #dedede;background:#f7f7f7}
+.product-screen-name{font:600 14px/1.25 "Space Grotesk",Arial,sans-serif;letter-spacing:-.035em;color:#292929}
+.product-screen-context{font-size:12px;line-height:1.35;color:#777;white-space:nowrap}
+.product-screen-body{padding:0 clamp(18px,3.2vw,35px);background:#fff}
+.product-screen-body .queue-title{padding-top:27px}
+.product-screen-body .case-pane{border-bottom:0}
+.product-screen-body .utilities{padding-bottom:27px}
+.product-screen-bottom{border-top:1px solid #e4e4e4;padding:12px clamp(18px,3vw,32px);background:#fafafa;display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap}
+.product-screen-bottom span{font-size:12px;color:#666;line-height:1.5}
+.product-screen-bottom .reset{margin:0;min-height:37px;padding:7px 0;color:#555}
+.site-footer{border-top:1px solid var(--line);font-size:12px;color:#727272;line-height:1.7;padding:25px 0 45px}
+@media(max-width:620px){.product-stage{padding:5px 0 58px;margin:0 -6px}.product-stage-label{margin-left:6px}.product-screen{border-radius:8px}.product-screen-bar{min-height:49px;padding:12px 16px}.product-screen-name{font-size:13px}.product-screen-context{font-size:11px}.product-screen-body{padding:0 15px}.product-screen-body .queue-title{padding-top:21px}.product-screen-bottom{padding:9px 15px}}
 </style></head>
 <body><div class="shell">
 <header class="topbar"><div class="logo">intake<span>/</span>integrity</div></header>
 <main><section class="intro"><div class="eyebrow">Before your CRM changes</div><h1>Keep the conversation.<br><span>Not another contact.</span></h1>
 <p>Each incoming enquiry should find the right customer and preserve previous commitments. When identity is uncertain, the system holds the decision rather than guessing.</p></section>
+<section class="product-stage" aria-label="Interactive Intake Integrity interface">
+<p class="product-stage-label">Inside Intake Integrity</p>
+<div class="product-screen" id="product-screen">
+<div class="product-screen-bar"><strong class="product-screen-name">Customer inbox</strong><span class="product-screen-context">Intake Integrity</span></div>
+<div class="product-screen-body">
 <section class="queue-title"><h2 id="attention">Needs attention</h2><p id="attention-desc">Only the cases that need a person.</p></section>
 <div class="workspace"><div class="inbox" id="inbox" role="group" aria-label="Cases requiring attention"></div>
 <article class="case-pane" id="case-pane" aria-live="polite"><h3 id="case-heading"></h3><p id="case-reason"></p>
@@ -170,8 +192,11 @@ body{overflow-x:hidden;font-family:"DM Sans",Arial,sans-serif}
 <div class="form-field"><label for="new-email">Email</label><input id="new-email" type="email" required maxlength="254" value="alex@example.com"></div>
 <div class="form-field"><label for="new-message">Enquiry</label><textarea id="new-message" required maxlength="1000">Following up on our earlier quote.</textarea></div>
 <button class="primary-action" type="submit">Check enquiry</button></form></details>
-<details id="audit"><summary>Decision history</summary><div id="audit-items"></div></details></div></main>
-<footer class="footer">Example with fictional customer records. No live CRM access, messages, or record writes. Not a production identity-verification service.<button id="reset" class="reset" type="button">Reset example</button></footer>
+<details id="audit"><summary>Decision history</summary><div id="audit-items"></div></details></div>
+</div>
+<div class="product-screen-bottom"><span>Explore with example customer records</span><button id="reset" class="reset" type="button">Reset example</button></div>
+</div></section></main>
+<footer class="site-footer">This interactive example uses fictional data. It does not connect to a live CRM or change customer records.</footer>
 </div><script>
 'use strict';
 const KEY='intake-exceptions-v1',$=id=>document.getElementById(id),el=(t,c,v)=>{const n=document.createElement(t);if(c)n.className=c;if(v!=null)n.textContent=v;return n},normalize=x=>String(x||'').trim().toLowerCase();
