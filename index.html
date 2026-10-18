@@ -103,6 +103,10 @@ h2{font-size:clamp(29px,7.3vw,36px)}
 .endnote{padding:25px 0 38px}
 }
 @media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}}
+
+/* Application boundary: quiet, neutral, visually separate from the public narrative. */
+.workspace{border:1px solid #e3e3e3;border-radius:14px;overflow:hidden;background:#fff;isolation:isolate}
+@media(max-width:640px){.workspace{border-radius:10px}.shell{max-width:100%;overflow-x:clip}}
 </style>
 <style id="exception-first">
 :root{--ink:#242424;--muted:#616161;--line:#e4e4e4}
