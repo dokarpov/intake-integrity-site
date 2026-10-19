@@ -1,0 +1,238 @@
+<!doctype html>
+<html lang="en"><head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#ffffff">
+<meta name="description" content="Inspect evidence discrepancies before a consequential operation. This interactive testing build does not change operational states.">
+<title>Intake Integrity · Evidence check testing</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{color-scheme:light;--ink:#252525;--muted:#626262;--line:#dedede;--font:"DM Sans",Arial,sans-serif;--head:"Space Grotesk",Arial,sans-serif}
+*,*::before,*::after{box-sizing:border-box}
+html,body{margin:0;background:#fff;color:var(--ink);min-width:320px;font:400 15px/1.56 var(--font);-webkit-text-size-adjust:100%;text-size-adjust:100%}
+h1,h2,h3,h4,p{margin-top:0}h1,h2,h3,h4{font-family:var(--head);letter-spacing:-.045em}
+button,input,textarea{font:inherit}button{cursor:pointer}button:focus-visible,input:focus-visible,textarea:focus-visible,summary:focus-visible{outline:2px solid #292929;outline-offset:3px}
+.wrap{width:min(100% - 66px,1180px);margin-inline:auto}
+.topbar{min-height:67px;display:flex;justify-content:space-between;align-items:center;gap:12px;border-bottom:1px solid var(--line)}
+.brand{font:700 19px/1.3 var(--head);letter-spacing:-.07em;color:var(--ink);text-decoration:none}.brand span{color:#999}
+.nav{font-size:12px;color:#666;text-decoration:none}
+.hero{padding:49px 0 29px}.eyebrow{font-size:11px;text-transform:uppercase;letter-spacing:.07em;color:#757575;font-weight:700}
+h1{font-size:clamp(36px,5.2vw,61px);line-height:1.075;margin:14px 0 12px;font-weight:600;max-width:870px}h1 span{color:#777}
+.hero p{max-width:790px;color:#555;font-size:16px;line-height:1.6;margin-bottom:0}
+.presets{margin:26px 0 19px;display:flex;align-items:center;flex-wrap:wrap;gap:8px}.presets strong{font-size:12px;color:#666;margin-right:8px}
+.softbtn{border:1px solid #d6d6d6;background:#fff;color:#333;border-radius:6px;padding:9px 13px;min-height:42px;font-size:13px;font-weight:650}
+.softbtn:hover{background:#f7f7f7}.softbtn[aria-pressed=true]{background:#242424;color:#fff;border-color:#242424}
+.monitor{border:1px solid #c5c5c5;border-radius:10px;box-shadow:0 16px 45px rgba(18,18,18,.065);overflow:hidden;background:#fff}
+.monitor-top{height:50px;display:flex;justify-content:space-between;align-items:center;gap:8px;padding:0 23px;border-bottom:1px solid #dedede;background:#f7f7f7}
+.monitor-top strong{font:600 14px var(--head);letter-spacing:-.025em}.monitor-top span{font-size:12px;color:#676767}
+.monitor-scroll{height:650px;max-height:650px;overflow:auto;overscroll-behavior:contain;scrollbar-gutter:stable;padding:27px 28px 38px;background:#fff}
+.section-title{display:flex;gap:10px;align-items:baseline;justify-content:space-between;flex-wrap:wrap}
+.section-title h2{font-size:23px;font-weight:600;margin:0 0 5px}.section-title p{font-size:13px;color:#666;max-width:620px}
+.sources{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:15px;margin:23px 0}
+.source{border:1px solid #e2e2e2;border-radius:8px;min-width:0;padding:19px 18px 15px}
+.source h3{font-size:18px;margin:0 0 3px}.source p{font-size:12px;line-height:1.48;color:#777;margin:0 0 16px}
+.fields{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px 12px}
+.field{min-width:0}.field.wide{grid-column:1/-1}
+.field label{display:block;font-size:11px;font-weight:700;color:#646464;margin-bottom:5px}
+.field input{width:100%;min-width:0;border:1px solid #ccc;border-radius:5px;background:#fff;color:#252525;font-size:13px;padding:10px 11px;min-height:40px}
+.checkline{display:flex;gap:9px;align-items:center;margin:13px 0;font-size:12px;color:#555;line-height:1.48}
+.checkline input{width:17px;height:17px;flex:0 0 17px;accent-color:#242424}
+.primary{border:1px solid #242424;border-radius:6px;background:#242424;color:#fff;min-height:46px;padding:11px 20px;font-weight:700;font-size:14px}
+.primary:hover{background:#444}
+.testnote{font-size:12px;color:#666;line-height:1.6;margin:11px 0}
+.divider{height:1px;background:var(--line);margin:27px 0}
+.result-summary{font:600 clamp(21px,2.5vw,28px)/1.3 var(--head);letter-spacing:-.043em;margin:9px 0 10px}
+.result-note{font-size:13px;line-height:1.6;color:#555}
+.finding{border-top:1px solid #e2e2e2;padding:13px 0;min-width:0}
+.finding strong{font:600 14px/1.35 var(--head);display:block;letter-spacing:-.025em}
+.finding small{color:#666;font-size:12px}
+.finding .pair{font:500 12px/1.6 ui-monospace,SFMono-Regular,Consolas,monospace;color:#444;overflow-wrap:anywhere;margin:7px 0}
+.finding-status{font-size:10px;font-weight:700;letter-spacing:.055em;text-transform:uppercase;color:#777;margin-bottom:3px}
+.disclosure{border-top:1px solid var(--line);margin-top:19px;padding-top:17px}
+.disclosure summary{font-size:13px;color:#555;font-weight:700;cursor:pointer}
+.decision{margin-top:25px;padding-top:24px;border-top:1px solid var(--line)}
+.decision h3{font-size:21px;margin-bottom:6px}.decision p{font-size:13px;color:#666;max-width:680px}
+.decision textarea{width:100%;max-width:720px;min-height:78px;border:1px solid #bbb;border-radius:5px;padding:12px;font-size:13px;resize:vertical;display:block;margin:14px 0 12px}
+.history{font-size:12px;line-height:1.7;color:#555;margin-top:14px}
+.history div{border-top:1px solid #eee;padding:9px 0;overflow-wrap:anywhere}
+footer{font-size:12px;color:#777;border-top:1px solid var(--line);line-height:1.6;margin-top:46px;padding:24px 0 38px}
+@media(max-width:850px){.sources{grid-template-columns:1fr}.monitor-scroll{height:575px;max-height:575px}}
+@media(max-width:600px){.wrap{width:calc(100% - 34px)}.topbar{min-height:62px}.brand{font-size:17px}.nav{font-size:11px}.hero{padding:39px 0 25px}h1{font-size:clamp(34px,9.2vw,45px)}.hero p{font-size:14px}.presets{margin:22px 0 18px}.presets strong{width:100%}.softbtn{font-size:12px;padding:8px 10px}.monitor-top{padding:0 14px}.monitor-top span{font-size:11px}.monitor-scroll{height:520px;max-height:520px;padding:19px 14px 28px;scrollbar-gutter:auto}.source{padding:15px 12px}.fields{gap:9px}.section-title h2{font-size:21px}.primary{width:100%}footer{margin-top:32px}}
+@media(max-width:340px){.fields{grid-template-columns:1fr}.monitor-top span{display:none}}
+@media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}}
+</style></head>
+<body>
+<div class="wrap">
+<header class="topbar"><a class="brand" href="../../">intake<span>/</span>integrity</a><a class="nav" href="../../preview/">Current product preview</a></header>
+<main>
+<section class="hero"><div class="eyebrow">Interactive rules test</div>
+<h1>Compare the evidence.<br><span>Keep the decision yours.</span></h1>
+<p>Inspect conflicting instructions before a production handoff. This checkpoint identifies differences and missing proof; it does not approve an order, change its status or tell you which version to produce.</p></section>
+<div class="presets" role="group" aria-label="Try an example">
+<strong>Try a case</strong>
+<button class="softbtn" type="button" data-preset="spelling">Different spelling</button>
+<button class="softbtn" type="button" data-preset="revision">Old approved version</button>
+<button class="softbtn" type="button" data-preset="placement">Changed placement</button>
+<button class="softbtn" type="button" data-preset="clean">Identical values</button>
+</div>
+<div class="monitor" id="monitor">
+<div class="monitor-top"><strong>Evidence checkpoint</strong><span>Testing with fictional records</span></div>
+<div class="monitor-scroll" id="monitor-scroll">
+<div class="section-title"><h2>What can we verify?</h2><p>Each field comes from a different source. Edit the example to inspect a specific rule.</p></div>
+<div class="sources">
+<section class="source" aria-labelledby="order-head"><h3 id="order-head">Customer order</h3><p>Original instructions and latest revision</p><div class="fields">
+<div class="field"><label for="order-id">Order ID</label><input id="order-id" data-source="order" data-field="id"></div>
+<div class="field"><label for="order-revision">Order revision</label><input id="order-revision" data-source="order" data-field="revision"></div>
+<div class="field wide"><label for="order-text">Personalization text</label><input id="order-text" data-source="order" data-field="personalizationText"></div>
+</div></section>
+<section class="source" aria-labelledby="proof-head"><h3 id="proof-head">Approved proof</h3><p>The artwork version shown for approval</p><div class="fields">
+<div class="field"><label for="proof-order">Order ID</label><input id="proof-order" data-source="approvedProof" data-field="orderId"></div>
+<div class="field"><label for="proof-version">Proof version</label><input id="proof-version" data-source="approvedProof" data-field="version"></div>
+<div class="field wide"><label for="proof-text">Text in artwork</label><input id="proof-text" data-source="approvedProof" data-field="personalizationText"></div>
+<div class="field"><label for="proof-font">Font</label><input id="proof-font" data-source="approvedProof" data-field="font"></div>
+<div class="field"><label for="proof-placement">Placement</label><input id="proof-placement" data-source="approvedProof" data-field="placement"></div>
+<div class="field wide"><label for="proof-digest">Proof fingerprint</label><input id="proof-digest" data-source="approvedProof" data-field="contentDigest"></div>
+</div></section>
+<section class="source" aria-labelledby="approval-head"><h3 id="approval-head">Approval evidence</h3><p>Which order and artwork the approval references</p>
+<label class="checkline"><input id="approval-exists" type="checkbox" checked>Approval record is available</label>
+<div class="fields">
+<div class="field"><label for="approval-order">Order ID</label><input id="approval-order" data-source="approval" data-field="orderId"></div>
+<div class="field"><label for="approval-revision">Order revision</label><input id="approval-revision" data-source="approval" data-field="orderRevision"></div>
+<div class="field"><label for="approval-version">Approved version</label><input id="approval-version" data-source="approval" data-field="proofVersion"></div>
+<div class="field"><label for="approval-digest">Approved fingerprint</label><input id="approval-digest" data-source="approval" data-field="proofDigest"></div>
+</div>
+<label class="checkline"><input id="approval-trusted" type="checkbox" checked>Simulate independently verified approval source</label>
+</section>
+<section class="source" aria-labelledby="asset-head"><h3 id="asset-head">Production asset</h3><p>The file intended for the actual handoff</p><div class="fields">
+<div class="field"><label for="asset-order">Order ID</label><input id="asset-order" data-source="productionAsset" data-field="orderId"></div>
+<div class="field"><label for="asset-version">Source proof version</label><input id="asset-version" data-source="productionAsset" data-field="basedOnProofVersion"></div>
+<div class="field wide"><label for="asset-text">Production text</label><input id="asset-text" data-source="productionAsset" data-field="personalizationText"></div>
+<div class="field"><label for="asset-font">Font</label><input id="asset-font" data-source="productionAsset" data-field="font"></div>
+<div class="field"><label for="asset-placement">Placement</label><input id="asset-placement" data-source="productionAsset" data-field="placement"></div>
+<div class="field wide"><label for="asset-digest">File fingerprint</label><input id="asset-digest" data-source="productionAsset" data-field="contentDigest"></div>
+</div><label class="checkline"><input id="asset-trusted" type="checkbox" checked>Simulate independent text, font and placement extraction</label></section>
+</div>
+<button class="primary" type="button" id="compare">Compare evidence</button>
+<p class="testnote">The trust switches simulate server-verified references in this fictional test. A real merchant's checkbox cannot establish approval or prove a file was analyzed.</p>
+<div class="divider"></div>
+<section id="results" aria-live="polite"><div class="eyebrow">Rule findings</div>
+<h2 class="result-summary" id="result-title">Waiting for comparison</h2>
+<p class="result-note" id="result-intro"></p>
+<div id="findings"></div>
+<details class="disclosure" id="matched-details"><summary id="match-count">Matching checks</summary><div id="matching"></div></details>
+</section>
+<section class="decision"><h3>Your assessment</h3>
+<p>Only you can decide what to do next based on your existing production process. Recording a note here is for this fictional test; it does not update a Shopify order, 1C, a machine or another system.</p>
+<label for="decision-note" class="eyebrow">Your decision or next verification step</label>
+<textarea id="decision-note" placeholder="For example: ask the customer to confirm the intended spelling before manufacturing."></textarea>
+<button id="record" class="primary" type="button">Record my assessment</button>
+<p class="testnote" id="record-status" role="status"></p>
+<div id="assessments" class="history"></div>
+</section>
+</div></div>
+</main>
+<footer>Testing environment. Fictional values and simulated verification only. No file parser, payment, production integration or automatic workflow decision.</footer>
+</div>
+<script type="module">
+import {evaluateEvidenceCheckpoint} from './engine.mjs';
+import {personalizedOrderPolicy,exampleEvidence,exampleAction,exampleTrustedEvidenceRefs} from './policy.mjs';
+const $=id=>document.getElementById(id);
+const sources=[...document.querySelectorAll('[data-source][data-field]')];
+const presetButtons=[...document.querySelectorAll('[data-preset]')];
+const labels={
+order_identity_proof:'Proof belongs to the order',
+order_identity_approval:'Approval belongs to the order',
+order_identity_asset:'Production file belongs to the order',
+revision_at_approval:'Order revision covered by approval',
+approved_proof_version:'Proof version matches approval',
+approved_proof_digest:'Exact proof reference at approval',
+production_derived_version:'Production uses approved proof version',
+order_vs_approved_text:'Order text versus approved proof',
+approved_vs_asset_text:'Approved text versus production file',
+approved_vs_asset_font:'Approved font versus production file',
+approved_vs_asset_placement:'Approved placement versus production file',
+production_asset_fingerprint:'Production fingerprint supplied',
+customer_approval_provenance:'Approval independently verified',
+production_asset_extraction:'File properties independently verified'
+};
+let lastResult=null;
+function preset(name){
+ const evidence=exampleEvidence();
+ if(name==='spelling')evidence.approvedProof.fields.personalizationText='SOPHIA';
+ if(name==='revision')evidence.productionAsset.fields.basedOnProofVersion='proof-v2';
+ if(name==='placement')evidence.productionAsset.fields.placement='back-left';
+ for(const input of sources)input.value=evidence[input.dataset.source]?.fields?.[input.dataset.field]??'';
+ $('approval-exists').checked=true;
+ $('approval-trusted').checked=true;
+ $('asset-trusted').checked=true;
+ presetButtons.forEach(b=>b.setAttribute('aria-pressed',String(b.dataset.preset===name)));
+ compare();
+}
+function gather(){
+ const evidence=exampleEvidence();
+ for(const input of sources){
+   const src=input.dataset.source,field=input.dataset.field;
+   if(!evidence[src])evidence[src]={fields:{}};
+   evidence[src].fields[field]=input.value;
+ }
+ if(!$('approval-exists').checked)delete evidence.approval;
+ const trusted=exampleTrustedEvidenceRefs().filter(ref=>{
+   if(ref.startsWith('approval.'))return $('approval-exists').checked && $('approval-trusted').checked;
+   return $('asset-trusted').checked;
+ });
+ return {evidence,trusted};
+}
+function findingNode(finding){
+ const wrap=document.createElement('div');wrap.className='finding';
+ const status=document.createElement('div');status.className='finding-status';
+ status.textContent=finding.observation.replaceAll('_',' ');
+ const title=document.createElement('strong');title.textContent=labels[finding.ruleId]||finding.ruleId;
+ const desc=document.createElement('small');desc.textContent=finding.detail;
+ wrap.append(status,title,desc);
+ if(Object.prototype.hasOwnProperty.call(finding,'leftValue')){
+   const pair=document.createElement('div');pair.className='pair';
+   pair.textContent='Source A: '+JSON.stringify(finding.leftValue)+' | Source B: '+JSON.stringify(finding.rightValue);
+   wrap.append(pair);
+ }
+ return wrap;
+}
+function compare(){
+ const {evidence,trusted}=gather();
+ let result;
+ try{
+  result=evaluateEvidenceCheckpoint({policy:personalizedOrderPolicy,evidence,proposedAction:exampleAction(),trustedEvidenceRefs:trusted});
+ }catch(error){
+  $('result-title').textContent='Unable to compare';
+  $('result-intro').textContent='Review the entered values and try again.';
+  return;
+ }
+ lastResult=result;
+ const all=result.findings,issues=all.filter(f=>result.unresolvedRuleIds.includes(f.ruleId));
+ const aligned=all.filter(f=>!result.unresolvedRuleIds.includes(f.ruleId));
+ const tally=issues.reduce((a,f)=>(a[f.observation]=(a[f.observation]||0)+1,a),{});
+ $('result-title').textContent=issues.length===0?'No discrepancies found in these rules':
+  issues.length+' rule'+(issues.length===1?' requires':'s require')+' attention';
+ $('result-intro').textContent=issues.length===0?
+  'No difference was observed within this limited policy scope. This is not production authorization.':
+  Object.entries(tally).map(([k,n])=>n+' '+k.replaceAll('_',' ')).join(' · ')+'. No production decision has been made.';
+ $('findings').replaceChildren(...issues.map(findingNode));
+ $('match-count').textContent=aligned.length+' checks with no observed conflict';
+ $('matching').replaceChildren(...aligned.map(findingNode));
+}
+$('compare').addEventListener('click',compare);
+presetButtons.forEach(b=>b.addEventListener('click',()=>preset(b.dataset.preset)));
+for(const element of sources)element.addEventListener('input',()=>presetButtons.forEach(b=>b.setAttribute('aria-pressed','false')));
+for(const id of ['approval-exists','approval-trusted','asset-trusted'])$(id).addEventListener('change',()=>presetButtons.forEach(b=>b.setAttribute('aria-pressed','false')));
+$('record').addEventListener('click',()=>{
+ const note=$('decision-note').value.trim();
+ if(note.length<8){$('record-status').textContent='Add a specific verification step or reason (at least 8 characters).';return}
+ if(!lastResult){$('record-status').textContent='Compare the evidence first.';return}
+ const item=document.createElement('div');
+ item.textContent='My assessment: '+note+' | '+lastResult.unresolvedRuleIds.length+' unresolved rules. No order state changed.';
+ $('assessments').prepend(item);
+ $('decision-note').value='';
+ $('record-status').textContent='Assessment recorded in this browser session only.';
+});
+preset('spelling');
+</script>
+</body></html>
