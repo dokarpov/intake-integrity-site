@@ -9,6 +9,8 @@ on:
       - 'decision-lab.html'
       - 'setup.html'
       - 'testing/integrity/**'
+      - 'testing/story/**'
+      - 'scripts/scroll-story.spec.cjs'
       - 'scripts/evidence-preview.spec.cjs'
       - 'scripts/preview.spec.cjs'
       - '.github/workflows/preview-qa.yml'
@@ -38,4 +40,4 @@ jobs:
           cat /tmp/intake-server.log
           exit 1
       - name: Test mobile, desktop, matching decisions and public color contract
-        run: npx playwright test scripts/preview.spec.cjs scripts/evidence-preview.spec.cjs --browser chromium --workers=1 --reporter=line
+        run: npx playwright test scripts/preview.spec.cjs scripts/evidence-preview.spec.cjs scripts/scroll-story.spec.cjs --browser chromium --workers=1 --reporter=line
