@@ -23,7 +23,9 @@ for (const vp of viewports){
   await app.getByRole('button',{name:'Review identity'}).click();
   const after=await iframe.boundingBox();
   expect(Math.round(after.height)).toBe(Math.round(box.height));
-  expect(Math.round(after.y)).toBe(Math.round(box.y));
+  // User and browser may scroll the outer page to bring the iframe into view.
+  // What must remain invariant is the iframe size and the website's layout height.
+  expect(Math.round(after.width)).toBe(Math.round(box.width));
   expect(errors).toEqual([]);
   await context.close();
  });
