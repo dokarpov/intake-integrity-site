@@ -107,3 +107,40 @@ test('reset returns example to original state',async({page})=>{
  await app.getByRole('button',{name:'Reset example'}).click();
  await expect(app.locator('#attention')).toHaveText('3 need attention');
 });
+
+
+test('every published route uses white background and approved fonts', async ({page})=>{
+ const routes=['/','/preview/','/preview/operator.html','/mvp/','/preview/integrations.html','/decision-lab.html','/setup.html'];
+ for(const route of routes){
+  await page.goto('http://127.0.0.1:4173'+route,{waitUntil:'domcontentloaded'});
+  const state=await page.evaluate(()=>({
+   html:getComputedStyle(document.documentElement).backgroundColor,
+   body:getComputedStyle(document.body).backgroundColor,
+   text:getComputedStyle(document.body).fontFamily,
+   overflow:document.documentElement.scrollWidth>window.innerWidth
+  }));
+  expect(state.html,route+' html canvas').toBe('rgb(255, 255, 255)');
+  expect(state.body,route+' body canvas').toBe('rgb(255, 255, 255)');
+  expect(state.text,route+' body font').toContain('DM Sans');
+  expect(state.overflow,route+' horizontal overflow').toBe(false);
+ }
+});
+test('legacy linked MVP and integrations page have no green or violet component palettes',async({page})=>{
+ await page.goto('http://127.0.0.1:4173/mvp/',{waitUntil:'domcontentloaded'});
+ const mvp=await page.evaluate(()=>{
+   const focus=getComputedStyle(document.querySelector('button'),'::before');
+   const pill=document.querySelector('.pill');
+   return {css:document.querySelector('style')?.textContent||'',background:getComputedStyle(document.body).backgroundColor};
+ });
+ expect(mvp.background).toBe('rgb(255, 255, 255)');
+ for(const color of ['#6c5a91','#5d5276','#f0eff5'])expect(mvp.css).not.toContain(color);
+ await page.goto('http://127.0.0.1:4173/preview/integrations.html',{waitUntil:'domcontentloaded'});
+ const integration=await page.evaluate(()=>({
+  body:getComputedStyle(document.body).backgroundColor,
+  notice:getComputedStyle(document.querySelector('.notice')).backgroundColor,
+  style:document.querySelector('style')?.textContent||''
+ }));
+ expect(integration.body).toBe('rgb(255, 255, 255)');
+ expect(integration.notice).toBe('rgb(255, 255, 255)');
+ for(const color of ['#f7f8f6','#eaf0e9','#617067'])expect(integration.style).not.toContain(color);
+});
