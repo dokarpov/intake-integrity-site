@@ -1,0 +1,232 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><meta name="theme-color" content="#ffffff"><title>Intake Integrity · Review queue</title><link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet"><style>
+:root{--ink:#242424;--muted:#616161;--line:#e4e4e4}
+html,body{background:#fff!important;color:var(--ink);-webkit-text-size-adjust:100%;text-size-adjust:100%}
+body{overflow-x:hidden;font-family:"DM Sans",Arial,sans-serif}
+.shell{width:min(calc(100% - 76px),1110px);margin:0 auto}
+.topbar{border-bottom:1px solid var(--line);height:72px;display:flex;align-items:center}
+.logo{font:700 20px "Space Grotesk",Arial,sans-serif;letter-spacing:-.075em}.logo span{color:#999}
+.intro{padding:55px 0 31px;max-width:650px;background:#fff}
+.intro h1{font:600 clamp(40px,5vw,63px)/1.07 "Space Grotesk",Arial,sans-serif;letter-spacing:-.057em;margin:14px 0 16px}
+.intro h1 span{color:#777}
+.intro p{font-size:16px;line-height:1.62;color:#555;margin:0}
+.eyebrow{font-size:11px;letter-spacing:.08em;text-transform:uppercase;font-weight:700;color:#777}
+.queue-title{display:flex;gap:15px;justify-content:space-between;align-items:baseline;flex-wrap:wrap;border-bottom:1px solid var(--line);padding:14px 0 19px}
+.queue-title h2{font:600 23px "Space Grotesk",Arial,sans-serif;letter-spacing:-.04em;margin:0}
+.queue-title p{font-size:13px;color:#666;margin:0}
+.workspace{display:grid;grid-template-columns:minmax(0,.9fr) minmax(0,1.1fr);gap:37px;align-items:start}
+.inbox{min-width:0}.case-btn{width:100%;display:block;background:#fff;border:0;border-bottom:1px solid var(--line);text-align:left;border-radius:0;color:#242424;padding:18px 10px 19px 0}
+.case-btn[aria-current=true]{box-shadow:inset 3px 0 #242424;padding-left:13px}
+.case-btn:hover{background:#fafafa}
+.case-kind{display:block;color:#777;font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.025em}
+.case-btn strong{display:block;font:600 18px "Space Grotesk",Arial,sans-serif;letter-spacing:-.035em;margin:5px 0}
+.case-btn small{color:#656565;display:block;font-size:13px;line-height:1.55}
+.case-pane{min-width:0;border-bottom:1px solid var(--line);padding:27px 0 35px}
+.case-pane[hidden],#proof[hidden]{display:none!important}
+.case-pane h3{font:600 clamp(23px,2.5vw,31px)/1.17 "Space Grotesk",Arial,sans-serif;letter-spacing:-.047em;margin:0 0 11px}
+.case-pane p{font-size:14px;line-height:1.6;color:#5a5a5a}
+.incoming-note{border-top:1px solid var(--line);border-bottom:1px solid var(--line);padding:15px 0;margin:19px 0;font-size:14px;line-height:1.6}
+.incoming-note b{display:block;font-size:11px;color:#777;text-transform:uppercase;letter-spacing:.06em;margin-bottom:5px}
+.case-subhead{font:600 16px "Space Grotesk",Arial,sans-serif;letter-spacing:-.035em;margin:22px 0 10px}
+.candidates{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;margin-bottom:17px}
+.candidate{border:1px solid var(--line);padding:13px;border-radius:5px;min-width:0;font-size:13px;line-height:1.5}
+.candidate b{display:block;font:600 15px "Space Grotesk",Arial,sans-serif}.candidate small{display:block;color:#666;margin-top:5px}
+.details-row{display:grid;grid-template-columns:95px minmax(0,1fr);gap:12px;border-bottom:1px solid #ededed;padding:10px 0;font-size:13px;line-height:1.5}
+.details-row dt{color:#777}.details-row dd{margin:0;overflow-wrap:anywhere}
+.primary-action{min-height:47px;background:#242424;color:#fff;border:1px solid #242424;border-radius:6px;padding:11px 19px;font-weight:700;font-size:14px}
+.primary-action:hover{background:#444}
+.case-actions{margin-top:21px}
+.form-field{margin:0 0 16px}.form-field label{display:block;font-size:12px;font-weight:700;margin-bottom:6px;color:#444}
+.form-field input,.form-field textarea,.form-field select{border:1px solid #cacaca;background:#fff;color:#222;display:block;width:100%;padding:11px 12px;border-radius:5px;font-size:15px}
+.form-field textarea{min-height:82px}
+.verify{display:flex;gap:9px;align-items:flex-start;font-size:13px;line-height:1.5;color:#444;margin-bottom:16px}
+.verify input{flex:0 0 17px;width:17px;height:17px;margin:2px 0;accent-color:#222}
+#proof{border-top:1px solid var(--line);margin-top:20px;padding-top:19px}
+.small-note{font-size:12px;color:#686868;line-height:1.65;margin:15px 0}
+.utilities{display:flex;flex-wrap:wrap;gap:25px;padding:25px 0 35px;border-top:1px solid var(--line)}
+.utilities details{flex:1 1 275px;min-width:0}.utilities summary{cursor:pointer;font-size:14px;font-weight:700}.utilities p{font-size:13px;color:#666;line-height:1.65}
+.utilities form{margin-top:18px}.audit-line{border-bottom:1px solid #eee;padding:10px 0;font-size:12px;color:#555;line-height:1.5}
+.footer{border-top:1px solid var(--line);padding:25px 0 50px;font-size:12px;line-height:1.7;color:#6a6a6a}
+.reset{border:0;background:transparent;color:#666;text-decoration:underline;text-underline-offset:3px;font-size:12px;margin-left:12px}
+@media(max-width:900px){.workspace{grid-template-columns:1fr;gap:0}.case-pane{padding-top:24px}.intro{padding:43px 0 26px}}
+@media(max-width:620px){.shell{width:calc(100% - 38px)}.topbar{height:66px}.logo{font-size:19px}.intro{padding:37px 0 26px}.intro h1{font-size:clamp(36px,9.2vw,46px)}.intro p{font-size:14px}.queue-title h2{font-size:20px}.queue-title p{font-size:12px}.case-btn strong{font-size:17px}.case-pane h3{font-size:25px}.candidates{grid-template-columns:1fr}.primary-action{width:100%}.details-row{grid-template-columns:90px minmax(0,1fr)}}
+
+/* One bounded, clearly identified product surface. Website canvas stays pure white. */
+.product-stage{padding:12px 0 77px}
+.product-stage-label{font-size:11px;font-weight:700;letter-spacing:.075em;text-transform:uppercase;color:#737373;margin:0 0 15px}
+.product-screen{background:#fff;border:1px solid #bfc0c2;border-radius:12px;overflow:hidden;box-shadow:0 18px 48px rgba(18,18,18,.075)}
+.product-screen-bar{min-height:53px;padding:13px clamp(18px,3vw,32px);display:flex;align-items:center;justify-content:space-between;gap:12px;border-bottom:1px solid #dedede;background:#f7f7f7}
+.product-screen-name{font:600 14px/1.25 "Space Grotesk",Arial,sans-serif;letter-spacing:-.035em;color:#292929}
+.product-screen-context{font-size:12px;line-height:1.35;color:#777;white-space:nowrap}
+.product-screen-body{padding:0 clamp(18px,3.2vw,35px);background:#fff}
+.product-screen-body .queue-title{padding-top:27px}
+.product-screen-body .case-pane{border-bottom:0}
+.product-screen-body .utilities{padding-bottom:27px}
+.product-screen-bottom{border-top:1px solid #e4e4e4;padding:12px clamp(18px,3vw,32px);background:#fafafa;display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap}
+.product-screen-bottom span{font-size:12px;color:#666;line-height:1.5}
+.product-screen-bottom .reset{margin:0;min-height:37px;padding:7px 0;color:#555}
+.site-footer{border-top:1px solid var(--line);font-size:12px;color:#727272;line-height:1.7;padding:25px 0 45px}
+@media(max-width:620px){.product-stage{padding:5px 0 58px;margin:0 -6px}.product-stage-label{margin-left:6px}.product-screen{border-radius:8px}.product-screen-bar{min-height:49px;padding:12px 16px}.product-screen-name{font-size:13px}.product-screen-context{font-size:11px}.product-screen-body{padding:0 15px}.product-screen-body .queue-title{padding-top:21px}.product-screen-bottom{padding:9px 15px}}
+
+
+:root{color-scheme:light;--ink:#232323;--muted:#626262;--line:#e6e6e6}
+*,*::before,*::after{box-sizing:border-box}
+html,body{height:100%;width:100%;margin:0;overflow:hidden;background:#fff;-webkit-text-size-adjust:100%}
+body{min-width:0;font:400 14px/1.5 "DM Sans",Arial,sans-serif;color:var(--ink)}
+button,input,select,textarea{font:inherit}button{cursor:pointer}
+button:focus-visible,input:focus-visible,textarea:focus-visible,select:focus-visible,summary:focus-visible{outline:2px solid #242424;outline-offset:3px}
+.app{display:grid;grid-template-columns:168px minmax(0,1fr);height:100%;width:100%;overflow:hidden}
+.sidebar{display:flex;flex-direction:column;min-width:0;min-height:0;overflow:auto;border-right:1px solid var(--line);background:#fff;padding:19px 12px}
+.brand{font:700 15px/1.35 "Space Grotesk",Arial,sans-serif;letter-spacing:-.04em;padding:5px 8px 24px}
+.brand small{display:block;margin-top:4px;font:500 11px/1.4 "DM Sans",Arial,sans-serif;letter-spacing:0;color:#777}
+.nav-active{border-radius:7px;padding:12px 10px;background:#f5f5f5;color:#222;font-size:13px;font-weight:700}
+.sidebar-bottom{border-top:1px solid var(--line);padding:13px 8px;margin-top:auto;font-size:11px;color:#777}
+.app-main{min-width:0;min-height:0;overflow-y:auto;overscroll-behavior:contain;scrollbar-gutter:stable}
+.app-topbar{position:sticky;z-index:4;top:0;display:flex;align-items:center;justify-content:space-between;gap:15px;padding:12px 22px;background:#fff;border-bottom:1px solid var(--line);min-height:64px}
+.app-topbar strong{display:block;font:600 17px/1.25 "Space Grotesk",Arial,sans-serif;letter-spacing:-.04em}
+.app-topbar p{margin:3px 0 0;font-size:11px;line-height:1.4;color:#666}
+.app-topbar-note{font-size:11px;color:#757575}
+.app-content{min-width:0;padding:22px 23px 45px}
+.queue-title{padding:0 0 17px;border:0}
+.queue-title h2{font:600 20px/1.2 "Space Grotesk",Arial,sans-serif;letter-spacing:-.04em}
+.queue-title p{font-size:12px}
+.workspace{display:grid;grid-template-columns:minmax(0,.95fr) minmax(0,1.05fr);gap:14px}
+.inbox{min-width:0;border:1px solid var(--line);border-radius:9px;overflow:hidden}
+.inbox .case-btn{padding:14px 14px 16px!important;box-shadow:none!important;border-bottom:1px solid var(--line);overflow-wrap:anywhere}
+.inbox .case-btn:last-child{border-bottom:0}
+.inbox .case-btn[aria-current=true]{background:#f7f7f7;box-shadow:inset 3px 0 #252525!important;padding-left:14px!important}
+.case-btn strong{font-size:15px;overflow-wrap:anywhere;line-height:1.35}
+.case-btn small{font-size:12px}
+.case-kind{font-size:10px}
+.case-pane{min-width:0;align-self:start;border:1px solid var(--line);border-radius:9px;padding:18px 16px 21px}
+.case-pane h3{font-size:23px}
+.case-pane p{font-size:12px}
+.case-subhead{font-size:15px}
+.incoming-note{font-size:13px;padding:12px 0;margin:16px 0}
+.candidate{padding:11px}
+.candidates{grid-template-columns:1fr;gap:8px}
+.details-row{grid-template-columns:88px minmax(0,1fr);gap:8px;font-size:12px}
+.small-note{font-size:11px;line-height:1.6}
+.primary-action{font-size:13px;padding:10px 14px;min-height:44px}
+.form-field input,.form-field textarea,.form-field select{font-size:14px;min-height:44px}
+.utilities{border-top:1px solid var(--line);margin-top:24px;padding:20px 0;display:grid;grid-template-columns:1fr 1fr;gap:24px}
+.utilities summary{font-size:13px}
+.utility-note{border-top:1px solid var(--line);color:#6f6f6f;font-size:11px;line-height:1.6;padding-top:14px;margin-top:12px}
+.reset{font-size:12px}
+@media(max-width:730px){
+.app{grid-template-columns:1fr}.sidebar{display:none}
+.app-main{scrollbar-gutter:auto}
+.app-topbar{padding:12px 16px;min-height:58px}
+.app-topbar strong{font-size:16px}
+.app-content{padding:18px 16px 34px}
+.workspace{grid-template-columns:1fr}
+.case-pane{margin-top:12px}
+.inbox .case-btn{padding:12px 14px!important}
+.queue-title h2{font-size:19px}
+.utilities{grid-template-columns:1fr;gap:17px}
+}
+@media(max-width:350px){.app-content{padding:15px 12px 28px}.app-topbar{padding:10px 12px}.app-topbar-note{display:none}}
+@media(prefers-reduced-motion:reduce){html{scroll-behavior:auto!important}}
+</style></head>
+<body>
+<div class="app">
+<aside class="sidebar" aria-label="Application navigation">
+  <div class="brand">Intake Integrity<small>Sales intake</small></div>
+  <div class="nav-active">Review queue</div>
+  <div class="sidebar-bottom">Example customer data</div>
+</aside>
+<div class="app-main" id="app-scroll">
+  <header class="app-topbar"><div><strong>Review queue</strong><p>Resolve uncertainty before customer records change.</p></div><span class="app-topbar-note">Sales intake</span></header>
+  <main class="app-content">
+    <section class="queue-title"><h2 id="attention">Needs attention</h2><p id="attention-desc">Only cases that require a decision.</p></section>
+    <div class="workspace">
+      <div class="inbox" id="inbox" role="group" aria-label="Cases requiring attention"></div>
+      <article class="case-pane" id="case-pane" aria-live="polite">
+        <h3 id="case-heading"></h3><p id="case-reason"></p>
+        <div class="incoming-note"><b>Incoming enquiry</b><span id="case-message"></span></div>
+        <div id="context"></div><div id="case-actions" class="case-actions"></div><div id="proof" hidden></div><p id="feedback" class="small-note" role="status"></p>
+      </article>
+    </div>
+    <div class="utilities">
+      <details id="try"><summary>Try an incoming enquiry</summary>
+        <p>Use fictional details; the system selects the route.</p>
+        <form id="form">
+          <div class="form-field"><label for="new-name">Name</label><input id="new-name" required maxlength="120" value="Alex Morgan"></div>
+          <div class="form-field"><label for="new-email">Email</label><input id="new-email" type="email" required maxlength="254" value="alex@example.com"></div>
+          <div class="form-field"><label for="new-message">Enquiry</label><textarea id="new-message" required maxlength="1000">Following up on our earlier quote.</textarea></div>
+          <button class="primary-action" type="submit">Check enquiry</button>
+        </form>
+      </details>
+      <details id="audit"><summary>Decision history</summary><div id="audit-items"></div></details>
+    </div>
+    <div class="utility-note">Example with fictional records; no live CRM connection or customer writes. <button id="reset" class="reset" type="button">Reset example</button></div>
+  </main>
+</div>
+</div>
+
+<script>
+'use strict';
+const KEY='intake-exceptions-v1',$=id=>document.getElementById(id),el=(t,c,v)=>{const n=document.createElement(t);if(c)n.className=c;if(v!=null)n.textContent=v;return n},normalize=x=>String(x||'').trim().toLowerCase();
+const seeded=()=>({version:1,seq:205,customers:[
+{id:'CRM-10042',name:'Alex Morgan',email:'alex@example.com',company:'Northstar Studio',owner:'Nina',last:'Proposal scope reviewed',promise:'Send revised quote',next:'Nina to send the quote'},
+{id:'CRM-10052',name:'Sam Lee',email:'sam@example.com',company:'Studio North',owner:'Mia',last:'Discovery call',promise:'Confirm API scope',next:'Follow up after verification'},
+{id:'CRM-10421',name:'Sam Lee',email:'sam@example.com',company:'Studio South',owner:'Luca',last:'Webinar',promise:'Send walkthrough',next:'Demo follow-up'},
+{id:'CRM-10632',name:'Nora Chen',email:'nora@example.com',company:'Example Labs',owner:'Ari',last:'Pricing request',promise:'Send pricing summary',next:'Ari to send summary'}],
+cases:[
+{id:'ENQ-201',name:'Sam Lee',email:'sam@example.com',source:'Website',message:'Two colleagues contacted me separately. Who owns our discussion?',status:'review',reason:'Two possible customer records'},
+{id:'ENQ-202',name:'Taylor Reed',email:'taylor@example.com',source:'Event import',message:'We met at an event. Could you send the pricing and implementation notes?',status:'new',reason:'No existing customer matches'},
+{id:'ENQ-203',name:'Nora Chen',email:'nora@example.com',source:'Account follow-up',message:'Checking when the pricing summary will arrive.',status:'delivery_unknown',key:'delivery-203',reason:'Delivery acknowledgement was lost'},
+{id:'ENQ-200',name:'Alex Morgan',email:'alex@example.com',source:'Verified account reference',message:'Following up on the revised quote.',status:'linked',contactId:'CRM-10042',reason:'Verified account reference and matching email'}],
+ledger:{'delivery-203':{contactId:'CRM-10632',attempts:1,writes:1}},
+audit:[{event:'Verified account match',detail:'Alex Morgan linked to CRM-10042; earlier commitments preserved.'}]});
+let state;try{let s=JSON.parse(localStorage.getItem(KEY));state=s?.version===1&&Array.isArray(s.cases)&&Array.isArray(s.customers)&&s.ledger?s:seeded()}catch{state=seeded()}
+let selected='',editing=false,feedback='';
+const candidates=email=>state.customers.filter(c=>normalize(c.email)===normalize(email));
+const waiting=()=>state.cases.filter(c=>['review','new','delivery_unknown','delivery_check'].includes(c.status));
+const log=(event,detail)=>state.audit.unshift({event,detail});
+const save=()=>{try{localStorage.setItem(KEY,JSON.stringify(state))}catch{}render()};
+function line(area,label,value){const r=el('dl','details-row');r.append(el('dt',null,label),el('dd',null,value));area.append(r)}
+function queue(){const open=waiting(),list=$('inbox');list.replaceChildren();$('attention').textContent=open.length?open.length+' need attention':'No decisions waiting';$('attention-desc').textContent=open.length?'Only cases that require a decision.':'All example cases resolved.';
+if(!open.length){selected='';$('case-pane').hidden=true;return}if(!open.some(x=>x.id===selected))selected=open[0].id;$('case-pane').hidden=false;
+for(const item of open){const b=el('button','case-btn');b.type='button';b.dataset.id=item.id;b.setAttribute('aria-current',String(item.id===selected));b.append(el('span','case-kind',item.status==='review'?'Identity conflict':item.status==='new'?'New customer approval':'Delivery exception'),el('strong',null,item.name+' · '+item.email),el('small',null,item.status==='review'?'Confirm customer identity and ownership':item.status==='new'?'Check contact permission before creation':'Reconcile the original delivery receipt'));b.addEventListener('click',()=>{selected=item.id;editing=false;feedback='';render();if(innerWidth<=900)$('case-pane').scrollIntoView({block:'start'})});list.append(b)}
+}
+function showContext(item){const root=$('context');root.replaceChildren();const matches=candidates(item.email);root.append(el('h4','case-subhead',matches.length>1?'Possible customer records':matches.length===1?'Existing customer context':'Customer lookup'));
+if(!matches.length){root.append(el('p','small-note','No customer found. The original message and source are retained.'));return}
+const grid=el('div','candidates');for(const c of matches){const card=el('div','candidate');card.append(el('b',null,c.name+' · '+c.company),el('small',null,'Owner: '+c.owner+' · '+c.id));grid.append(card)}root.append(grid);
+if(matches.length===1){const c=matches[0];line(root,'Last contact',c.last);line(root,'Promise',c.promise);line(root,'Next action',c.next)}
+else root.append(el('p','small-note','A shared identifier is not identity proof. No record or owner has been selected.'));
+}
+function resolve(item){const dest=item.status==='new'?'new':$('destination')?.value,verified=$('verified')?.checked,permission=$('permission')?.checked,evidence=$('evidence')?.value.trim()||'';
+if(!dest||!verified||evidence.length<12||(dest==='new'&&!permission)){feedback='Independent verification and any required permission must be confirmed.';$('feedback').textContent=feedback;return}
+if(dest!=='new'&&!candidates(item.email).some(c=>c.id===dest)){feedback='Choose a verified matching customer.';$('feedback').textContent=feedback;return}
+if(dest==='new'){if(item.status==='new'&&candidates(item.email).length){feedback='Matching customer appeared. Review identity first.';$('feedback').textContent=feedback;return}
+const id='CRM-'+state.seq++;state.customers.push({id,name:item.name,email:item.email,company:'Not provided',owner:'Unassigned',last:item.source,promise:'Respond to enquiry',next:'Assign owner and respond'});item.status='created';item.contactId=id;log('New contact approved',item.id+' · '+id+' · permission checked')}
+else{item.status='linked';item.contactId=dest;log('Identity verified',item.id+' · '+dest+' · independent check recorded')}
+selected='';editing=false;feedback='';save();
+}
+function showProof(item){const root=$('proof');root.replaceChildren();root.hidden=!editing;if(!editing)return;
+if(item.status==='review'){const f=el('div','form-field'),label=el('label',null,'Verified destination'),select=el('select');label.htmlFor='destination';select.id='destination';const initial=el('option',null,'Select after verification');initial.value='';select.append(initial);
+for(const c of candidates(item.email)){const o=el('option',null,c.company+' · '+c.id);o.value=c.id;select.append(o)}const separate=el('option',null,'Create separate customer');separate.value='new';select.append(separate);f.append(label,select);root.append(f)}
+const fld=el('div','form-field'),lab=el('label',null,'Independent verification evidence'),ta=el('textarea');lab.htmlFor='evidence';ta.id='evidence';ta.maxLength=500;ta.placeholder='Example: Confirmed customer identity through an independent callback';fld.append(lab,ta);root.append(fld);
+const verify=el('label','verify'),v=el('input');v.type='checkbox';v.id='verified';verify.append(v,el('span',null,'I independently verified this customer.'));root.append(verify);
+const consent=el('label','verify'),p=el('input');p.type='checkbox';p.id='permission';consent.append(p,el('span',null,'Permission to contact is confirmed.'));root.append(consent);
+const btn=el('button','primary-action','Record decision');btn.type='button';btn.id='resolve';btn.disabled=true;root.append(btn);
+const sync=()=>{const dest=item.status==='new'?'new':$('destination').value;consent.hidden=dest!=='new';btn.disabled=!(dest&&v.checked&&ta.value.trim().length>=12&&(dest!=='new'||p.checked))};
+for(const [x,event] of [[ta,'input'],[v,'change'],[p,'change']])x.addEventListener(event,sync);
+if(item.status==='review')$('destination').addEventListener('change',sync);sync();btn.addEventListener('click',()=>resolve(item));
+}
+function details(){const item=state.cases.find(x=>x.id===selected);if(!item)return;
+$('case-heading').textContent=item.status==='review'?'Identity needs review':item.status==='new'?'New customer approval':item.status==='delivery_check'?'Delivery remains on hold':'Check delivery outcome';
+$('case-reason').textContent=item.reason;$('case-message').textContent=item.message+' ('+item.source+')';showContext(item);
+const actions=$('case-actions');actions.replaceChildren();
+if(item.status==='delivery_unknown'){const b=el('button','primary-action','Check delivery receipt');b.type='button';b.addEventListener('click',()=>{const r=state.ledger[item.key];if(!r){item.status='delivery_check';item.reason='Receipt unknown; blind retry blocked';log('Delivery held',item.id+' · no safe receipt available')}else{r.attempts++;item.status='delivered';item.contactId=r.contactId;log('Delivery reconciled',item.id+' · one original simulated write; safe replay confirmed')}selected='';editing=false;feedback='';save()});actions.append(b,el('p','small-note','In this example the previous write succeeded but its acknowledgement was lost. Looking up the original delivery key avoids a duplicate.'))}
+else if(item.status==='delivery_check')actions.append(el('p','small-note','The receipt is still unknown. No blind retry is attempted.'));
+else if(!editing){const b=el('button','primary-action',item.status==='review'?'Review identity':'Review new record');b.type='button';b.addEventListener('click',()=>{editing=true;details()});actions.append(b)}
+showProof(item);$('feedback').textContent=feedback;
+}
+function render(){queue();details();$('audit-items').replaceChildren(...state.audit.map(x=>el('div','audit-line',x.event+': '+x.detail)))}
+$('form').addEventListener('submit',event=>{event.preventDefault();const name=$('new-name').value.trim(),email=normalize($('new-email').value),message=$('new-message').value.trim();if(!name||!email||!message)return;
+const matches=candidates(email),reason=matches.length>1?'Multiple customer records share this email':matches.length===1?'Email alone is not independent identity proof':'No existing customer matches',status=matches.length?'review':'new',id='ENQ-'+state.seq++;
+state.cases.unshift({id,name,email,message,status,source:'Example intake',reason});log('Enquiry checked',id+' · '+reason);selected=id;editing=false;feedback='';save();$('try').open=false;$('case-pane').scrollIntoView({block:'start'})});
+$('reset').addEventListener('click',()=>{state=seeded();selected='';editing=false;feedback='';save()});render();
+</script></body></html>
