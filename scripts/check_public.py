@@ -2,7 +2,7 @@
 """Fail closed on likely secrets and organization-specific identifiers in publishable files."""
 import pathlib, re, sys
 ROOT = pathlib.Path(__file__).resolve().parents[1]
-FILES = ("index.html", "decision-lab.html", "setup.html", "preview/index.html", "preview/operator.html", "preview/tokens.css", "preview/integrations.html", "mvp/index.html", "mvp/engine.mjs")
+FILES = ("index.html", "decision-lab.html", "setup.html", "preview/index.html", "preview/operator.html", "preview/tokens.css", "preview/integrations.html", "mvp/index.html", "mvp/engine.mjs", "testing/integrity/index.html", "testing/integrity/engine.mjs", "testing/integrity/policy.mjs")
 RULES = {
  "private key": re.compile(r"-----BEGIN (?:RSA |EC |OPENSSH |DSA )?PRIVATE KEY-----"),
  "credential assignment": re.compile(r"(?i)(?:api[_-]?key|client[_-]?secret|access[_-]?token|password)\s*[:=]\s*['\\\"][^'\\\"]{8,}['\\\"]"),
