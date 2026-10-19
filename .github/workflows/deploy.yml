@@ -25,10 +25,10 @@ jobs:
           mkdir -p dist
           cp index.html decision-lab.html setup.html dist/
           mkdir -p dist/preview
-          cp preview/index.html preview/tokens.css preview/integrations.html dist/preview/
+          cp preview/index.html preview/operator.html preview/tokens.css preview/integrations.html dist/preview/
           mkdir -p dist/mvp
           cp mvp/index.html mvp/engine.mjs dist/mvp/
-          test "$(find dist -type f | wc -l)" -eq 8
+          test "$(find dist -type f | wc -l)" -eq 9
   deploy:
     needs: verify
     environment:
@@ -46,10 +46,10 @@ jobs:
           python3 scripts/check_public.py
           mkdir -p dist/preview
           cp index.html decision-lab.html setup.html dist/
-          cp preview/index.html preview/tokens.css preview/integrations.html dist/preview/
+          cp preview/index.html preview/operator.html preview/tokens.css preview/integrations.html dist/preview/
           mkdir -p dist/mvp
           cp mvp/index.html mvp/engine.mjs dist/mvp/
-          test "$(find dist -type f | wc -l)" -eq 8
+          test "$(find dist -type f | wc -l)" -eq 9
       - uses: actions/configure-pages@v5
       - uses: actions/upload-pages-artifact@v3
         with:
