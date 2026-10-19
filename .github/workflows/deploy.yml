@@ -30,7 +30,9 @@ jobs:
           cp mvp/index.html mvp/engine.mjs dist/mvp/
           mkdir -p dist/testing/integrity
           cp testing/integrity/index.html testing/integrity/engine.mjs testing/integrity/policy.mjs dist/testing/integrity/
-          test "$(find dist -type f | wc -l)" -eq 12
+          mkdir -p dist/testing/story
+          cp testing/story/index.html dist/testing/story/
+          test "$(find dist -type f | wc -l)" -eq 13
   deploy:
     needs: verify
     environment:
@@ -53,7 +55,9 @@ jobs:
           cp mvp/index.html mvp/engine.mjs dist/mvp/
           mkdir -p dist/testing/integrity
           cp testing/integrity/index.html testing/integrity/engine.mjs testing/integrity/policy.mjs dist/testing/integrity/
-          test "$(find dist -type f | wc -l)" -eq 12
+          mkdir -p dist/testing/story
+          cp testing/story/index.html dist/testing/story/
+          test "$(find dist -type f | wc -l)" -eq 13
       - uses: actions/configure-pages@v5
       - uses: actions/upload-pages-artifact@v3
         with:
