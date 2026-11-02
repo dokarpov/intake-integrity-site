@@ -1,4 +1,4 @@
-# Intake Integrity — Market and design research
+# Acorde — Market and design research
 
 Updated 12 October 2026. This is a directional desk-research summary, not a customer-validation report.
 

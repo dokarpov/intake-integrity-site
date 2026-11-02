@@ -1,4 +1,4 @@
-# Intake Integrity — public experience
+# Acorde — public experience
 
 **Know who is coming back without assigning an enquiry to the wrong person.**
 
@@ -14,13 +14,13 @@ This is a set of **browser-only research experiences using fictional records**. 
 - [Decision Lab](https://dokarpov.github.io/intake-integrity-site/decision-lab.html) — synthetic enrollment/identity scenario.
 - [Organization configuration](https://dokarpov.github.io/intake-integrity-site/setup.html) — fictional mappings and a configuration export.
 
-**Stage:** Synthetic public walkthroughs; backend controls live in the separate Intake Integrity Lab repository. Do not enter personal records or credentials in these demos.
+**Stage:** Synthetic public walkthroughs; backend controls live in the separate Acorde Lab repository. Do not enter personal records or credentials in these demos.
 
 ## Product and implementation boundary
 
 - **Problem:** phone numbers, households and incomplete identifiers can describe more than one person.
 - **Decision:** continue when permitted by evidence; preserve uncertainty and route ambiguous cases to a human.
-- **Implementation:** the separate [Intake Integrity Lab](https://github.com/dokarpov/intake-integrity-lab) demonstrates server-side constraints, consent, review routing, delivery idempotency and evidence controls. Pilot validation is a separate step.
+- **Implementation:** the separate [Acorde Lab](https://github.com/dokarpov/intake-integrity-lab) demonstrates server-side constraints, consent, review routing, delivery idempotency and evidence controls. Pilot validation is a separate step.
 - **Next evidence:** operator usability, exception volume, downstream error prevention, integration performance and support cost.
 
 ## Publication safety

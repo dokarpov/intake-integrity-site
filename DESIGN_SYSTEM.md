@@ -1,4 +1,4 @@
-# Intake Integrity — Unified Design System v2
+# Acorde — Unified Design System v2
 
 ## Direction
 Neutral, Apple-inspired interface. Prioritize readable typography, calm hierarchy, few actions, and a clear next step. Avoid decorative outlines, colorful badges, excessive instructional copy and ornamental animation.
