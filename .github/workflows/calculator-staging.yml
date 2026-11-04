@@ -8,6 +8,9 @@ on:
       - 'calculator.html'
       - 'calculator-engine.mjs'
       - 'calculator-ui.mjs'
+      - 'staging-server.mjs'
+      - 'package.json'
+      - 'scripts/staging-server.test.mjs'
       - 'scripts/revenue-calculator.test.mjs'
       - 'scripts/revenue-calculator.spec.cjs'
       - 'scripts/check_public.py'
@@ -26,11 +29,12 @@ jobs:
           node-version: '22'
       - name: Test calculation accuracy and public privacy rules
         run: |
-          node --test scripts/revenue-calculator.test.mjs
+          node --test scripts/revenue-calculator.test.mjs scripts/staging-server.test.mjs
           node --test mvp/engine.test.mjs mvp/scenarios-12.test.mjs
           python3 scripts/check_public.py
           node --check calculator-engine.mjs
           node --check calculator-ui.mjs
+          node --check staging-server.mjs
       - name: Install browser test dependencies
         run: |
           npm install --no-save @playwright/test
