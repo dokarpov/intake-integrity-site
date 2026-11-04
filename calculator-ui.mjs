@@ -35,6 +35,7 @@ function render(){
     $('contribution').textContent=formatMoney(r.contribution,currency);
     $('rework').textContent=formatMoney(r.annualReworkCost,currency);
     $('stage-breakdown').textContent=formatCount(r.capture)+' '+PRESETS[mode].unit+' missed at entry + '+formatCount(r.handoff)+' lost later = '+formatCount(r.affected)+' at-risk cases per month, with no double-counting.';
+    $('assumption-note').textContent='Based on '+r.assumptions.closeRate+'% assumed conversion, '+r.assumptions.recoverable+'% preventability and '+r.assumptions.margin+'% contribution margin. Open Fine-tune assumptions to change these.';
     const biggest=r.capture>=r.handoff?PRESETS[mode].issueA:PRESETS[mode].issueB;
     $('bottleneck').textContent=r.affected===0?'Your input scenario has zero at-risk cases. Validate the baseline before assuming there is an implementation opportunity.':'The larger modeled failure stage is: '+biggest+'. This is a hypothesis for the audit, not a diagnosed root cause.';
     $('result').classList.remove('empty');$('empty-result').hidden=true;$('result-content').hidden=false;

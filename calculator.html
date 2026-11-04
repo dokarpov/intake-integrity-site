@@ -87,6 +87,13 @@ h1 em{font-style:normal;color:#858585}
 @media(max-width:850px){.calculator-layout{grid-template-columns:1fr;gap:26px}.result{max-width:none}.intro{padding:50px 0 32px}.offers{padding-top:42px}}
 @media(max-width:620px){.shell{width:calc(100% - 36px)}.topbar{height:65px}.intro{padding:44px 0 30px}h1{font-size:clamp(37px,9vw,48px)}.intro p{font-size:15px}.model-intro{padding:28px 0 12px}.segment-picker{gap:7px;margin:17px 0 23px}.segment-picker button{flex:1 1 100%;width:100%;text-align:left}.calculator-layout{padding-bottom:50px}.fields{gap:15px 10px}.field label{font-size:12px;min-height:48px}.field .help{min-height:60px}.result{padding:21px 19px}.offer-grid{grid-template-columns:1fr}.offer+.offer{border-left:0;border-top:1px solid #ddd}.offer{padding:24px}.action{width:100%}.offers{padding-bottom:50px}.form-actions{align-items:stretch}.reset{width:100%;text-align:center}}
 @media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}}
+.advanced-settings{border-top:1px solid var(--line);border-bottom:1px solid var(--line);margin:23px 0 0;padding:15px 0 16px}
+.advanced-settings summary{cursor:pointer;font-size:14px;font-weight:700;line-height:1.5}
+.advanced-settings summary span{color:#888;font-size:12px;font-weight:500;margin-left:7px}
+.advanced-settings[open] summary{margin-bottom:13px}
+.advanced-note{font-size:12px;color:#6a6a6a;line-height:1.65;max-width:580px;margin:0 0 18px}
+.advanced-grid{margin-bottom:4px}
+@media(max-width:620px){.advanced-settings summary span{display:block;margin:3px 0 0}.advanced-grid .field label{min-height:43px}}
 </style>
 </head>
 <body>
@@ -133,6 +140,22 @@ h1 em{font-style:normal;color:#858585}
             <p class="help">Of the cases not lost at entry, to avoid double-counting.</p>
           </div>
           <div class="field">
+            <label for="currency">Currency</label>
+            <select id="currency" name="currency">
+              <option value="EUR">EUR · Euro</option>
+              <option value="USD">USD · US dollar</option>
+              <option value="GBP">GBP · British pound</option>
+              <option value="AED">AED · UAE dirham</option>
+              <option value="MXN">MXN · Mexican peso</option>
+            </select>
+            <p class="help">Currency label only; no exchange-rate conversion.</p>
+          </div>
+        </div>
+        <details class="advanced-settings" id="advanced-settings">
+          <summary>Fine-tune conversion, recovery and staffing assumptions <span>5 editable estimates</span></summary>
+          <p class="advanced-note">These assumed values affect the result. Open to replace them with your actual figures; they are not sector benchmarks.</p>
+          <div class="fields advanced-grid">
+          <div class="field">
             <label for="closeRate" id="close-label">Would become a sale (%)</label>
             <input id="closeRate" name="closeRate" inputmode="decimal" type="number" required min="0" max="100" step="any">
             <p class="help">Estimated conversion if the at-risk case were handled.</p>
@@ -148,17 +171,6 @@ h1 em{font-style:normal;color:#858585}
             <p class="help">After variable costs, before overheads.</p>
           </div>
           <div class="field">
-            <label for="currency">Currency</label>
-            <select id="currency" name="currency">
-              <option value="EUR">EUR · Euro</option>
-              <option value="USD">USD · US dollar</option>
-              <option value="GBP">GBP · British pound</option>
-              <option value="AED">AED · UAE dirham</option>
-              <option value="MXN">MXN · Mexican peso</option>
-            </select>
-            <p class="help">Currency label only; no exchange-rate conversion.</p>
-          </div>
-          <div class="field">
             <label for="reworkMinutes">Manual rework per affected case (min)</label>
             <input id="reworkMinutes" name="reworkMinutes" inputmode="decimal" type="number" required min="0" max="1440" step="any">
             <p class="help">Time spent finding, correcting or chasing a case.</p>
@@ -168,7 +180,8 @@ h1 em{font-style:normal;color:#858585}
             <input id="hourlyCost" name="hourlyCost" inputmode="decimal" type="number" required min="0" max="5000" step="any">
             <p class="help">Cost of staff time, not a sales-rate assumption.</p>
           </div>
-        </div>
+          </div>
+        </details>
         <p class="explain">This calculator models a scenario, not an observed loss. Presets are illustrative and are not claimed to be market averages. Your estimates remain in your browser unless you choose to include them in an email.</p>
         <div class="form-actions"><button class="action" type="submit" id="calculate">Calculate potential exposure</button><button class="reset" type="button" id="reset">Reset example</button></div>
         <p id="error" role="alert" hidden></p>
@@ -183,8 +196,8 @@ h1 em{font-style:normal;color:#858585}
           <div class="metric"><span>Potential monthly contribution</span><strong id="contribution"></strong></div>
           <div class="metric subdued"><span>Separate annual rework cost that might be avoided</span><strong id="rework"></strong></div>
           <div class="bottleneck" id="bottleneck"></div>
-          <div class="result-proof"><p id="stage-breakdown"></p><p><b>Read carefully:</b> this is a modeled opportunity, not lost cash, net profit or a guaranteed recovery. Time savings are shown separately and are not added to revenue.</p><p id="audit-evidence"></p></div>
-          <div class="form-actions"><button id="copy" class="action light" type="button">Copy calculation</button><span id="copy-status" role="status"></span></div>
+          <div class="result-proof"><p id="stage-breakdown"></p><p id="assumption-note"></p><p><b>Read carefully:</b> this is a modeled opportunity, not lost cash, net profit or a guaranteed recovery. Time savings are shown separately and are not added to revenue.</p><p id="audit-evidence"></p></div>
+          <div class="form-actions"><button id="copy" class="action light" type="button">Copy calculation</button><span id="copy-status" role="status"></span></div><div class="form-actions"><a id="next-action" class="action" href="#next-step">See audit and implementation options</a></div>
         </div>
       </aside>
     </section>
