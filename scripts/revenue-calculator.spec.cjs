@@ -1,0 +1,88 @@
+const {test,expect}=require('@playwright/test');
+const root='http://127.0.0.1:4173';
+const sizes=[{width:320,height:720},{width:375,height:812},{width:390,height:844},{width:768,height:1024},{width:1440,height:900}];
+test('Acorde home has the commercial calculator as its second section',async({page})=>{
+  const errors=[];page.on('pageerror',e=>errors.push(e.message));
+  await page.goto(root+'/');
+  const order=await page.evaluate(()=>[...document.querySelector('main').children].slice(0,3).map(e=>e.className));
+  expect(order[0]).toContain('intro');
+  expect(order[1]).toContain('loss-entrance');
+  expect(order[2]).toContain('queue-title');
+  await expect(page.locator('#loss-title')).toContainText('What do missed handoffs');
+  await expect(page.locator('.loss-cta')).toHaveAttribute('href','./calculator.html');
+  await page.locator('.loss-cta').click();
+  await expect(page).toHaveURL(/calculator\.html$/);
+  await expect(page.locator('h1')).toContainText('Where is revenue');
+  expect(errors).toEqual([]);
+});
+test('calculator does not claim preset assumptions are measured losses',async({page})=>{
+  await page.goto(root+'/calculator.html');
+  await expect(page.locator('#empty-result')).toBeVisible();
+  await expect(page.locator('#result-content')).toBeHidden();
+  await expect(page.getByText('Illustrative starting values. Edit them.')).toBeVisible();
+  await expect(page.locator('.explain')).toContainText('not an observed loss');
+  await page.getByRole('button',{name:'Calculate potential exposure'}).click();
+  await expect(page.locator('#annual-revenue')).not.toBeEmpty();
+  await expect(page.locator('.result-proof')).toContainText('not lost cash');
+  await expect(page.locator('#audit-link')).toHaveAttribute('href','https://contra.com/dokarpov');
+  await expect(page.locator('#build-link')).toHaveAttribute('href','https://contra.com/dokarpov');
+  expect(await page.locator('body').innerText()).not.toContain('Guaranteed ROI');
+  expect(await page.locator('body').innerText()).not.toContain('dokarpov@gmail.com');
+});
+test('editable scenario computes mutually exclusive failure stages and separate staff costs',async({page})=>{
+  await page.goto(root+'/calculator.html?mode=sales');
+  const values={volume:'100',avgValue:'100',captureLoss:'10',handoffLoss:'20',closeRate:'100',recoverable:'50',margin:'30',reworkMinutes:'0',hourlyCost:'0'};
+  for(const [id,val] of Object.entries(values))await page.locator('#'+id).fill(val);
+  await page.locator('#calculate').click();
+  await expect(page.locator('#annual-revenue')).toContainText('16,800');
+  await expect(page.locator('#monthly-revenue')).toContainText('1,400');
+  await expect(page.locator('#gross-at-risk')).toContainText('2,800');
+  await expect(page.locator('#contribution')).toContainText('420');
+  await expect(page.locator('#stage-breakdown')).toContainText('10 enquiries missed at entry + 18 lost later = 28');
+  await expect(page.locator('#rework')).toContainText('0');
+  await page.locator('#hourlyCost').fill('100');
+  await page.locator('#reworkMinutes').fill('60');
+  await expect(page.locator('#monthly-revenue')).toContainText('1,400');
+  await expect(page.locator('#rework')).not.toContainText('€0');
+});
+test('three business paths update labels and examples without fabricating benchmarks',async({page})=>{
+  await page.goto(root+'/calculator.html?mode=orders');
+  await expect(page.locator('[data-mode=orders]')).toHaveAttribute('aria-pressed','true');
+  await expect(page.locator('#volume-label')).toContainText('Order attempts per month');
+  await page.locator('#calculate').click();
+  const orders=await page.locator('#annual-revenue').innerText();
+  await page.locator('[data-mode=operations]').click();
+  await expect(page.locator('#volume-label')).toContainText('Billable requests per month');
+  await expect(page.locator('#result-content')).toBeHidden();
+  await page.locator('#calculate').click();
+  const ops=await page.locator('#annual-revenue').innerText();
+  expect(ops).not.toEqual(orders);
+  await page.locator('[data-mode=sales]').click();
+  await expect(page.locator('#volume')).toHaveValue('250');
+  await expect(page.locator('#result-content')).toBeHidden();
+});
+test('zero missed and handoff cases yields no implied leakage',async({page})=>{
+  await page.goto(root+'/calculator.html');
+  await page.locator('#captureLoss').fill('0');
+  await page.locator('#handoffLoss').fill('0');
+  await page.locator('#calculate').click();
+  await expect(page.locator('#annual-revenue')).toContainText('0');
+  await expect(page.locator('#bottleneck')).toContainText('zero at-risk cases');
+});
+for(const viewport of sizes){
+  test('calculator and entry are readable without sideways scrolling at '+viewport.width,async({browser})=>{
+    const context=await browser.newContext({viewport,reducedMotion:'reduce'});
+    const page=await context.newPage(),errors=[];
+    page.on('pageerror',e=>errors.push(e.message));
+    await page.goto(root+'/');
+    expect(await page.evaluate(()=>document.documentElement.scrollWidth>innerWidth)).toBe(false);
+    await expect(page.locator('#revenue-loss')).toBeVisible();
+    await page.goto(root+'/calculator.html');
+    await page.locator('#calculate').click();
+    expect(await page.evaluate(()=>document.documentElement.scrollWidth>innerWidth)).toBe(false);
+    const result=await page.locator('#result').boundingBox();expect(result?.width||0).toBeGreaterThan(240);
+    await expect(page.locator('#audit-link')).toBeVisible();
+    expect(errors).toEqual([]);
+    await context.close();
+  });
+}
