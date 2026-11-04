@@ -11,6 +11,8 @@ on:
       - 'staging-server.mjs'
       - 'package.json'
       - 'scripts/staging-server.test.mjs'
+      - 'scripts/build-staging-neon-preview.mjs'
+      - 'scripts/static-neon-preview.test.mjs'
       - 'scripts/revenue-calculator.test.mjs'
       - 'scripts/revenue-calculator.spec.cjs'
       - 'scripts/check_public.py'
@@ -35,6 +37,11 @@ jobs:
           node --check calculator-engine.mjs
           node --check calculator-ui.mjs
           node --check staging-server.mjs
+      - name: Generate and verify isolated staging bundle
+        run: |
+          node scripts/build-staging-neon-preview.mjs
+          node --check dist/staging-function/index.mjs
+          node --test scripts/static-neon-preview.test.mjs
       - name: Install browser test dependencies
         run: |
           npm install --no-save @playwright/test
