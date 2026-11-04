@@ -1,0 +1,222 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#ffffff">
+<meta name="description" content="Estimate where revenue may slip through sales, orders and operational handoffs. Edit every assumption, then choose a paid audit or six-week implementation.">
+<title>Acorde — Revenue leakage calculator</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{--ink:#242424;--muted:#626262;--line:#e0e0e0;--faint:#f7f7f7;--display:"Space Grotesk",Arial,sans-serif;--body:"DM Sans",Arial,sans-serif}
+*{box-sizing:border-box}
+html{background:#fff;scroll-behavior:smooth;-webkit-text-size-adjust:100%}
+body{margin:0;min-width:320px;background:#fff;color:var(--ink);font:400 16px/1.55 var(--body);-webkit-font-smoothing:antialiased}
+a{color:inherit}button,input,select{font:inherit}button{cursor:pointer}
+:focus-visible{outline:2px solid #242424;outline-offset:3px}
+[hidden]{display:none!important}
+.shell{width:min(calc(100% - 72px),1110px);margin:auto}
+.topbar{height:72px;display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid var(--line);gap:18px}
+.logo{font:700 20px/1 var(--display);letter-spacing:-.07em;text-decoration:none}
+.nav{font-size:13px;font-weight:600;color:#444;text-underline-offset:4px}
+.eyebrow{font-size:11px;letter-spacing:.07em;text-transform:uppercase;color:#777;font-weight:700}
+.intro{padding:72px 0 44px;border-bottom:1px solid var(--line)}
+h1,h2,h3{font-family:var(--display);font-weight:600;letter-spacing:-.053em;line-height:1.13;margin:0}
+h1{font-size:clamp(38px,5.4vw,68px);max-width:900px;margin:17px 0 20px}
+h1 em{font-style:normal;color:#858585}
+.intro p{max-width:680px;color:var(--muted);font-size:17px;line-height:1.65;margin:0}
+.step{font-size:11px;text-transform:uppercase;letter-spacing:.06em;font-weight:700;color:#777}
+.model-intro{padding:35px 0 22px}
+.model-intro h2{font-size:clamp(25px,3vw,34px);margin:8px 0 10px}
+.model-intro p{color:#666;font-size:14px;margin:0;max-width:680px}
+.segment-picker{display:flex;flex-wrap:wrap;gap:8px;margin:20px 0 26px}
+.segment-picker button{border:1px solid #d2d2d2;border-radius:5px;background:#fff;color:#444;font-size:14px;font-weight:700;padding:11px 17px;min-height:44px}
+.segment-picker button[aria-pressed="true"]{background:#242424;border-color:#242424;color:#fff}
+.calculator-layout{display:grid;grid-template-columns:minmax(0,1.05fr) minmax(0,.95fr);gap:44px;align-items:start;padding-bottom:70px}
+.inputs{min-width:0}
+.inputs-head,.result-head{display:flex;justify-content:space-between;align-items:baseline;gap:16px;flex-wrap:wrap;padding-bottom:15px;border-bottom:1px solid var(--line);margin-bottom:19px}
+.inputs-head h3,.result-head h3{font-size:23px}
+.inputs-head small,.result-head small{font-size:12px;color:#777;line-height:1.4}
+.fields{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:15px 18px}
+.field{min-width:0}
+.field label{display:block;font-size:13px;font-weight:700;line-height:1.4;min-height:38px;margin-bottom:7px}
+.field input,.field select{display:block;width:100%;max-width:100%;height:47px;background:#fff;color:#222;border:1px solid #c7c7c7;border-radius:5px;padding:10px 12px;font-size:16px;min-width:0}
+.field input:focus,.field select:focus{border-color:#333;outline:2px solid #eee;outline-offset:1px}
+.field .help{font-size:12px;color:#747474;margin:6px 0 0;min-height:36px;line-height:1.45}
+.full{grid-column:1/-1}
+.explain{margin:23px 0 0;padding:16px 17px;background:var(--faint);border-left:2px solid #c7c7c7;color:#626262;font-size:13px;line-height:1.55}
+.form-actions{display:flex;align-items:center;flex-wrap:wrap;gap:15px;margin-top:22px}
+.action{display:inline-flex;justify-content:center;align-items:center;text-align:center;min-height:48px;padding:12px 20px;border:1px solid #242424;border-radius:5px;background:#242424;color:#fff;font-size:14px;font-weight:700;text-decoration:none}
+.action:hover{background:#444}
+.action.light{background:#fff;color:#242424}
+.action.light:hover{background:#f5f5f5}
+.reset{border:0;background:transparent;text-decoration:underline;text-underline-offset:3px;font-size:13px;color:#555;padding:8px 0}
+#error{color:#a02a25;font-size:13px;line-height:1.4;margin:10px 0 0}
+.result{border:1px solid #d9d9d9;border-radius:8px;background:#fff;padding:clamp(22px,3vw,32px);min-width:0}
+.result.empty{background:#fafafa}
+.result-head{margin-bottom:20px}
+.empty-copy{padding:49px 0;color:#777;max-width:280px;font-size:14px;line-height:1.65}
+.result-hero .eyebrow{color:#666}
+.result-hero strong{display:block;font:600 clamp(32px,4vw,49px)/1.1 var(--display);letter-spacing:-.06em;overflow-wrap:anywhere;margin:10px 0 7px}
+.result-hero p{margin:0 0 23px;color:#666;font-size:13px;line-height:1.6}
+.metric{display:grid;grid-template-columns:minmax(0,1fr) auto;align-items:baseline;gap:14px;border-top:1px solid var(--line);padding:15px 0;font-size:14px}
+.metric span{color:#666}
+.metric strong{font:600 18px/1.2 var(--display);letter-spacing:-.035em;text-align:right;overflow-wrap:anywhere}
+.metric.subdued strong{font-size:16px}
+.result-proof{padding-top:16px;border-top:1px solid var(--line);font-size:12px;color:#777;line-height:1.6}
+.result-proof p{margin:0 0 8px}
+.bottleneck{font-size:13px;line-height:1.55;background:#f7f7f7;padding:13px 16px;margin:5px 0 21px}
+.offers{border-top:1px solid #d5d5d5;padding:56px 0 80px}
+.offers h2{font-size:clamp(28px,3.1vw,42px);max-width:750px;margin:12px 0 12px}
+.offers-intro{font-size:15px;color:#666;max-width:660px;margin:0 0 29px}
+.offer-grid{display:grid;grid-template-columns:1fr 1fr;border:1px solid #ddd;border-radius:8px;overflow:hidden}
+.offer{padding:30px;display:flex;flex-direction:column;align-items:flex-start;min-width:0}
+.offer+.offer{border-left:1px solid #ddd}
+.offer h3{font-size:26px;margin:9px 0 12px}
+.offer p{font-size:14px;line-height:1.62;color:#595959;margin:0 0 17px}
+.offer ul{padding-left:19px;color:#555;font-size:13px;line-height:1.75;margin:0 0 21px}
+.offer .action{margin-top:auto}
+.offer-foot{font-size:12px;color:#777;margin-top:13px!important}
+.method{padding:24px 0 42px;border-top:1px solid var(--line);color:#666;font-size:13px}
+.method summary{font-weight:700;color:#303030;font-size:14px;cursor:pointer;padding:5px 0}
+.method p{max-width:900px;line-height:1.7}
+.site-footer{border-top:1px solid var(--line);padding:25px 0 40px;font-size:12px;color:#777;display:flex;gap:15px;justify-content:space-between;flex-wrap:wrap}
+#copy-status{font-size:12px;color:#666;min-height:16px}
+@media(max-width:850px){.calculator-layout{grid-template-columns:1fr;gap:26px}.result{max-width:none}.intro{padding:50px 0 32px}.offers{padding-top:42px}}
+@media(max-width:620px){.shell{width:calc(100% - 36px)}.topbar{height:65px}.intro{padding:44px 0 30px}h1{font-size:clamp(37px,9vw,48px)}.intro p{font-size:15px}.model-intro{padding:28px 0 12px}.segment-picker{gap:7px;margin:17px 0 23px}.segment-picker button{flex:1 1 100%;width:100%;text-align:left}.calculator-layout{padding-bottom:50px}.fields{gap:15px 10px}.field label{font-size:12px;min-height:48px}.field .help{min-height:60px}.result{padding:21px 19px}.offer-grid{grid-template-columns:1fr}.offer+.offer{border-left:0;border-top:1px solid #ddd}.offer{padding:24px}.action{width:100%}.offers{padding-bottom:50px}.form-actions{align-items:stretch}.reset{width:100%;text-align:center}}
+@media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}}
+</style>
+</head>
+<body>
+<div class="shell">
+  <header class="topbar"><a href="./" class="logo" aria-label="Acorde home">acorde</a><a href="./" class="nav">Back to Acorde</a></header>
+  <main>
+    <section class="intro" aria-labelledby="calculator-title">
+      <div class="eyebrow">Free scenario model · no signup</div>
+      <h1 id="calculator-title">Where is revenue <em>slipping through?</em></h1>
+      <p>Model losses between an incoming request, the next team and the final sale. Start with a sample business, replace every assumption, and see what is worth investigating.</p>
+    </section>
+    <section class="model-intro" aria-labelledby="flow-title">
+      <div class="step">01 / Choose your workflow</div>
+      <h2 id="flow-title">What does your team process?</h2>
+      <p id="segment-description">Enquiries lost between the first message, a responsible owner and the next action.</p>
+      <div class="segment-picker" role="group" aria-label="Business workflow">
+        <button type="button" data-mode="sales" aria-pressed="true">Sales enquiries</button>
+        <button type="button" data-mode="orders" aria-pressed="false">Orders</button>
+        <button type="button" data-mode="operations" aria-pressed="false">Operations</button>
+      </div>
+    </section>
+    <section class="calculator-layout" aria-label="Revenue loss estimation">
+      <form class="inputs" id="calculator-form">
+        <div class="inputs-head"><h3>Your assumptions</h3><small>Illustrative starting values. Edit them.</small></div>
+        <div class="fields">
+          <div class="field">
+            <label for="volume" id="volume-label">Enquiries per month</label>
+            <input id="volume" name="volume" inputmode="numeric" type="number" required min="0" max="1000000" step="1">
+            <p class="help">Unique requests, not messages in a thread.</p>
+          </div>
+          <div class="field">
+            <label for="avgValue">Average sale or order value</label>
+            <input id="avgValue" name="avgValue" inputmode="decimal" type="number" required min="0" max="10000000" step="any">
+            <p class="help">Value of one potential completed transaction.</p>
+          </div>
+          <div class="field">
+            <label for="captureLoss" id="capture-label">Missed at entry (%)</label>
+            <input id="captureLoss" name="captureLoss" inputmode="decimal" type="number" required min="0" max="100" step="any">
+            <p class="help">Share never reliably registered or responded to.</p>
+          </div>
+          <div class="field">
+            <label for="handoffLoss" id="handoff-label">Lost at next step (%)</label>
+            <input id="handoffLoss" name="handoffLoss" inputmode="decimal" type="number" required min="0" max="100" step="any">
+            <p class="help">Of the cases not lost at entry, to avoid double-counting.</p>
+          </div>
+          <div class="field">
+            <label for="closeRate" id="close-label">Would become a sale (%)</label>
+            <input id="closeRate" name="closeRate" inputmode="decimal" type="number" required min="0" max="100" step="any">
+            <p class="help">Estimated conversion if the at-risk case were handled.</p>
+          </div>
+          <div class="field">
+            <label for="recoverable">Potentially preventable (%)</label>
+            <input id="recoverable" name="recoverable" inputmode="decimal" type="number" required min="0" max="100" step="any">
+            <p class="help">Share you could realistically prevent or recover.</p>
+          </div>
+          <div class="field">
+            <label for="margin">Contribution margin (%)</label>
+            <input id="margin" name="margin" inputmode="decimal" type="number" required min="0" max="100" step="any">
+            <p class="help">After variable costs, before overheads.</p>
+          </div>
+          <div class="field">
+            <label for="currency">Currency</label>
+            <select id="currency" name="currency">
+              <option value="EUR">EUR · Euro</option>
+              <option value="USD">USD · US dollar</option>
+              <option value="GBP">GBP · British pound</option>
+              <option value="AED">AED · UAE dirham</option>
+              <option value="MXN">MXN · Mexican peso</option>
+            </select>
+            <p class="help">Currency label only; no exchange-rate conversion.</p>
+          </div>
+          <div class="field">
+            <label for="reworkMinutes">Manual rework per affected case (min)</label>
+            <input id="reworkMinutes" name="reworkMinutes" inputmode="decimal" type="number" required min="0" max="1440" step="any">
+            <p class="help">Time spent finding, correcting or chasing a case.</p>
+          </div>
+          <div class="field">
+            <label for="hourlyCost">Blended staff cost per hour</label>
+            <input id="hourlyCost" name="hourlyCost" inputmode="decimal" type="number" required min="0" max="5000" step="any">
+            <p class="help">Cost of staff time, not a sales-rate assumption.</p>
+          </div>
+        </div>
+        <p class="explain">This calculator models a scenario, not an observed loss. Presets are illustrative and are not claimed to be market averages. Your estimates remain in your browser unless you choose to include them in an email.</p>
+        <div class="form-actions"><button class="action" type="submit" id="calculate">Calculate potential exposure</button><button class="reset" type="button" id="reset">Reset example</button></div>
+        <p id="error" role="alert" hidden></p>
+      </form>
+      <aside class="result empty" id="result" aria-live="polite" aria-atomic="false">
+        <div class="result-head"><h3>Scenario estimate</h3><small>02 / Understand the size</small></div>
+        <div class="empty-copy" id="empty-result">Your scenario will appear here. No email or company details required.</div>
+        <div id="result-content" hidden>
+          <div class="result-hero"><div class="eyebrow">Potential annual recoverable revenue</div><strong id="annual-revenue"></strong><p>Based only on the assumptions you entered, not proven revenue leakage.</p></div>
+          <div class="metric"><span>Monthly recoverable revenue</span><strong id="monthly-revenue"></strong></div>
+          <div class="metric"><span>Monthly gross revenue at risk</span><strong id="gross-at-risk"></strong></div>
+          <div class="metric"><span>Potential monthly contribution</span><strong id="contribution"></strong></div>
+          <div class="metric subdued"><span>Separate annual rework cost that might be avoided</span><strong id="rework"></strong></div>
+          <div class="bottleneck" id="bottleneck"></div>
+          <div class="result-proof"><p id="stage-breakdown"></p><p><b>Read carefully:</b> this is a modeled opportunity, not lost cash, net profit or a guaranteed recovery. Time savings are shown separately and are not added to revenue.</p><p id="audit-evidence"></p></div>
+          <div class="form-actions"><button id="copy" class="action light" type="button">Copy calculation</button><span id="copy-status" role="status"></span></div>
+        </div>
+      </aside>
+    </section>
+    <section class="offers" id="next-step">
+      <div class="step">03 / Turn the estimate into evidence</div>
+      <h2>Find the actual failure. Then decide what to fix.</h2>
+      <p class="offers-intro">Use the model to frame a discussion. A paid audit verifies the leakage before any implementation is proposed.</p>
+      <div class="offer-grid">
+        <article class="offer">
+          <div class="eyebrow">Diagnosis · fixed scope</div><h3>Paid workflow audit</h3>
+          <p>Trace a real order or enquiry from its origin to final outcome. Separate data errors, missed handoffs and conversion problems, and quantify what can actually be improved.</p>
+          <ul><li>Workflow map and evidence sample</li><li>Validated risk and root-cause priorities</li><li>Recommended fixes and measured success criteria</li></ul>
+          <a class="action" id="audit-link" href="mailto:dokarpov@gmail.com?subject=Acorde%20paid%20workflow%20audit">Request a paid audit</a>
+          <p class="offer-foot">Fee and scope agreed in a proposal. No automatic booking.</p>
+        </article>
+        <article class="offer">
+          <div class="eyebrow">Delivery · six weeks</div><h3>Six-week implementation</h3>
+          <p>Implement one bounded workflow and prove it works: capture, identity checks, review, exception handling and a measurable handoff to the destination system.</p>
+          <ul><li>Week 1: baseline, data and acceptance criteria</li><li>Weeks 2–4: build, integration and edge cases</li><li>Weeks 5–6: QA, rollout plan and handover</li></ul>
+          <a class="action light" id="build-link" href="mailto:dokarpov@gmail.com?subject=Acorde%20six-week%20implementation">Discuss six-week delivery</a>
+          <p class="offer-foot">Paid, scoped engagement subject to system access and feasibility.</p>
+        </article>
+      </div>
+    </section>
+    <details class="method">
+      <summary>Calculation method and limitations</summary>
+      <p>At-risk cases = monthly requests × missed-at-entry rate + remaining requests × handoff failure rate. Potential recoverable revenue = at-risk cases × assumed sale conversion × average transaction value × potentially preventable share. Annual values multiply the monthly scenario by 12. Contribution is recoverable revenue × contribution margin. The optional rework estimate uses affected cases × potentially preventable share × staff minutes × hourly cost, and is never included in revenue.</p>
+      <p>Rates may overlap with cancellations, bad leads, capacity limits, seasonality and refunds. It does not establish causality, confirm that the transactions were profitable or predict what an implementation will recover. An audit should validate a representative sample, unique request counts, timelines, source systems, ownership and actual transaction outcomes.</p>
+    </details>
+  </main>
+  <footer class="site-footer"><span>© Acorde · A scenario tool, not an audited financial statement.</span><span>No account required. No tracking or form submission.</span></footer>
+</div>
+<script type="module" src="./calculator-ui.mjs"></script>
+</body>
+</html>
