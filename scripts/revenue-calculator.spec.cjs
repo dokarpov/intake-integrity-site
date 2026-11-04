@@ -97,3 +97,27 @@ for(const viewport of sizes){
     await context.close();
   });
 }
+
+
+test('campaign parameters persist from landing to calculator to the consent-based lead form',async({page})=>{
+  await page.goto(root+'/?utm_source=linkedin&utm_medium=organic&utm_campaign=november_launch');
+  const entry=page.locator('.loss-cta');
+  await expect(entry).toHaveAttribute('href',/utm_source=linkedin/);
+  await entry.click();
+  await expect(page).toHaveURL(/utm_source=linkedin/);
+  await page.getByRole('button',{name:'Calculate potential exposure'}).click();
+  await expect(page.locator('#audit-link')).toHaveAttribute('href',/utm_source=linkedin/);
+  await expect(page.locator('#build-link')).toHaveAttribute('href',/utm_campaign=november_launch/);
+  await page.locator('[data-mode=orders]').click();
+  await expect(page).toHaveURL(/utm_source=linkedin/);
+  await expect(page.locator('#audit-link')).toHaveAttribute('href',/flow=orders/);
+  await page.goto(root+'/privacy.html');
+  await expect(page.getByRole('heading',{name:'Privacy & data use'})).toBeVisible();
+  await expect(page.getByText('Nothing is uploaded when you edit or calculate an estimate.')).toBeVisible();
+});
+
+test('malformed campaign parameters are not forwarded to third party form',async({page})=>{
+  await page.goto(root+'/calculator.html?utm_source='+encodeURIComponent('"><img src=x onerror=1>'));
+  await page.getByRole('button',{name:'Calculate potential exposure'}).click();
+  await expect(page.locator('#audit-link')).not.toHaveAttribute('href',/utm_source=/);
+});

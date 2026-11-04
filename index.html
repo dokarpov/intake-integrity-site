@@ -212,7 +212,7 @@ body{overflow-x:hidden;font-family:"DM Sans",Arial,sans-serif}
 <div class="form-field"><label for="new-message">Enquiry</label><textarea id="new-message" required maxlength="1000">Following up on our earlier quote.</textarea></div>
 <button class="primary-action" type="submit">Check enquiry</button></form></details>
 <details id="audit"><summary>Decision history</summary><div id="audit-items"></div></details></div></main>
-<footer class="footer">Illustrative customer records. No real customer data or CRM changes.<button id="reset" class="reset" type="button">Reset example</button></footer>
+<footer class="footer">Illustrative customer records. No real customer data or CRM changes. <a href="./privacy.html">Privacy &amp; data use</a>. <button id="reset" class="reset" type="button">Reset example</button></footer>
 </div><script>
 'use strict';
 const KEY='intake-exceptions-v1',$=id=>document.getElementById(id),el=(t,c,v)=>{const n=document.createElement(t);if(c)n.className=c;if(v!=null)n.textContent=v;return n},normalize=x=>String(x||'').trim().toLowerCase();
@@ -278,4 +278,18 @@ $('form').addEventListener('submit',event=>{event.preventDefault();const name=$(
 const matches=candidates(email),reason=matches.length>1?'Multiple customer records share this email':matches.length===1?'Email alone is not independent identity proof':'No existing customer matches',status=matches.length?'review':'new',id='ENQ-'+state.seq++;
 state.cases.unshift({id,name,email,message,status,source:'Example intake',reason});log('Enquiry checked',id+' · '+reason);selected=id;editing=false;feedback='';save();$('try').open=false;$('case-pane').scrollIntoView({block:'start'})});
 $('reset').addEventListener('click',()=>{state=seeded();selected='';editing=false;feedback='';save()});render();
-</script></body></html>
+</script>
+<script id="acorde-source-pass-through">
+(()=>{
+  const incoming=new URLSearchParams(location.search),allowed=['utm_source','utm_medium','utm_campaign'];
+  const kept=new URLSearchParams();
+  for(const key of allowed){const value=incoming.get(key);if(value&&/^[a-zA-Z0-9_. -]{1,64}$/.test(value))kept.set(key,value)}
+  if(!kept.size)return;
+  for(const anchor of document.querySelectorAll('a[href^="./calculator.html"]')){
+    const dest=new URL(anchor.getAttribute('href'),location.href);
+    for(const [key,value] of kept)dest.searchParams.set(key,value);
+    anchor.href=dest.pathname+dest.search;
+  }
+})();
+</script>
+</body></html>

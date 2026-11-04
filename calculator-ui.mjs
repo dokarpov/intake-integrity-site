@@ -1,12 +1,19 @@
 import {PRESETS,FIELD_NAMES,calculate,formatMoney,formatCount,reportText} from './calculator-engine.mjs';
 const $=id=>document.getElementById(id),buttons=[...document.querySelectorAll('[data-mode]')];
-const qs=new URLSearchParams(location.search);let mode=Object.hasOwn(PRESETS,qs.get('mode'))?qs.get('mode'):'sales';
+const qs=new URLSearchParams(location.search);
+const ATTRIBUTION=new URLSearchParams();
+for(const key of ['utm_source','utm_medium','utm_campaign']){
+  const value=qs.get(key);
+  if(value&&/^[a-zA-Z0-9_. -]{1,64}$/.test(value))ATTRIBUTION.set(key,value);
+}
+let mode=Object.hasOwn(PRESETS,qs.get('mode'))?qs.get('mode'):'sales';
 function updateLeadLinks(){
   for(const [id,offer] of [['audit-link','audit'],['build-link','implementation']]){
     const link=new URL('https://tally.so/r/5XbAeE');
     link.searchParams.set('offer',offer);
     link.searchParams.set('flow',mode);
     link.searchParams.set('source','acorde-calculator');
+    for(const [key,value] of ATTRIBUTION)link.searchParams.set(key,value);
     $(id).href=link.toString();
   }
 }
@@ -29,7 +36,7 @@ function resetExample(nextMode=mode){
   updateLeadLinks();
   labelText();
   showEmpty();
-  if(history.replaceState)history.replaceState(null,'',location.pathname+'?mode='+encodeURIComponent(mode));
+  if(history.replaceState)history.replaceState(null,'',location.pathname+'?mode='+encodeURIComponent(mode)+(ATTRIBUTION.size?'&'+ATTRIBUTION.toString():''));
 }
 function showEmpty(){
   last=null;$('result').classList.add('empty');$('empty-result').hidden=false;$('result-content').hidden=true;

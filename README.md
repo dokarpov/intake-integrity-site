@@ -38,3 +38,7 @@ If credentials were ever exposed, revoke or rotate them first. Hiding a page or 
 ## Contact handoff
 
 A separately published Tally enquiry form is used only by testing-branch CTAs pending owner signoff. The form carries `offer`, `flow` and `source` in URL parameters and collects business contact information with explicit consent. The calculator does not send model values or customer records. The form uses default Tally email notifications; custom sender/subject/body would require a paid Tally plan.
+
+## Prelaunch attribution and privacy
+
+The homepage preserves only allowlisted, short UTM campaign labels on links to the calculator. The calculator forwards these campaign labels and service/flow selection to Tally; no financial input is transmitted. A dedicated public privacy notice covers the lead form. Before launch, replace staging links in the Tally form with the approved production privacy URL, verify legal details and test owner notifications. Production promotion remains subject to owner approval.
