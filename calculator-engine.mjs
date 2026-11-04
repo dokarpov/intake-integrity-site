@@ -67,6 +67,8 @@ export function calculate(values){
     annualContribution:contribution*12,
     annualReworkCost:avoidableReworkCost*12,
     annualAtRisk:grossAtRisk*12,
+    sensitivityLow:grossAtRisk*(v.recoverable*0.5/100)*12,
+    sensitivityHigh:grossAtRisk*(Math.min(100,v.recoverable*1.5)/100)*12,
     assumptions:v
   });
 }
@@ -93,6 +95,7 @@ export function reportText(mode,values,currency='EUR'){
     'At-risk '+p.unit+' per month: '+formatCount(result.affected),
     'Potential recoverable revenue per month: '+formatMoney(result.recoverableRevenue,currency),
     'Annual scenario: '+formatMoney(result.annualRevenue,currency),
+    'Annual sensitivity range: '+formatMoney(result.sensitivityLow,currency)+' to '+formatMoney(result.sensitivityHigh,currency),
     'Potential contribution per month: '+formatMoney(result.contribution,currency),
     'Potential annual rework cost avoided (separate): '+formatMoney(result.annualReworkCost,currency),
     '',

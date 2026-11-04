@@ -21,10 +21,12 @@ test('calculator does not claim preset assumptions are measured losses',async({p
   await expect(page.locator('#advanced-settings')).not.toHaveAttribute('open');
   await expect(page.locator('#advanced-settings')).toContainText('Fine-tune conversion');
   await expect(page.locator('#result-content')).toBeHidden();
+  await expect(page.locator('#next-step')).toBeHidden();
   await expect(page.getByText('Illustrative starting values. Edit them.')).toBeVisible();
   await expect(page.locator('.explain')).toContainText('not an observed loss');
   await page.getByRole('button',{name:'Calculate potential exposure'}).click();
   await expect(page.locator('#annual-revenue')).not.toBeEmpty();
+  await expect(page.locator('#next-step')).toBeVisible();
   await expect(page.locator('.result-proof')).toContainText('not lost cash');
   await expect(page.locator('#audit-link')).toHaveAttribute('href','https://contra.com/dokarpov');
   await expect(page.locator('#build-link')).toHaveAttribute('href','https://contra.com/dokarpov');
@@ -42,6 +44,8 @@ test('editable scenario computes mutually exclusive failure stages and separate 
   await expect(page.locator('#monthly-revenue')).toContainText('1,400');
   await expect(page.locator('#gross-at-risk')).toContainText('2,800');
   await expect(page.locator('#contribution')).toContainText('420');
+  await expect(page.locator('#range')).toContainText('8,400');
+  await expect(page.locator('#range')).toContainText('25,200');
   await expect(page.locator('#stage-breakdown')).toContainText('10 enquiries missed at entry + 18 lost later = 28');
   await expect(page.locator('#assumption-note')).toContainText('50% preventability');
   await expect(page.locator('#next-action')).toHaveAttribute('href','#next-step');

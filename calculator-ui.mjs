@@ -31,6 +31,7 @@ function render(){
     const data=inputs(),r=calculate(data),currency=$('currency').value;
     $('annual-revenue').textContent=formatMoney(r.annualRevenue,currency);
     $('monthly-revenue').textContent=formatMoney(r.recoverableRevenue,currency);
+    $('range').textContent=formatMoney(r.sensitivityLow,currency)+' – '+formatMoney(r.sensitivityHigh,currency);
     $('gross-at-risk').textContent=formatMoney(r.grossAtRisk,currency);
     $('contribution').textContent=formatMoney(r.contribution,currency);
     $('rework').textContent=formatMoney(r.annualReworkCost,currency);
@@ -39,7 +40,7 @@ function render(){
     const biggest=r.capture>=r.handoff?PRESETS[mode].issueA:PRESETS[mode].issueB;
     $('bottleneck').textContent=r.affected===0?'Your input scenario has zero at-risk cases. Validate the baseline before assuming there is an implementation opportunity.':'The larger modeled failure stage is: '+biggest+'. This is a hypothesis for the audit, not a diagnosed root cause.';
     $('result').classList.remove('empty');$('empty-result').hidden=true;$('result-content').hidden=false;
-    $('error').hidden=true;last={mode,data:{...r.assumptions},currency};$('copy-status').textContent='';
+    $('error').hidden=true;$('next-step').hidden=false;last={mode,data:{...r.assumptions},currency};$('copy-status').textContent='';
     return true;
   }catch(error){$('error').textContent=error.message;$('error').hidden=false;showEmpty();return false;}
 }

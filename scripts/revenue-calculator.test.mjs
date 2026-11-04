@@ -11,6 +11,8 @@ test('sequential failure stages do not double-count the same enquiry',()=>{
   assert.equal(x.recoverableRevenue,1400);
   assert.equal(x.contribution,420);
   assert.equal(x.annualRevenue,16800);
+  assert.equal(x.sensitivityLow,8400);
+  assert.equal(x.sensitivityHigh,25200);
 });
 test('zero failures result in zero exposure across all flow types',()=>{
   for(const preset of Object.values(PRESETS)){
@@ -23,6 +25,8 @@ test('no assumed recoverability results in no modeled incremental revenue',()=>{
   const x=calculate({...PRESETS.orders,recoverable:0});
   assert.equal(x.recoverableRevenue,0);
   assert.equal(x.annualContribution,0);
+  assert.equal(x.sensitivityLow,0);
+  assert.equal(x.sensitivityHigh,0);
   assert.ok(x.grossAtRisk>=0);
 });
 test('staff time does not inflate incremental revenue',()=>{
