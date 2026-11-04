@@ -28,8 +28,8 @@ test('calculator does not claim preset assumptions are measured losses',async({p
   await expect(page.locator('#annual-revenue')).not.toBeEmpty();
   await expect(page.locator('#next-step')).toBeVisible();
   await expect(page.locator('.result-proof')).toContainText('not lost cash');
-  await expect(page.locator('#audit-link')).toHaveAttribute('href','https://contra.com/dokarpov');
-  await expect(page.locator('#build-link')).toHaveAttribute('href','https://contra.com/dokarpov');
+  await expect(page.locator('#audit-link')).toHaveAttribute('href','https://tally.so/r/5XbAeE?offer=audit&flow=sales&source=acorde-calculator');
+  await expect(page.locator('#build-link')).toHaveAttribute('href','https://tally.so/r/5XbAeE?offer=implementation&flow=sales&source=acorde-calculator');
   expect(await page.locator('body').innerText()).not.toContain('Guaranteed ROI');
   expect(await page.locator('body').innerText()).not.toContain('dokarpov@gmail.com');
 });
@@ -63,6 +63,7 @@ test('three business paths update labels and examples without fabricating benchm
   const orders=await page.locator('#annual-revenue').innerText();
   await page.locator('[data-mode=operations]').click();
   await expect(page.locator('#volume-label')).toContainText('Billable requests per month');
+  await expect(page.locator('#audit-link')).toHaveAttribute('href',/flow=operations/);
   await expect(page.locator('#result-content')).toBeHidden();
   await page.locator('#calculate').click();
   const ops=await page.locator('#annual-revenue').innerText();

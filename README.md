@@ -6,7 +6,7 @@ This is a set of **browser-only research experiences using fictional records**. 
 
 ## Revenue-loss acquisition funnel
 
-The homepage has a second-block entry point into a separate client-side revenue leakage calculator. Illustrative presets for sales, orders and operations are editable; the tool counts sequential failure stages without double-counting, separates revenue from staff costs and offers paid diagnostic or six-week project discussions through the already-public professional contact profile. No estimate or contact details are stored by this site.
+The homepage has a second-block entry point into a separate client-side revenue leakage calculator. Illustrative presets for sales, orders and operations are editable; the tool counts sequential failure stages without double-counting, separates revenue from staff costs and routes service enquiries to a separately hosted Tally form, without transmitting calculations or customer records. No estimate or contact details are stored by this site.
 
 The calculator is built on the testing branch and is **not live on the approved public site** until reviewed and promoted. The public source scanning rules explicitly prohibit publishing personal email addresses.
 
@@ -34,3 +34,7 @@ The calculator is built on the testing branch and is **not live on the approved 
 The intended public artifact allowlist is in the site deployment workflow and checker. A pattern scan complements manual artifact and Git-history review. Do not assume a standard GitHub Pages build uses the same allowlist as a dedicated deployment workflow; verify the **deployed** artifact and workflow outcome separately.
 
 If credentials were ever exposed, revoke or rotate them first. Hiding a page or rewriting a file does not erase public Git history, forks or caches.
+
+## Contact handoff
+
+A separately published Tally enquiry form is used only by testing-branch CTAs pending owner signoff. The form carries `offer`, `flow` and `source` in URL parameters and collects business contact information with explicit consent. The calculator does not send model values or customer records. The form uses default Tally email notifications; custom sender/subject/body would require a paid Tally plan.

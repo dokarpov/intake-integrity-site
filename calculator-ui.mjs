@@ -1,6 +1,15 @@
 import {PRESETS,FIELD_NAMES,calculate,formatMoney,formatCount,reportText} from './calculator-engine.mjs';
 const $=id=>document.getElementById(id),buttons=[...document.querySelectorAll('[data-mode]')];
 const qs=new URLSearchParams(location.search);let mode=Object.hasOwn(PRESETS,qs.get('mode'))?qs.get('mode'):'sales';
+function updateLeadLinks(){
+  for(const [id,offer] of [['audit-link','audit'],['build-link','implementation']]){
+    const link=new URL('https://tally.so/r/5XbAeE');
+    link.searchParams.set('offer',offer);
+    link.searchParams.set('flow',mode);
+    link.searchParams.set('source','acorde-calculator');
+    $(id).href=link.toString();
+  }
+}
 let last=null;
 function inputs(){const data={};for(const name of FIELD_NAMES)data[name]=$(name).value;return data;}
 function labelText(){
@@ -17,6 +26,7 @@ function resetExample(nextMode=mode){
   buttons.forEach(b=>b.setAttribute('aria-pressed',String(b.dataset.mode===mode)));
   for(const name of FIELD_NAMES)$(name).value=PRESETS[mode][name];
   $('error').hidden=true;
+  updateLeadLinks();
   labelText();
   showEmpty();
   if(history.replaceState)history.replaceState(null,'',location.pathname+'?mode='+encodeURIComponent(mode));
