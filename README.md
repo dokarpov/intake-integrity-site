@@ -4,6 +4,12 @@
 
 This is a set of **browser-only research experiences using fictional records**. It presents the operator-facing identity decision in a simpler way than the more extensive [engineering reference](https://github.com/dokarpov/intake-integrity-lab).
 
+## Revenue-loss acquisition funnel
+
+The homepage has a second-block entry point into a separate client-side revenue leakage calculator. Illustrative presets for sales, orders and operations are editable; the tool counts sequential failure stages without double-counting, separates revenue from staff costs and offers paid diagnostic or six-week project discussions through the already-public professional contact profile. No estimate or contact details are stored by this site.
+
+The calculator is built on the testing branch and is **not live on the approved public site** until reviewed and promoted. The public source scanning rules explicitly prohibit publishing personal email addresses.
+
 ## Start with the customer problem
 
 1. [Product overview](https://dokarpov.github.io/intake-integrity-site/) — why a pre-write identity checkpoint may matter.

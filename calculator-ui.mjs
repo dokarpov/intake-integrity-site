@@ -24,17 +24,7 @@ function resetExample(nextMode=mode){
 function showEmpty(){
   last=null;$('result').classList.add('empty');$('empty-result').hidden=false;$('result-content').hidden=true;
   $('copy-status').textContent='';
-  refreshMailLinks(null);
-}
-function refreshMailLinks(data){
-  const currency=$('currency').value;
-  const summary=data?'\n\n'+reportText(mode,data,currency):'\n\nI would like to scope a workflow assessment.';
-  for(const [id,title,intro] of [
-    ['audit-link','Acorde — paid workflow audit','Hello, I would like to discuss a paid workflow audit for my company.'],
-    ['build-link','Acorde — six-week implementation','Hello, I would like to discuss a six-week implementation project.']
-  ]){
-    $(id).href='mailto:dokarpov@gmail.com?subject='+encodeURIComponent(title)+'&body='+encodeURIComponent(intro+summary+'\n\nCompany / contact:\nPreferred times:');
-  }
+
 }
 function render(){
   try{
@@ -48,13 +38,13 @@ function render(){
     const biggest=r.capture>=r.handoff?PRESETS[mode].issueA:PRESETS[mode].issueB;
     $('bottleneck').textContent=r.affected===0?'Your input scenario has zero at-risk cases. Validate the baseline before assuming there is an implementation opportunity.':'The larger modeled failure stage is: '+biggest+'. This is a hypothesis for the audit, not a diagnosed root cause.';
     $('result').classList.remove('empty');$('empty-result').hidden=true;$('result-content').hidden=false;
-    $('error').hidden=true;last={mode,data:{...r.assumptions},currency};$('copy-status').textContent='';refreshMailLinks(r.assumptions);
+    $('error').hidden=true;last={mode,data:{...r.assumptions},currency};$('copy-status').textContent='';
     return true;
   }catch(error){$('error').textContent=error.message;$('error').hidden=false;showEmpty();return false;}
 }
 $('calculator-form').addEventListener('submit',event=>{event.preventDefault();if(render()&&matchMedia('(max-width:850px)').matches)$('result').scrollIntoView({behavior:'smooth',block:'start'});});
 $('calculator-form').addEventListener('input',()=>{if(last)render();});
-$('currency').addEventListener('change',()=>{if(last)render();else refreshMailLinks(null);});
+$('currency').addEventListener('change',()=>{if(last)render();});
 buttons.forEach(b=>b.addEventListener('click',()=>resetExample(b.dataset.mode)));
 $('reset').addEventListener('click',()=>resetExample());
 $('copy').addEventListener('click',async()=>{
