@@ -11,7 +11,7 @@ test('Acorde home has the commercial calculator as its second section',async({pa
   await expect(page.locator('#loss-title')).toContainText('What do missed handoffs');
   await expect(page.locator('.loss-cta')).toHaveAttribute('href','./calculator.html');
   await page.locator('.loss-cta').click();
-  await expect(page).toHaveURL(/calculator\.html$/);
+  await expect(page).toHaveURL(/calculator\.html\?mode=sales$/);
   await expect(page.locator('h1')).toContainText('Where is revenue');
   expect(errors).toEqual([]);
 });
