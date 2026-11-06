@@ -6,6 +6,7 @@ import {resolve} from 'node:path';
 
 const files=new Set([
  'index.html','privacy.html','calculator.html','calculator-engine.mjs','calculator-ui.mjs',
+ 'comparison.html','comparison-engine.mjs','comparison-ui.mjs',
  'decision-lab.html','setup.html','preview/index.html','preview/operator.html',
  'preview/tokens.css','preview/integrations.html','mvp/index.html','mvp/engine.mjs',
  'testing/integrity/index.html','testing/integrity/engine.mjs','testing/integrity/policy.mjs',
