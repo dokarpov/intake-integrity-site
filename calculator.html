@@ -86,6 +86,7 @@ h1 em{font-style:normal;color:#858585}
 #copy-status{font-size:12px;color:#666;min-height:16px}
 @media(max-width:850px){.calculator-layout{grid-template-columns:1fr;gap:26px}.result{max-width:none}.intro{padding:50px 0 32px}.offers{padding-top:42px}}
 @media(max-width:620px){.shell{width:calc(100% - 36px)}.topbar{height:65px}.intro{padding:44px 0 30px}h1{font-size:clamp(37px,9vw,48px)}.intro p{font-size:15px}.model-intro{padding:28px 0 12px}.segment-picker{gap:7px;margin:17px 0 23px}.segment-picker button{flex:1 1 100%;width:100%;text-align:left}.calculator-layout{padding-bottom:50px}.fields{gap:15px 10px}.field label{font-size:12px;min-height:48px}.field .help{min-height:60px}.result{padding:21px 19px}.offer-grid{grid-template-columns:1fr}.offer+.offer{border-left:0;border-top:1px solid #ddd}.offer{padding:24px}.action{width:100%}.offers{padding-bottom:50px}.form-actions{align-items:stretch}.reset{width:100%;text-align:center}}
+.model-disclaimer{margin:11px 0 0;font-size:11px;line-height:1.5;color:#727272}
 @media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}}
 .advanced-settings{border-top:1px solid var(--line);border-bottom:1px solid var(--line);margin:23px 0 0;padding:15px 0 16px}
 .advanced-settings summary{cursor:pointer;font-size:14px;font-weight:700;line-height:1.5}
@@ -223,6 +224,7 @@ h1 em{font-style:normal;color:#858585}
         
         <div class="form-actions"><button class="action" type="submit" id="calculate">Calculate potential exposure</button><button class="reset" type="button" id="reset">Reset</button></div>
         <p id="error" role="alert" hidden></p>
+        <p class="model-disclaimer">Illustrative scenario, not a measured loss or guaranteed recovery. All inputs are editable; calculations stay in your browser.</p>
       </form>
       <aside class="result empty" id="result" aria-live="polite" aria-atomic="false">
         <div class="result-head"><h3>Revenue opportunity</h3></div>
