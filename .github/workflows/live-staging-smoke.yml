@@ -38,6 +38,8 @@ jobs:
           grep -Fq 'TESTING PREVIEW' /tmp/acorde-smoke/home.body
           grep -Fq 'Calculate revenue at risk' /tmp/acorde-smoke/home.body
           grep -Fq "newTab.id='new-enquiry-tab'" /tmp/acorde-smoke/home.body
+          grep -Fq 'id="recent-select"' /tmp/acorde-smoke/home.body
+          grep -Fq 'Your test enquiries' /tmp/acorde-smoke/home.body
           grep -Fq 'Request a workflow audit' /tmp/acorde-smoke/calculator.body
           grep -Fq 'Discuss six-week implementation' /tmp/acorde-smoke/calculator.body
           grep -Fq 'href="./privacy.html"' /tmp/acorde-smoke/calculator.body
