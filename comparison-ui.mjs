@@ -11,7 +11,7 @@ for(const key of ['utm_source','utm_medium','utm_campaign']){
  if(value&&/^[a-zA-Z0-9_. -]{1,64}$/.test(value))campaign.set(key,value);
 }
 let mode=MODES.includes(params.get('baseline'))?params.get('baseline'):'manual';
-let last=null;
+let last=null,toolFeeDraft='';
 function linkOffers(){
  const map=[['audit-link','audit','Paid workflow audit'],['build-link','implementation','Six-week implementation']];
  for(const [id,offer,name] of map){
@@ -33,7 +33,9 @@ function empty(){
  $('copy-status').textContent='';
 }
 function setMode(next){
+ if(mode==='tool'&&!$('currentSoftwareMonthly').disabled)toolFeeDraft=$('currentSoftwareMonthly').value;
  mode=next;
+ $('currentSoftwareMonthly').value=mode==='manual'?'0':toolFeeDraft;
  modeButtons.forEach(button=>button.setAttribute('aria-pressed',String(button.dataset.baseline===mode)));
  $('current-software-field').hidden=mode==='manual';
  $('currentSoftwareMonthly').disabled=mode==='manual';
