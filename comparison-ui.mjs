@@ -40,7 +40,7 @@ function setMode(next){
  $('tool-name-field').hidden=mode==='manual';
  $('baseline-label').textContent=mode==='manual'?'Manual process — no dedicated dedup tool':'Existing software + manual review';
  $('baseline-hint').textContent=mode==='manual'
-  ? 'Licence assumed €0. Staff time and correction costs still count.'
+  ? 'Licence assumed 0. Staff time and correction costs still count.'
   : 'Enter your contracted licence, including seats/add-ons. Do not assume CRM licence equals dedup price.';
  $('error').textContent='';
  empty();
