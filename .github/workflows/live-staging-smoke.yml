@@ -38,7 +38,7 @@ jobs:
           grep -Fq "newTab.id='new-enquiry-tab'" /tmp/acorde-smoke/home.body
           grep -Fq 'Request a workflow audit' /tmp/acorde-smoke/calculator.body
           grep -Fq 'Discuss six-week implementation' /tmp/acorde-smoke/calculator.body
-          grep -Fq 'href=\"./privacy.html\"' /tmp/acorde-smoke/calculator.body
+          grep -Fq 'href="./privacy.html"' /tmp/acorde-smoke/calculator.body
           grep -Fq 'utm_source' /tmp/acorde-smoke/ui.body
           grep -Fq 'tally.so/r/5XbAeE' /tmp/acorde-smoke/ui.body
           grep -Fq 'Nothing is uploaded' /tmp/acorde-smoke/privacy.body
