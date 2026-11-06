@@ -2,7 +2,7 @@
 // Real privacy notices and consent remain in dedicated legal form/page.
 import {readFileSync} from 'node:fs';
 import assert from 'node:assert/strict';
-const customer=['index.html','calculator.html','preview/index.html','decision-lab.html','setup.html','testing/integrity/index.html','testing/story/index.html'];
+const customer=['index.html','calculator.html','comparison.html','preview/index.html','decision-lab.html','setup.html','testing/integrity/index.html','testing/story/index.html'];
 const banned=[
   /read carefully\s*:/i,/not an audited financial statement/i,
   /not an observed loss/i,/not proven revenue leakage/i,
@@ -17,7 +17,7 @@ for(const file of customer){
     .replace(/<style\b[^>]*>[\s\S]*?<\/style>/gi,'')
     .replace(/<!--([\s\S]*?)-->/g,'');
   for(const word of banned)assert.ok(!word.test(visible),file+' contains an internal-facing disclosure: '+word);
-  if(['index.html','calculator.html'].includes(file)){
+  if(['index.html','calculator.html','comparison.html'].includes(file)){
     assert.ok(!/<details\b/i.test(visible),file+' hides core interface in an accordion');
     assert.ok(!/<footer\b/i.test(visible),file+' adds a narrative footer');
   }
@@ -27,4 +27,8 @@ assert.ok(calculator.indexOf('id="audit-link"')>0&&calculator.indexOf('id="build
 assert.ok(calculator.includes('id="closeRate"')&&calculator.includes('id="recoverable"'));
 assert.ok(calculator.includes('class="next-step"'), 'service CTAs are not grouped');
 assert.ok(!calculator.includes('id="next-action"'), 'duplicate scroll CTA must stay removed');
+const comp=readFileSync('comparison.html','utf8');
+assert.ok(comp.includes('data-baseline="manual"')&&comp.includes('data-baseline="tool"'));
+assert.ok(comp.includes('id="newSoftwareMonthly"')&&comp.includes('id="newSetupOneOff"'));
+assert.ok(comp.includes('id="current-year"')&&comp.includes('id="proposed-year"'));
 console.log('Acorde UI content and progressive disclosure gates PASS');
