@@ -19,7 +19,7 @@ jobs:
           FRONT: https://br-shiny-union-bajmnaa3-acordepreview.compute.c-8.eu-central-1.aws.neon.tech
           API: https://br-shiny-union-bajmnaa3-intakestaging.compute.c-8.eu-central-1.aws.neon.tech
         run: |
-          set -euo pipefail
+          set -euxo pipefail
           mkdir -p /tmp/acorde-smoke
           req() {
             local path="$1" output="$2"
