@@ -8,6 +8,10 @@ for(const key of ['utm_source','utm_medium','utm_campaign']){
 }
 let mode=Object.hasOwn(PRESETS,qs.get('mode'))?qs.get('mode'):'sales';
 function updateLeadLinks(){
+  const compareLink=new URL('./comparison.html',location.href);
+  compareLink.searchParams.set('currency',$('currency').value);
+  for(const [key,value] of ATTRIBUTION)compareLink.searchParams.set(key,value);
+  $('cost-compare-link').href=compareLink.pathname+compareLink.search;
   for(const [id,offer] of [['audit-link','audit'],['build-link','implementation']]){
     const link=new URL('https://tally.so/r/5XbAeE');
     link.searchParams.set('offer',offer);
@@ -67,7 +71,7 @@ function render(){
 }
 $('calculator-form').addEventListener('submit',event=>{event.preventDefault();if(render()&&matchMedia('(max-width:850px)').matches)$('result').scrollIntoView({behavior:'smooth',block:'start'});});
 $('calculator-form').addEventListener('input',()=>{if(last)render();});
-$('currency').addEventListener('change',()=>{if(last)render();});
+$('currency').addEventListener('change',()=>{updateLeadLinks();if(last)render();});
 buttons.forEach(b=>b.addEventListener('click',()=>resetExample(b.dataset.mode)));
 $('reset').addEventListener('click',()=>resetExample());
 $('copy').addEventListener('click',async()=>{
