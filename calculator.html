@@ -124,6 +124,7 @@ h1 em{font-style:normal;color:#858585}
 .metric strong,.metric.subdued strong{font:600 clamp(15px,2vw,20px)/1.2 var(--display);text-align:left;letter-spacing:-.03em;overflow-wrap:anywhere}
 .metric-wide{grid-column:span 2;flex-direction:row;align-items:center}
 .result-summary{margin:10px 0 12px;font-size:12px;line-height:1.5;color:#666}
+.range-method{font-size:11px;line-height:1.5;margin:8px 0;color:#6c6c6c}
 .result-summary p{margin:0 0 4px}
 #bottleneck{background:transparent;padding:0;margin:0 0 4px;font-size:12px}
 .next-step{display:grid;gap:8px;border-top:1px solid var(--line);padding-top:13px;margin-top:8px}
@@ -242,6 +243,7 @@ h1 em{font-style:normal;color:#858585}
             <div class="metric"><span>Annual range</span><strong id="range"></strong></div>
             <div class="metric metric-wide"><span>Annual rework costs</span><strong id="rework"></strong></div>
           </div>
+          <p class="range-method">Sensitivity only: half to 1.5× your assumed recoverable share (capped at 100%). Not a statistical confidence interval.</p>
           <div class="result-summary"><p id="bottleneck"></p><p id="assumption-note"></p></div>
           <div class="next-step" id="next-step" hidden>
             <div class="next-heading">Next step</div>

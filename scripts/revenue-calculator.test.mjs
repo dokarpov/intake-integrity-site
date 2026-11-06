@@ -48,5 +48,6 @@ test('all three scenarios have nonzero editable presets and transparent reports'
     assert.match(reportText(mode,p,'EUR'),/illustrative revenue-loss model/);
     assert.match(reportText(mode,p,'EUR'),/not a verified loss/);
   }
+  assert.match(reportText('sales',PRESETS.sales,'EUR'),/not a statistical confidence interval/);
   assert.match(formatMoney(1200,'EUR'),/1,200/);
 });

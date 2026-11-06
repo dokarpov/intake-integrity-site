@@ -96,6 +96,7 @@ export function reportText(mode,values,currency='EUR'){
     'Potential recoverable revenue per month: '+formatMoney(result.recoverableRevenue,currency),
     'Annual scenario: '+formatMoney(result.annualRevenue,currency),
     'Annual sensitivity range: '+formatMoney(result.sensitivityLow,currency)+' to '+formatMoney(result.sensitivityHigh,currency),
+    'Sensitivity uses half to 1.5 times your assumed recoverable share, capped at 100%; not a statistical confidence interval.',
     'Potential contribution per month: '+formatMoney(result.contribution,currency),
     'Potential annual rework cost avoided (separate): '+formatMoney(result.annualReworkCost,currency),
     '',

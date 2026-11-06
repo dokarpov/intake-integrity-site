@@ -11,7 +11,12 @@ function updateLeadLinks(){
   for(const [id,offer] of [['audit-link','audit'],['build-link','implementation']]){
     const link=new URL('https://tally.so/r/5XbAeE');
     link.searchParams.set('offer',offer);
+    // These fixed option texts match the public Tally form exactly so neither
+    // selected service nor workflow must be entered a second time.
+    link.searchParams.set('offer_name',offer==='audit'?'Paid workflow audit':'Six-week implementation');
     link.searchParams.set('flow',mode);
+    const flowNames={sales:'Sales enquiries and follow-up',orders:'Orders and fulfilment',operations:'Operations and team handoffs'};
+    link.searchParams.set('flow_name',flowNames[mode]);
     link.searchParams.set('source','acorde-calculator');
     for(const [key,value] of ATTRIBUTION)link.searchParams.set(key,value);
     $(id).href=link.toString();

@@ -28,8 +28,13 @@ test('calculator does not claim preset assumptions are measured losses',async({p
   await expect(page.locator('#annual-revenue')).not.toBeEmpty();
   await expect(page.locator('#next-step')).toBeVisible();
   await expect(page.locator('#audit-link')).toBeVisible();
-  await expect(page.locator('#audit-link')).toHaveAttribute('href','https://tally.so/r/5XbAeE?offer=audit&flow=sales&source=acorde-calculator');
-  await expect(page.locator('#build-link')).toHaveAttribute('href','https://tally.so/r/5XbAeE?offer=implementation&flow=sales&source=acorde-calculator');
+  await expect(page.locator('#audit-link')).toHaveAttribute('href',/offer_name=Paid\+workflow\+audit/);
+  await expect(page.locator('#audit-link')).toHaveAttribute('href',/flow_name=Sales\+enquiries\+and\+follow-up/);
+  await expect(page.locator('#audit-link')).toHaveAttribute('href',/offer=audit/);
+  await expect(page.locator('#build-link')).toHaveAttribute('href',/offer_name=Six-week\+implementation/);
+  await expect(page.locator('#build-link')).toHaveAttribute('href',/flow_name=Sales\+enquiries\+and\+follow-up/);
+  await expect(page.locator('#build-link')).toHaveAttribute('href',/offer=implementation/);
+  await expect(page.locator('.range-method')).toContainText('Not a statistical confidence interval');
   expect(await page.locator('body').innerText()).not.toContain('Guaranteed ROI');
   expect(await page.locator('body').innerText()).not.toContain('dokarpov@gmail.com');
 });
@@ -63,6 +68,7 @@ test('three business paths update labels and examples without fabricating benchm
   await page.locator('[data-mode=operations]').click();
   await expect(page.locator('#volume-label')).toContainText('Billable requests per month');
   await expect(page.locator('#audit-link')).toHaveAttribute('href',/flow=operations/);
+  await expect(page.locator('#audit-link')).toHaveAttribute('href',/flow_name=Operations\+and\+team\+handoffs/);
   await expect(page.locator('#result-content')).toBeHidden();
   await page.locator('#calculate').click();
   const ops=await page.locator('#annual-revenue').innerText();
