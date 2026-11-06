@@ -217,3 +217,18 @@ test('homepage exposes review and enquiry flows without accordions or narrative 
   expect((await page.locator('main').innerText()).toLowerCase()).not.toContain('not a real crm');
   await expect(page.locator('footer')).toHaveCount(0);
 });
+
+
+test('resolved delivery stays accessible and explains its safe receipt',async({page})=>{
+ await page.goto(root+'/');
+ await page.locator('#reset').click();
+ await page.getByRole('button',{name:/Delivery: Nora Chen/}).click();
+ await page.getByRole('button',{name:'Check delivery receipt'}).click();
+ await expect(page.locator('#case-heading')).toContainText('Delivery reconciled');
+ await expect(page.locator('#case-actions')).toContainText('no duplicate write');
+ await expect(page.locator('#inbox .case-btn')).toHaveCount(4);
+ await page.getByRole('button',{name:/Identity: Sam Lee/}).click();
+ await expect(page.locator('#case-heading')).toContainText('Identity needs review');
+ await page.getByRole('button',{name:/Delivery: Nora Chen/}).click();
+ await expect(page.locator('#case-heading')).toContainText('Delivery reconciled');
+});
