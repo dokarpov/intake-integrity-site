@@ -9,6 +9,11 @@ on:
       - 'scripts/check-ui-content.mjs'
       - 'calculator-engine.mjs'
       - 'calculator-ui.mjs'
+      - 'comparison.html'
+      - 'comparison-engine.mjs'
+      - 'comparison-ui.mjs'
+      - 'scripts/comparison-engine.test.mjs'
+      - 'scripts/comparison.spec.cjs'
       - 'staging-server.mjs'
       - 'package.json'
       - 'scripts/staging-server.test.mjs'
@@ -27,6 +32,11 @@ on:
       - 'scripts/check-ui-content.mjs'
       - 'calculator-engine.mjs'
       - 'calculator-ui.mjs'
+      - 'comparison.html'
+      - 'comparison-engine.mjs'
+      - 'comparison-ui.mjs'
+      - 'scripts/comparison-engine.test.mjs'
+      - 'scripts/comparison.spec.cjs'
       - 'staging-server.mjs'
       - 'package.json'
       - 'scripts/staging-server.test.mjs'
@@ -50,12 +60,14 @@ jobs:
           node-version: '22'
       - name: Test calculation accuracy and public privacy rules
         run: |
-          node --test scripts/revenue-calculator.test.mjs scripts/staging-server.test.mjs
+          node --test scripts/revenue-calculator.test.mjs scripts/comparison-engine.test.mjs scripts/staging-server.test.mjs
           node --test mvp/engine.test.mjs mvp/scenarios-12.test.mjs
           python3 scripts/check_public.py
           node scripts/check-ui-content.mjs
           node --check calculator-engine.mjs
           node --check calculator-ui.mjs
+          node --check comparison-engine.mjs
+          node --check comparison-ui.mjs
           node --check staging-server.mjs
       - name: Generate and verify isolated staging bundle
         run: |
@@ -76,4 +88,4 @@ jobs:
           cat /tmp/acorde-calculator.log
           exit 1
       - name: Browser QA of conversion funnel
-        run: npx playwright test scripts/revenue-calculator.spec.cjs --browser chromium --workers=1 --reporter=line
+        run: npx playwright test scripts/revenue-calculator.spec.cjs scripts/comparison.spec.cjs --browser chromium --workers=1 --reporter=line
