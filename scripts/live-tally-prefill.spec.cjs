@@ -1,21 +1,32 @@
 const {test,expect}=require('@playwright/test');
-test('public lead form loads and reveals the selected service and workflow',async({page})=>{
+const front=process.env.ACORDE_BASE_URL||'https://br-shiny-union-bajmnaa3-acordepreview.compute.c-8.eu-central-1.aws.neon.tech';
+const cases=[
+ {mode:'sales',offer:'audit',offerIndex:0,flowIndex:2,button:'audit-link'},
+ {mode:'orders',offer:'implementation',offerIndex:1,flowIndex:3,button:'build-link'},
+ {mode:'operations',offer:'audit',offerIndex:0,flowIndex:4,button:'audit-link'}
+];
+for(const item of cases){
+ test('live calculator to prefilled, consent-gated Tally '+item.mode+'/'+item.offer,async({page})=>{
   test.setTimeout(90000);
-  const url='https://tally.so/r/5XbAeE?offer=audit&offer_name=Paid+workflow+audit&flow=sales&flow_name=Sales+enquiries+and+follow-up&source=acorde-calculator&utm_source=linkedin';
-  const response=await page.goto(url,{waitUntil:'domcontentloaded',timeout:60000});
-  await page.waitForTimeout(2800);
-  const snapshot=await page.evaluate(()=>({
-    title:document.title,
-    body:document.body.innerText.slice(0,1500),
-    radios:[...document.querySelectorAll('input[type="radio"],[role="radio"]')].slice(0,15).map(n=>({
-      checked:n.checked,aria:n.getAttribute('aria-checked'),text:n.closest('label,[role="radiogroup"]')?.textContent?.slice(0,90)
-    })),
-    buttons:[...document.querySelectorAll('button')].slice(0,20).map(n=>n.textContent?.slice(0,90))
-  }));
-  console.log('TALLY_PREFILL_DEBUG',JSON.stringify({status:response?.status(),...snapshot}));
-  await expect(page.getByText('What would you like to discuss?')).toBeVisible({timeout:15000});
+  await page.goto(front+'/calculator.html?mode='+item.mode,{waitUntil:'domcontentloaded'});
+  await page.locator('#calculate').click();
+  const href=await page.locator('#'+item.button).getAttribute('href');
+  expect(href).toContain('https://tally.so/r/5XbAeE?');
+  expect(href).toContain('offer='+item.offer);
+  expect(href).toContain('flow='+item.mode);
+  const response=await page.goto(href,{waitUntil:'domcontentloaded',timeout:60000});
+  expect(response?.status()).toBe(200);
+  const controls=page.locator('input[type="radio"]');
+  await expect(controls).toHaveCount(11,{timeout:15000});
   await expect(page.getByText('Paid workflow audit',{exact:true})).toBeVisible();
-  await expect(page.getByText('Sales enquiries and follow-up',{exact:true})).toBeVisible();
-  await expect(page.getByText('Business email')).toBeVisible();
-  await expect(page.getByText('Please confirm')).toBeVisible();
-});
+  await expect(page.getByText('Six-week implementation',{exact:true})).toBeVisible();
+  await expect(page.getByText('Business email',{exact:true})).toBeVisible();
+  await expect(controls.nth(item.offerIndex)).toBeChecked();
+  await expect(controls.nth(1-item.offerIndex)).not.toBeChecked();
+  await expect(controls.nth(item.flowIndex)).toBeChecked();
+  for(const n of [2,3,4,5].filter(x=>x!==item.flowIndex))await expect(controls.nth(n)).not.toBeChecked();
+  await expect(page.locator('input[type="checkbox"]')).not.toBeChecked();
+  await expect(page.getByText('Please confirm',{exact:true})).toBeVisible();
+  console.log('PASS real published Tally prefill + opt-in:',item.mode,item.offer);
+ });
+}
