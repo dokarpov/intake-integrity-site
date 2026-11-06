@@ -238,3 +238,42 @@ test('resolved delivery stays accessible and explains its safe receipt',async({p
  await page.getByRole('button',{name:/Delivery: Nora Chen/}).click();
  await expect(page.locator('#case-heading')).toContainText('Delivery reconciled');
 });
+
+
+test('multiple submitted enquiries remain reachable after reload without extending mobile scenario tabs',async({browser})=>{
+  const context=await browser.newContext({viewport:{width:390,height:844},reducedMotion:'reduce'});
+  const page=await context.newPage(),errors=[];
+  page.on('pageerror',e=>errors.push(e.message));
+  await page.goto(root+'/');
+  await page.locator('#reset').click();
+  for(const [name,email,message] of [
+    ['Alex Quinn','alex.quinn@example.com','Please follow up about our first quote.'],
+    ['Morgan Vale','morgan.vale@example.com','Please send the updated implementation outline.']
+  ]){
+    await page.locator('#new-enquiry-tab').click();
+    await page.locator('#new-name').fill(name);
+    await page.locator('#new-email').fill(email);
+    await page.locator('#new-message').fill(message);
+    await page.getByRole('button',{name:'Check this enquiry'}).click();
+    await expect(page.locator('#case-message')).toContainText(message);
+    await expect(page.locator('#inbox .case-btn')).toHaveCount(4);
+  }
+  await expect(page.locator('#recent-enquiries')).toBeVisible();
+  await expect(page.locator('#recent-select option')).toHaveCount(3);
+  const firstId=await page.locator('#recent-select option').filter({hasText:'Alex Quinn'}).getAttribute('value');
+  await page.locator('#recent-select').selectOption(firstId);
+  await expect(page.locator('#case-message')).toContainText('first quote');
+  await page.reload();
+  await expect(page.locator('#recent-select option')).toHaveCount(3);
+  await page.locator('#recent-select').selectOption(firstId);
+  await expect(page.locator('#case-message')).toContainText('first quote');
+  await expect(page.locator('#inbox .case-btn')).toHaveCount(4);
+  expect(await page.evaluate(()=>document.documentElement.scrollWidth>innerWidth)).toBe(false);
+  await page.locator('#new-enquiry-action').click();
+  await expect(page.locator('#try')).toBeVisible();
+  await expect(page.locator('#case-pane')).toBeHidden();
+  await page.getByRole('button',{name:/Identity: Sam Lee/}).click();
+  await expect(page.locator('#recent-enquiries')).toBeVisible();
+  expect(errors).toEqual([]);
+  await context.close();
+});
