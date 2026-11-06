@@ -94,21 +94,60 @@ h1 em{font-style:normal;color:#858585}
 .advanced-note{font-size:12px;color:#6a6a6a;line-height:1.65;max-width:580px;margin:0 0 18px}
 .advanced-grid{margin-bottom:4px}
 @media(max-width:620px){.advanced-settings summary span{display:block;margin:3px 0 0}.advanced-grid .field label{min-height:43px}}
+
+/* Acorde UI content contract: primary actions stay together, no footer caveats or collapsed core inputs. */
+.intro{padding:34px 0 20px}.intro h1{font-size:clamp(34px,4.8vw,51px);margin:10px 0 10px}.intro p{font-size:15px;line-height:1.45}
+.header-nav{display:flex;gap:17px;align-items:center}
+.model-intro{padding:20px 0 8px}.model-intro h2{margin:4px 0 6px;font-size:24px}
+.segment-picker{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:6px;margin:13px 0 17px}
+.segment-picker button{min-width:0;padding:9px 8px;min-height:42px;font-size:13px;line-height:1.2}
+.calculator-layout{gap:25px;padding-bottom:30px}
+.inputs-head,.result-head{padding-bottom:10px;margin-bottom:13px}
+.inputs-head h3,.result-head h3{font-size:21px}
+.fields{gap:12px 11px}
+.field label{font-size:12px;line-height:1.25;min-height:0;margin-bottom:6px}
+.field input,.field select{height:44px;padding:8px 10px}
+.model-parameters{border-top:1px solid var(--line);padding-top:16px;margin-top:17px}
+.model-parameters h3{font-size:16px;letter-spacing:-.03em;margin:0 0 13px}
+.advanced-grid{margin-bottom:0}
+.form-actions{gap:8px;margin-top:14px;align-items:center}
+.action{min-height:46px;padding:10px 13px}
+.result{padding:19px}
+.result-head{margin-bottom:13px}
+.empty-copy{padding:20px 0}
+.result-hero strong{font-size:clamp(33px,5vw,44px);margin:6px 0 4px}
+.result-hero .context-line{margin:0 0 12px;color:#666;font-size:12px;line-height:1.4}
+.metric-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}
+.metric{display:flex;flex-direction:column;justify-content:space-between;align-items:flex-start;gap:4px;padding:9px 10px;border:1px solid var(--line);border-radius:5px;font-size:11px;line-height:1.35;min-width:0}
+.metric span{color:#666}
+.metric strong,.metric.subdued strong{font:600 clamp(15px,2vw,20px)/1.2 var(--display);text-align:left;letter-spacing:-.03em;overflow-wrap:anywhere}
+.metric-wide{grid-column:span 2;flex-direction:row;align-items:center}
+.result-summary{margin:10px 0 12px;font-size:12px;line-height:1.5;color:#666}
+.result-summary p{margin:0 0 4px}
+#bottleneck{background:transparent;padding:0;margin:0 0 4px;font-size:12px}
+.next-step{display:grid;gap:8px;border-top:1px solid var(--line);padding-top:13px;margin-top:8px}
+.next-heading{font-size:12px;font-weight:700}
+.next-step .action{width:100%;min-height:44px}
+.utility-actions{display:flex;align-items:center;gap:12px;margin-top:8px}
+.utility-actions .reset{margin:0;font-size:12px;text-align:left;width:auto;padding:6px 0}
+#copy-status{min-height:0}
+@media(max-width:850px){.calculator-layout{gap:16px}.intro{padding:26px 0 15px}.model-intro{padding-top:14px}}
+@media(max-width:620px){.shell{width:calc(100% - 30px)}.intro{padding:20px 0 10px}.intro h1{font-size:clamp(31px,8vw,38px)}.intro p{font-size:13px}.model-intro h2{font-size:22px}.segment-picker{gap:5px;margin:10px 0 13px}.segment-picker button{width:auto;flex:initial;padding:9px 5px;min-height:46px;font-size:12px;text-align:center}.fields{grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}.field label{min-height:0;font-size:11px;line-height:1.27}.field input,.field select{height:43px}.result{padding:15px}.metric{padding:8px}.metric strong{font-size:17px}.model-parameters{margin-top:14px}.calculator-layout{padding-bottom:20px}.form-actions .action{flex:1 1 auto}.form-actions .reset{width:auto}.next-step .action{min-height:46px}.header-nav{gap:12px}.header-nav .nav{font-size:12px}}
 </style>
 </head>
 <body>
 <div class="shell">
-  <header class="topbar"><a href="./" class="logo" aria-label="Acorde home">acorde</a><a href="./" class="nav">Back to Acorde</a></header>
+  <header class="topbar"><a href="./" class="logo" aria-label="Acorde home">acorde</a><nav class="header-nav"><a href="./" class="nav">Home</a><a href="./privacy.html" class="nav">Privacy</a></nav></header>
   <main>
     <section class="intro" aria-labelledby="calculator-title">
-      <div class="eyebrow">Free scenario model · no signup</div>
+      <div class="eyebrow">Revenue diagnostic</div>
       <h1 id="calculator-title">Where is revenue <em>slipping through?</em></h1>
-      <p>Model losses between an incoming request, the next team and the final sale. Start with a sample business, replace every assumption, and see what is worth investigating.</p>
+      <p>Choose a workflow and enter your numbers to estimate revenue at risk.</p>
     </section>
     <section class="model-intro" aria-labelledby="flow-title">
       <div class="step">01 / Choose your workflow</div>
       <h2 id="flow-title">What does your team process?</h2>
-      <p id="segment-description">Enquiries lost between the first message, a responsible owner and the next action.</p>
+      <p id="segment-description">Sales, orders or operational requests.</p>
       <div class="segment-picker" role="group" aria-label="Business workflow">
         <button type="button" data-mode="sales" aria-pressed="true">Sales enquiries</button>
         <button type="button" data-mode="orders" aria-pressed="false">Orders</button>
@@ -117,27 +156,27 @@ h1 em{font-style:normal;color:#858585}
     </section>
     <section class="calculator-layout" aria-label="Revenue loss estimation">
       <form class="inputs" id="calculator-form">
-        <div class="inputs-head"><h3>Your assumptions</h3><small>Illustrative starting values. Edit them.</small></div>
+        <div class="inputs-head"><h3>Business inputs</h3></div>
         <div class="fields">
           <div class="field">
             <label for="volume" id="volume-label">Enquiries per month</label>
             <input id="volume" name="volume" inputmode="numeric" type="number" required min="0" max="1000000" step="1">
-            <p class="help">Unique requests, not messages in a thread.</p>
+            
           </div>
           <div class="field">
             <label for="avgValue">Average sale or order value</label>
             <input id="avgValue" name="avgValue" inputmode="decimal" type="number" required min="0" max="10000000" step="any">
-            <p class="help">Value of one potential completed transaction.</p>
+            
           </div>
           <div class="field">
             <label for="captureLoss" id="capture-label">Missed at entry (%)</label>
             <input id="captureLoss" name="captureLoss" inputmode="decimal" type="number" required min="0" max="100" step="any">
-            <p class="help">Share never reliably registered or responded to.</p>
+            
           </div>
           <div class="field">
             <label for="handoffLoss" id="handoff-label">Lost at next step (%)</label>
             <input id="handoffLoss" name="handoffLoss" inputmode="decimal" type="number" required min="0" max="100" step="any">
-            <p class="help">Of the cases not lost at entry, to avoid double-counting.</p>
+            
           </div>
           <div class="field">
             <label for="currency">Currency</label>
@@ -148,88 +187,71 @@ h1 em{font-style:normal;color:#858585}
               <option value="AED">AED · UAE dirham</option>
               <option value="MXN">MXN · Mexican peso</option>
             </select>
-            <p class="help">Currency label only; no exchange-rate conversion.</p>
+            
           </div>
         </div>
-        <details class="advanced-settings" id="advanced-settings">
-          <summary>Fine-tune conversion, recovery and staffing assumptions <span>5 editable estimates</span></summary>
-          <p class="advanced-note">These assumed values affect the result. Open to replace them with your actual figures; they are not sector benchmarks.</p>
-          <div class="fields advanced-grid">
+        <section class="model-parameters" id="advanced-settings" aria-labelledby="parameter-title">
+<h3 id="parameter-title">Conversion & costs</h3>
+<div class="fields advanced-grid">
           <div class="field">
             <label for="closeRate" id="close-label">Would become a sale (%)</label>
             <input id="closeRate" name="closeRate" inputmode="decimal" type="number" required min="0" max="100" step="any">
-            <p class="help">Estimated conversion if the at-risk case were handled.</p>
+            
           </div>
           <div class="field">
             <label for="recoverable">Potentially preventable (%)</label>
             <input id="recoverable" name="recoverable" inputmode="decimal" type="number" required min="0" max="100" step="any">
-            <p class="help">Share you could realistically prevent or recover.</p>
+            
           </div>
           <div class="field">
             <label for="margin">Contribution margin (%)</label>
             <input id="margin" name="margin" inputmode="decimal" type="number" required min="0" max="100" step="any">
-            <p class="help">After variable costs, before overheads.</p>
+            
           </div>
           <div class="field">
             <label for="reworkMinutes">Manual rework per affected case (min)</label>
             <input id="reworkMinutes" name="reworkMinutes" inputmode="decimal" type="number" required min="0" max="1440" step="any">
-            <p class="help">Time spent finding, correcting or chasing a case.</p>
+            
           </div>
           <div class="field">
             <label for="hourlyCost">Blended staff cost per hour</label>
             <input id="hourlyCost" name="hourlyCost" inputmode="decimal" type="number" required min="0" max="5000" step="any">
-            <p class="help">Cost of staff time, not a sales-rate assumption.</p>
+            
           </div>
           </div>
-        </details>
-        <p class="explain">This calculator models a scenario, not an observed loss. Presets are illustrative and are not claimed to be market averages. Your estimates remain in your browser unless you choose to include them in an email.</p>
-        <div class="form-actions"><button class="action" type="submit" id="calculate">Calculate potential exposure</button><button class="reset" type="button" id="reset">Reset example</button></div>
+</section>
+        
+        <div class="form-actions"><button class="action" type="submit" id="calculate">Calculate potential exposure</button><button class="reset" type="button" id="reset">Reset</button></div>
         <p id="error" role="alert" hidden></p>
       </form>
       <aside class="result empty" id="result" aria-live="polite" aria-atomic="false">
-        <div class="result-head"><h3>Scenario estimate</h3><small>02 / Understand the size</small></div>
-        <div class="empty-copy" id="empty-result">Your scenario will appear here. No email or company details required.</div>
+        <div class="result-head"><h3>Revenue opportunity</h3></div>
+        <div class="empty-copy" id="empty-result">Enter your numbers and calculate.</div>
         <div id="result-content" hidden>
-          <div class="result-hero"><div class="eyebrow">Potential annual recoverable revenue</div><strong id="annual-revenue"></strong><p>Based only on the assumptions you entered, not proven revenue leakage.</p></div>
-          <div class="metric"><span>Monthly recoverable revenue</span><strong id="monthly-revenue"></strong></div>
-          <div class="metric"><span>Monthly gross revenue at risk</span><strong id="gross-at-risk"></strong></div>
-          <div class="metric"><span>Potential monthly contribution</span><strong id="contribution"></strong></div>
-          <div class="metric subdued"><span>Annual sensitivity range</span><strong id="range"></strong></div>
-          <div class="metric subdued"><span>Separate annual rework cost that might be avoided</span><strong id="rework"></strong></div>
-          <div class="bottleneck" id="bottleneck"></div>
-          <div class="result-proof"><p id="stage-breakdown"></p><p id="assumption-note"></p><p><b>Read carefully:</b> the range varies only your assumed preventable share from half to 1.5 times its value (capped at 100%). This is a modeled opportunity, not lost cash, net profit or a guaranteed recovery. Time savings are shown separately and are not added to revenue.</p><p id="audit-evidence"></p></div>
-          <div class="form-actions"><button id="copy" class="action light" type="button">Copy calculation</button><span id="copy-status" role="status"></span></div><div class="form-actions"><a id="next-action" class="action" href="#next-step">See audit and implementation options</a></div>
+          <div class="result-hero">
+            <div class="eyebrow">Estimated annual recoverable revenue</div>
+            <strong id="annual-revenue"></strong>
+            <p id="stage-breakdown" class="context-line"></p>
+          </div>
+          <div class="metric-grid" aria-label="Estimated revenue breakdown">
+            <div class="metric"><span>Recoverable / month</span><strong id="monthly-revenue"></strong></div>
+            <div class="metric"><span>At risk / month</span><strong id="gross-at-risk"></strong></div>
+            <div class="metric"><span>Contribution / month</span><strong id="contribution"></strong></div>
+            <div class="metric"><span>Annual range</span><strong id="range"></strong></div>
+            <div class="metric metric-wide"><span>Annual rework costs</span><strong id="rework"></strong></div>
+          </div>
+          <div class="result-summary"><p id="bottleneck"></p><p id="assumption-note"></p></div>
+          <div class="next-step" id="next-step" hidden>
+            <div class="next-heading">Next step</div>
+            <a class="action" id="audit-link" href="https://tally.so/r/5XbAeE" target="_blank" rel="noopener noreferrer">Request a workflow audit</a>
+            <a class="action light" id="build-link" href="https://tally.so/r/5XbAeE" target="_blank" rel="noopener noreferrer">Discuss six-week implementation</a>
+          </div>
+          <div class="utility-actions"><button id="copy" type="button" class="reset">Copy calculation</button><span id="copy-status" role="status"></span></div>
         </div>
       </aside>
     </section>
-    <section class="offers" id="next-step" hidden>
-      <div class="step">03 / Turn the estimate into evidence</div>
-      <h2>Find the actual failure. Then decide what to fix.</h2>
-      <p class="offers-intro">Use the model to frame a discussion. A paid audit verifies the leakage before any implementation is proposed.</p>
-      <div class="offer-grid">
-        <article class="offer">
-          <div class="eyebrow">Diagnosis · fixed scope</div><h3>Paid workflow audit</h3>
-          <p>Trace a real order or enquiry from its origin to final outcome. Separate data errors, missed handoffs and conversion problems, and quantify what can actually be improved.</p>
-          <ul><li>Workflow map and evidence sample</li><li>Validated risk and root-cause priorities</li><li>Recommended fixes and measured success criteria</li></ul>
-          <a class="action" id="audit-link" href="https://tally.so/r/5XbAeE" target="_blank" rel="noopener noreferrer">Request a paid audit</a>
-          <p class="offer-foot">Opens a short Acorde enquiry form. Only your chosen workflow and service type are carried forward; your calculation stays private unless you share it. Fee and scope agreed separately.</p>
-        </article>
-        <article class="offer">
-          <div class="eyebrow">Delivery · six weeks</div><h3>Six-week implementation</h3>
-          <p>Implement one bounded workflow and prove it works: capture, identity checks, review, exception handling and a measurable handoff to the destination system.</p>
-          <ul><li>Week 1: baseline, data and acceptance criteria</li><li>Weeks 2–4: build, integration and edge cases</li><li>Weeks 5–6: QA, rollout plan and handover</li></ul>
-          <a class="action light" id="build-link" href="https://tally.so/r/5XbAeE" target="_blank" rel="noopener noreferrer">Discuss six-week delivery</a>
-          <p class="offer-foot">Opens the same enquiry form, marked for six-week delivery. Paid engagement is subject to scope, system access and feasibility.</p>
-        </article>
-      </div>
-    </section>
-    <details class="method">
-      <summary>Calculation method and limitations</summary>
-      <p>At-risk cases = monthly requests × missed-at-entry rate + remaining requests × handoff failure rate. Potential recoverable revenue = at-risk cases × assumed sale conversion × average transaction value × potentially preventable share. Annual values multiply the monthly scenario by 12. Contribution is recoverable revenue × contribution margin. The optional rework estimate uses affected cases × potentially preventable share × staff minutes × hourly cost, and is never included in revenue.</p>
-      <p>Rates may overlap with cancellations, bad leads, capacity limits, seasonality and refunds. It does not establish causality, confirm that the transactions were profitable or predict what an implementation will recover. An audit should validate a representative sample, unique request counts, timelines, source systems, ownership and actual transaction outcomes.</p>
-    </details>
   </main>
-  <footer class="site-footer"><span>© Acorde · A scenario tool, not an audited financial statement.</span><span>No account required for the calculator. Lead requests use Tally. <a href="./privacy.html">Privacy &amp; data use</a></span></footer>
+  
 </div>
 <script type="module" src="./calculator-ui.mjs"></script>
 </body>

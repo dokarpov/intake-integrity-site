@@ -26,7 +26,7 @@ function labelText(){
   $('capture-label').textContent=p.issueA+' (%)';
   $('handoff-label').textContent=p.issueB+' (%)';
   $('close-label').textContent=mode==='orders'?'Would complete after recovery (%)':'Would convert to a sale (%)';
-  $('audit-evidence').textContent='Audit next: '+p.audit;
+
 }
 function resetExample(nextMode=mode){
   mode=nextMode;
@@ -40,8 +40,7 @@ function resetExample(nextMode=mode){
 }
 function showEmpty(){
   last=null;$('result').classList.add('empty');$('empty-result').hidden=false;$('result-content').hidden=true;
-  $('copy-status').textContent='';
-
+  $('copy-status').textContent='';$('next-step').hidden=true;
 }
 function render(){
   try{
@@ -53,9 +52,9 @@ function render(){
     $('contribution').textContent=formatMoney(r.contribution,currency);
     $('rework').textContent=formatMoney(r.annualReworkCost,currency);
     $('stage-breakdown').textContent=formatCount(r.capture)+' '+PRESETS[mode].unit+' missed at entry + '+formatCount(r.handoff)+' lost later = '+formatCount(r.affected)+' at-risk cases per month, with no double-counting.';
-    $('assumption-note').textContent='Based on '+r.assumptions.closeRate+'% assumed conversion, '+r.assumptions.recoverable+'% preventability and '+r.assumptions.margin+'% contribution margin. Open Fine-tune assumptions to change these.';
+    $('assumption-note').textContent='Model: '+r.assumptions.closeRate+'% conversion · '+r.assumptions.recoverable+'% recoverable · '+r.assumptions.margin+'% margin';
     const biggest=r.capture>=r.handoff?PRESETS[mode].issueA:PRESETS[mode].issueB;
-    $('bottleneck').textContent=r.affected===0?'Your input scenario has zero at-risk cases. Validate the baseline before assuming there is an implementation opportunity.':'The larger modeled failure stage is: '+biggest+'. This is a hypothesis for the audit, not a diagnosed root cause.';
+    $('bottleneck').textContent=r.affected===0?'No cases at risk with these inputs.':'Largest source: '+biggest+'.';
     $('result').classList.remove('empty');$('empty-result').hidden=true;$('result-content').hidden=false;
     $('error').hidden=true;$('next-step').hidden=false;last={mode,data:{...r.assumptions},currency};$('copy-status').textContent='';
     return true;
