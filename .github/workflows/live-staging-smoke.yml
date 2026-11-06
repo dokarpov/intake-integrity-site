@@ -34,7 +34,8 @@ jobs:
           req /calculator-ui.mjs ui
           req /privacy.html privacy
           grep -Fq 'TESTING PREVIEW' /tmp/acorde-smoke/home.body
-          grep -Fq 'Estimate revenue at risk' /tmp/acorde-smoke/home.body
+          grep -Fq 'Calculate revenue at risk' /tmp/acorde-smoke/home.body
+          grep -Fq 'id="new-enquiry-tab"' /tmp/acorde-smoke/home.body
           grep -Fq 'Request a workflow audit' /tmp/acorde-smoke/calculator.body
           grep -Fq 'Discuss six-week implementation' /tmp/acorde-smoke/calculator.body
           grep -Fq 'href=\"./privacy.html\"' /tmp/acorde-smoke/calculator.body
