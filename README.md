@@ -42,3 +42,13 @@ A separately published Tally enquiry form is used only by testing-branch CTAs pe
 ## Prelaunch attribution and privacy
 
 The homepage preserves only allowlisted, short UTM campaign labels on links to the calculator. The calculator forwards these campaign labels and service/flow selection to Tally; no financial input is transmitted. A dedicated public privacy notice covers the lead form. Before launch, replace staging links in the Tally form with the approved production privacy URL, verify legal details and test owner notifications. Production promotion remains subject to owner approval.
+
+
+## Acorde UI content contract (marketing/testing artifacts)
+- Do not add product-internal commentary, engineering disclaimers, placeholder explanations, or footnotes to customer-facing screens. Keep release caveats in docs and testing logs.
+- Explicitly label simulated flows as **Demo** at the point of interaction; never imply a real CRM write or verified recovery.
+- Essential inputs, intake, review and paid conversion actions must be visible; no hidden accordions for primary flows.
+- Keep paired commercial CTAs adjacent at a maximum 12px gap on mobile, with no duplicated jump button or explanatory paragraphs between them.
+- Use compact metric grids and one action hierarchy; avoid multiple large section breaks on a mobile result.
+- Keep legal data rights accessible through a dedicated Privacy link/page and required form consent, not narrative footer disclaimers.
+- UI rules are checked in scripts/check-ui-content.mjs and responsive browser tests.

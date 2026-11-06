@@ -134,6 +134,8 @@ h1,h2,h3,h4,p{margin-top:0}h1,h2,h3,h4{font-family:var(--display);font-weight:60
 }
 @media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}}
 
+.queue-tools{display:flex;align-items:center;gap:12px}.queue-tools .reset{font-size:12px;color:#444;padding:6px 0;margin:0;white-space:nowrap}.header-privacy{font-size:12px;color:#666;text-decoration:none}
+@media(max-width:440px){.queue-title{gap:6px;align-items:center}.queue-title h2{font-size:22px}.queue-tools{gap:10px}.queue-tools .reset,.header-privacy{font-size:11px}}
 </style>
 </head>
 <body><div class="shell">
@@ -148,7 +150,7 @@ h1,h2,h3,h4,p{margin-top:0}h1,h2,h3,h4{font-family:var(--display);font-weight:60
     <h2 id="loss-title">What are missed handoffs <span>costing you?</span></h2>
     <p>Estimate the potential cost of lost enquiries, orders or operational requests. Adjust every assumption.</p>
     <a class="loss-cta" href="./calculator.html">Calculate revenue at risk</a>
-    <div class="loss-foot">3 business flows · No signup · Your inputs stay in your browser</div>
+    
   </div>
   <div class="loss-paths" aria-label="Calculator workflows">
     <div class="loss-path-label">Choose a starting scenario</div>
@@ -159,7 +161,7 @@ h1,h2,h3,h4,p{margin-top:0}h1,h2,h3,h4{font-family:var(--display);font-weight:60
 </section>
 <section class="queue-title" id="workflows" aria-label="Interactive product demonstration">
  <div><h2 id="attention">Explore the decisions</h2><p id="attention-desc">Choose a situation or submit a fictional enquiry.</p></div>
- <span class="demo-tag">Interactive · Fictional records</span>
+ <div class="queue-tools"><button type="button" id="reset" class="reset">Reset</button><a href="./privacy.html" class="header-privacy">Privacy</a></div>
 </section>
 <div class="workspace">
  <div class="inbox" id="inbox" role="group" aria-label="Choose an interactive scenario"></div>
@@ -190,7 +192,7 @@ h1,h2,h3,h4,p{margin-top:0}h1,h2,h3,h4{font-family:var(--display);font-weight:60
  <div id="audit-items" role="log" aria-live="polite"></div>
 </section>
 </main>
-<footer class="footer">Illustrative customer records. No real customer data or CRM changes. <a href="./privacy.html">Privacy &amp; data use</a>. <button id="reset" class="reset" type="button">Reset the demo</button></footer>
+
 </div><script>
 'use strict';
 const KEY='intake-exceptions-v1',$=id=>document.getElementById(id),el=(t,c,v)=>{const n=document.createElement(t);if(c)n.className=c;if(v!=null)n.textContent=v;return n},normalize=x=>String(x||'').trim().toLowerCase();

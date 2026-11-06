@@ -6,6 +6,7 @@ on:
     paths:
       - 'index.html'
       - 'calculator.html'
+      - 'scripts/check-ui-content.mjs'
       - 'calculator-engine.mjs'
       - 'calculator-ui.mjs'
       - 'staging-server.mjs'
@@ -34,6 +35,7 @@ jobs:
           node --test scripts/revenue-calculator.test.mjs scripts/staging-server.test.mjs
           node --test mvp/engine.test.mjs mvp/scenarios-12.test.mjs
           python3 scripts/check_public.py
+          node scripts/check-ui-content.mjs
           node --check calculator-engine.mjs
           node --check calculator-ui.mjs
           node --check staging-server.mjs

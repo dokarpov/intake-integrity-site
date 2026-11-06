@@ -51,7 +51,7 @@ function render(){
     $('gross-at-risk').textContent=formatMoney(r.grossAtRisk,currency);
     $('contribution').textContent=formatMoney(r.contribution,currency);
     $('rework').textContent=formatMoney(r.annualReworkCost,currency);
-    $('stage-breakdown').textContent=formatCount(r.capture)+' '+PRESETS[mode].unit+' missed at entry + '+formatCount(r.handoff)+' lost later = '+formatCount(r.affected)+' at-risk cases per month, with no double-counting.';
+    $('stage-breakdown').textContent=formatCount(r.affected)+' cases at risk · '+formatCount(r.capture)+' at entry · '+formatCount(r.handoff)+' at handoff';
     $('assumption-note').textContent='Model: '+r.assumptions.closeRate+'% conversion · '+r.assumptions.recoverable+'% recoverable · '+r.assumptions.margin+'% margin';
     const biggest=r.capture>=r.handoff?PRESETS[mode].issueA:PRESETS[mode].issueB;
     $('bottleneck').textContent=r.affected===0?'No cases at risk with these inputs.':'Largest source: '+biggest+'.';

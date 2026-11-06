@@ -18,16 +18,16 @@ test('Acorde home has the commercial calculator as its second section',async({pa
 test('calculator does not claim preset assumptions are measured losses',async({page})=>{
   await page.goto(root+'/calculator.html');
   await expect(page.locator('#empty-result')).toBeVisible();
-  await expect(page.locator('#advanced-settings')).not.toHaveAttribute('open');
-  await expect(page.locator('#advanced-settings')).toContainText('Fine-tune conversion');
+  await expect(page.locator('#advanced-settings')).toBeVisible();
+  await expect(page.locator('#advanced-settings')).toContainText('Conversion & costs');
   await expect(page.locator('#result-content')).toBeHidden();
   await expect(page.locator('#next-step')).toBeHidden();
-  await expect(page.getByText('Illustrative starting values. Edit them.')).toBeVisible();
-  await expect(page.locator('.explain')).toContainText('not an observed loss');
+  await expect(page.locator('#recoverable')).toBeVisible();
+  expect(await page.locator('body').innerText()).not.toContain('Read carefully');
   await page.getByRole('button',{name:'Calculate potential exposure'}).click();
   await expect(page.locator('#annual-revenue')).not.toBeEmpty();
   await expect(page.locator('#next-step')).toBeVisible();
-  await expect(page.locator('.result-proof')).toContainText('not lost cash');
+  await expect(page.locator('#audit-link')).toBeVisible();
   await expect(page.locator('#audit-link')).toHaveAttribute('href','https://tally.so/r/5XbAeE?offer=audit&flow=sales&source=acorde-calculator');
   await expect(page.locator('#build-link')).toHaveAttribute('href','https://tally.so/r/5XbAeE?offer=implementation&flow=sales&source=acorde-calculator');
   expect(await page.locator('body').innerText()).not.toContain('Guaranteed ROI');
@@ -35,8 +35,7 @@ test('calculator does not claim preset assumptions are measured losses',async({p
 });
 test('editable scenario computes mutually exclusive failure stages and separate staff costs',async({page})=>{
   await page.goto(root+'/calculator.html?mode=sales');
-  await page.locator('#advanced-settings summary').click();
-  await expect(page.locator('#advanced-settings')).toHaveAttribute('open');
+  await expect(page.locator('#closeRate')).toBeVisible();
   const values={volume:'100',avgValue:'100',captureLoss:'10',handoffLoss:'20',closeRate:'100',recoverable:'50',margin:'30',reworkMinutes:'0',hourlyCost:'0'};
   for(const [id,val] of Object.entries(values))await page.locator('#'+id).fill(val);
   await page.locator('#calculate').click();
@@ -46,9 +45,9 @@ test('editable scenario computes mutually exclusive failure stages and separate 
   await expect(page.locator('#contribution')).toContainText('420');
   await expect(page.locator('#range')).toContainText('8,400');
   await expect(page.locator('#range')).toContainText('25,200');
-  await expect(page.locator('#stage-breakdown')).toContainText('10 enquiries missed at entry + 18 lost later = 28');
-  await expect(page.locator('#assumption-note')).toContainText('50% preventability');
-  await expect(page.locator('#next-action')).toHaveAttribute('href','#next-step');
+  await expect(page.locator('#stage-breakdown')).toContainText('28 cases at risk · 10 at entry · 18 at handoff');
+  await expect(page.locator('#assumption-note')).toContainText('50% recoverable');
+  await expect(page.locator('#audit-link')).toBeVisible();
   await expect(page.locator('#rework')).toContainText('0');
   await page.locator('#hourlyCost').fill('100');
   await page.locator('#reworkMinutes').fill('60');
@@ -78,7 +77,7 @@ test('zero missed and handoff cases yields no implied leakage',async({page})=>{
   await page.locator('#handoffLoss').fill('0');
   await page.locator('#calculate').click();
   await expect(page.locator('#annual-revenue')).toContainText('0');
-  await expect(page.locator('#bottleneck')).toContainText('zero at-risk cases');
+  await expect(page.locator('#bottleneck')).toContainText('No cases at risk');
 });
 for(const viewport of sizes){
   test('calculator and entry are readable without sideways scrolling at '+viewport.width,async({browser})=>{
@@ -185,3 +184,36 @@ for(const width of [320,375,390,768]){
   await context.close();
  });
 }
+
+
+test('mobile conversion controls are grouped without excessive gaps',async({browser})=>{
+  const ctx=await browser.newContext({viewport:{width:375,height:812},reducedMotion:'reduce'});
+  const page=await ctx.newPage();
+  await page.goto(root+'/calculator.html');
+  await expect(page.locator('#closeRate')).toBeVisible();
+  await page.locator('#calculate').click();
+  await expect(page.locator('#next-step')).toBeVisible();
+  const boxes=await page.evaluate(()=>{
+    const a=document.querySelector('#audit-link').getBoundingClientRect();
+    const b=document.querySelector('#build-link').getBoundingClientRect();
+    const x=document.querySelector('#copy').getBoundingClientRect();
+    const top=document.querySelector('#result').getBoundingClientRect();
+    return {gap:b.top-a.bottom,copyGap:x.top-b.bottom,resultWidth:top.width,scrollWidth:document.documentElement.scrollWidth,viewport:innerWidth,details:document.querySelectorAll('main details').length};
+  });
+  expect(boxes.gap).toBeGreaterThanOrEqual(0);
+  expect(boxes.gap).toBeLessThanOrEqual(12);
+  expect(boxes.copyGap).toBeLessThanOrEqual(30);
+  expect(boxes.resultWidth).toBeGreaterThan(300);
+  expect(boxes.scrollWidth).toBeLessThanOrEqual(boxes.viewport);
+  expect(boxes.details).toBe(0);
+  await expect(page.locator('footer')).toHaveCount(0);
+  await ctx.close();
+});
+test('homepage exposes review and enquiry flows without accordions or narrative footnotes',async({page})=>{
+  await page.goto(root+'/');
+  await expect(page.getByRole('button',{name:/Try a new enquiry|Try an enquiry/})).toBeVisible();
+  await expect(page.locator('#inbox button')).toHaveCount(4);
+  expect(await page.locator('main details').count()).toBe(0);
+  expect((await page.locator('main').innerText()).toLowerCase()).not.toContain('not a real crm');
+  await expect(page.locator('footer')).toHaveCount(0);
+});
