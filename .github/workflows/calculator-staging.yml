@@ -18,6 +18,24 @@ on:
       - 'scripts/revenue-calculator.spec.cjs'
       - 'scripts/check_public.py'
       - '.github/workflows/calculator-staging.yml'
+  pull_request:
+    branches:
+      - main
+    paths:
+      - 'index.html'
+      - 'calculator.html'
+      - 'scripts/check-ui-content.mjs'
+      - 'calculator-engine.mjs'
+      - 'calculator-ui.mjs'
+      - 'staging-server.mjs'
+      - 'package.json'
+      - 'scripts/staging-server.test.mjs'
+      - 'scripts/build-staging-neon-preview.mjs'
+      - 'scripts/static-neon-preview.test.mjs'
+      - 'scripts/revenue-calculator.test.mjs'
+      - 'scripts/revenue-calculator.spec.cjs'
+      - 'scripts/check_public.py'
+      - '.github/workflows/calculator-staging.yml'
   workflow_dispatch:
 permissions:
   contents: read
