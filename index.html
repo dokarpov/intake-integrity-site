@@ -214,11 +214,21 @@ const log=(event,detail)=>state.audit.unshift({event,detail});
 const save=()=>{try{localStorage.setItem(KEY,JSON.stringify(state))}catch{}render()};
 function line(area,label,value){const r=el('dl','details-row');r.append(el('dt',null,label),el('dd',null,value));area.append(r)}
 function queue(){
- const pending=waiting(),list=$('inbox');list.replaceChildren();
+ const defaults=['ENQ-201','ENQ-202','ENQ-203'];
+ const core=defaults.map(id=>state.cases.find(c=>c.id===id)).filter(Boolean);
+ const latest=state.cases.find(c=>!defaults.includes(c.id)&&c.id!=='ENQ-200');
+ const pending=latest?[...core,latest]:core;
+ const list=$('inbox');list.replaceChildren();
  $('attention').textContent='See how Acorde handles exceptions';
  $('attention-desc').textContent='Select a scenario or try an enquiry. No account needed.';
  if(!pending.some(x=>x.id===selected))selected=pending[0]?.id||'';
- const type=(item)=>item.status==='review'?['Identity','Two matches']:item.status==='new'?['New customer','Consent check']:['Delivery','Lost receipt'];
+ const type=(item)=>{
+  const name=item.id==='ENQ-201'?'Identity':item.id==='ENQ-202'?'New customer':item.id==='ENQ-203'?'Delivery':'New enquiry';
+  const detail=['linked','created','delivered'].includes(item.status)?'Completed':
+    item.status==='review'?'Two matches':item.status==='new'?'Consent check':
+    item.status==='delivery_unknown'?'Lost receipt':'Review pending';
+  return [name,detail];
+ };
  pending.forEach((item,index)=>{
   const [name,description]=type(item),b=el('button','case-btn');
   b.type='button';b.dataset.id=item.id;b.setAttribute('aria-pressed',String(activeTab==='case'&&item.id===selected));
@@ -240,7 +250,7 @@ function showContext(item){const root=$('context');root.replaceChildren();const 
 if(!matches.length){root.append(el('p','small-note','No customer found. The original message and source are retained.'));return}
 const grid=el('div','candidates');for(const c of matches){const card=el('div','candidate');card.append(el('b',null,c.name+' · '+c.company),el('small',null,'Owner: '+c.owner+' · '+c.id));grid.append(card)}root.append(grid);
 if(matches.length===1){const c=matches[0];line(root,'Last contact',c.last);line(root,'Promise',c.promise);line(root,'Next action',c.next)}
-else root.append(el('p','small-note','A shared identifier is not identity proof. No record or owner has been selected.'));
+else root.append(el('p','small-note',item.status==='linked'&&item.contactId?'Verified destination: '+item.contactId+'. The two customer records remain separate.':'A shared identifier is not identity proof. No record or owner has been selected.'));
 }
 function resolve(item){const dest=item.status==='new'?'new':$('destination')?.value,verified=$('verified')?.checked,permission=$('permission')?.checked,evidence=$('evidence')?.value.trim()||'';
 if(!dest||!verified||evidence.length<12||(dest==='new'&&!permission)){feedback='Independent verification and any required permission must be confirmed.';$('feedback').textContent=feedback;return}
@@ -248,7 +258,7 @@ if(dest!=='new'&&!candidates(item.email).some(c=>c.id===dest)){feedback='Choose 
 if(dest==='new'){if(item.status==='new'&&candidates(item.email).length){feedback='Matching customer appeared. Review identity first.';$('feedback').textContent=feedback;return}
 const id='CRM-'+state.seq++;state.customers.push({id,name:item.name,email:item.email,company:'Not provided',owner:'Unassigned',last:item.source,promise:'Respond to enquiry',next:'Assign owner and respond'});item.status='created';item.contactId=id;log('New contact approved',item.id+' · '+id+' · permission checked')}
 else{item.status='linked';item.contactId=dest;log('Identity verified',item.id+' · '+dest+' · independent check recorded')}
-selected='';editing=false;feedback='';save();
+selected=item.id;editing=false;feedback='';save();
 }
 function showProof(item){const root=$('proof');root.replaceChildren();root.hidden=!editing;if(!editing)return;
 if(item.status==='review'){const f=el('div','form-field'),label=el('label',null,'Verified destination'),select=el('select');label.htmlFor='destination';select.id='destination';const initial=el('option',null,'Select after verification');initial.value='';select.append(initial);
@@ -262,11 +272,17 @@ for(const [x,event] of [[ta,'input'],[v,'change'],[p,'change']])x.addEventListen
 if(item.status==='review')$('destination').addEventListener('change',sync);sync();btn.addEventListener('click',()=>resolve(item));
 }
 function details(){if(activeTab==='try')return;const item=state.cases.find(x=>x.id===selected);if(!item)return;
-$('case-heading').textContent=item.status==='review'?'Identity needs review':item.status==='new'?'New customer approval':item.status==='delivery_check'?'Delivery remains on hold':'Check delivery outcome';
+$('case-heading').textContent=item.status==='review'?'Identity needs review':item.status==='new'?'New customer approval':item.status==='delivery_check'?'Delivery remains on hold':item.status==='linked'?'Identity verified':item.status==='created'?'New customer approved':item.status==='delivered'?'Delivery reconciled':'Check delivery outcome';
 $('case-reason').textContent=item.reason;$('case-message').textContent=item.message+' ('+item.source+')';showContext(item);
 const actions=$('case-actions');actions.replaceChildren();
-if(item.status==='delivery_unknown'){const b=el('button','primary-action','Check delivery receipt');b.type='button';b.addEventListener('click',()=>{const r=state.ledger[item.key];if(!r){item.status='delivery_check';item.reason='Receipt unknown; blind retry blocked';log('Delivery held',item.id+' · no safe receipt available')}else{r.attempts++;item.status='delivered';item.contactId=r.contactId;log('Delivery reconciled',item.id+' · one original simulated write; safe replay confirmed')}selected='';editing=false;feedback='';save()});actions.append(b,el('p','small-note','In this example the previous write succeeded but its acknowledgement was lost. Looking up the original delivery key avoids a duplicate.'))}
+if(item.status==='delivery_unknown'){const b=el('button','primary-action','Check delivery receipt');b.type='button';b.addEventListener('click',()=>{const r=state.ledger[item.key];if(!r){item.status='delivery_check';item.reason='Receipt unknown; blind retry blocked';log('Delivery held',item.id+' · no safe receipt available')}else{r.attempts++;item.status='delivered';item.contactId=r.contactId;log('Delivery reconciled',item.id+' · one original simulated write; safe replay confirmed')}selected=item.id;editing=false;feedback='';save()});actions.append(b,el('p','small-note','In this example the previous write succeeded but its acknowledgement was lost. Looking up the original delivery key avoids a duplicate.'))}
 else if(item.status==='delivery_check')actions.append(el('p','small-note','The receipt is still unknown. No blind retry is attempted.'));
+else if(['linked','created','delivered'].includes(item.status)){
+ const copy=item.status==='delivered'?'Original delivery receipt verified; no duplicate write was made.':
+  item.status==='created'?'New contact approved after a fictional consent check.':
+  'Identity verified for '+item.contactId+'. Original customer records remain separate.';
+ actions.append(el('p','small-note',copy));
+}
 else if(!editing){const b=el('button','primary-action',item.status==='review'?'Review identity':'Review new record');b.type='button';b.addEventListener('click',()=>{editing=true;details()});actions.append(b)}
 showProof(item);$('feedback').textContent=feedback;
 }
