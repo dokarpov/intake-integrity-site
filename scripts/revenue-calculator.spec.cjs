@@ -1,5 +1,5 @@
 const {test,expect}=require('@playwright/test');
-const root='http://127.0.0.1:4173';
+const root=(process.env.ACORDE_BASE_URL||'http://127.0.0.1:4173').replace(/\/$/,'');
 const sizes=[{width:320,height:720},{width:375,height:812},{width:390,height:844},{width:768,height:1024},{width:1440,height:900}];
 test('Acorde home has the commercial calculator as its second section',async({page})=>{
   const errors=[];page.on('pageerror',e=>errors.push(e.message));
