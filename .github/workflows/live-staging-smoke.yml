@@ -2,7 +2,9 @@ name: Acorde isolated live-staging smoke
 on:
   push:
     branches: ['testing/revenue-calculator']
-    paths: ['.github/workflows/live-staging-smoke.yml']
+    paths:
+      - '.github/workflows/live-staging-smoke.yml'
+      - 'scripts/revenue-calculator.spec.cjs'
   workflow_dispatch:
 permissions:
   contents: read
@@ -60,3 +62,21 @@ jobs:
           test "$code" = "401" || { echo "FAIL anonymous backend API: $code"; exit 1; }
           grep -Fq 'unauthorized' /tmp/acorde-smoke/anonymous.json
           echo 'PASS: Live homepage, calculator, private-data policy, noindex, assets, CSP, allowlist, write denial, DB readiness and anonymous API protection'
+
+  live-browser:
+    needs: live-http
+    runs-on: ubuntu-latest
+    timeout-minutes: 12
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Install Chromium and test dependencies
+        run: |
+          npm install --no-save @playwright/test
+          npx playwright install --with-deps chromium
+      - name: Test deployed calculator across mobile and desktop
+        env:
+          ACORDE_BASE_URL: https://br-shiny-union-bajmnaa3-acordepreview.compute.c-8.eu-central-1.aws.neon.tech
+        run: npx playwright test scripts/revenue-calculator.spec.cjs --browser chromium --workers=1 --reporter=line
