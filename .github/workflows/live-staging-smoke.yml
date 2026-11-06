@@ -42,6 +42,9 @@ jobs:
           req '/calculator.html?mode=orders' calculator
           req /calculator-engine.mjs math
           req /calculator-ui.mjs ui
+          req /healthz staging_health
+          echo 'Deployed static preview revision:'
+          cat /tmp/acorde-smoke/staging_health.body
           req /comparison.html comparison
           req /comparison-engine.mjs costs
           req /comparison-ui.mjs costui
