@@ -207,15 +207,34 @@ cases:[
 ledger:{'delivery-203':{contactId:'CRM-10632',attempts:1,writes:1}},
 audit:[{event:'Verified account match',detail:'Alex Morgan linked to CRM-10042; earlier commitments preserved.'}]});
 let state;try{let s=JSON.parse(localStorage.getItem(KEY));state=s?.version===1&&Array.isArray(s.cases)&&Array.isArray(s.customers)&&s.ledger?s:seeded()}catch{state=seeded()}
-let selected='',editing=false,feedback='';
+let selected='',editing=false,feedback='',activeTab='case';
 const candidates=email=>state.customers.filter(c=>normalize(c.email)===normalize(email));
 const waiting=()=>state.cases.filter(c=>['review','new','delivery_unknown','delivery_check'].includes(c.status));
 const log=(event,detail)=>state.audit.unshift({event,detail});
 const save=()=>{try{localStorage.setItem(KEY,JSON.stringify(state))}catch{}render()};
 function line(area,label,value){const r=el('dl','details-row');r.append(el('dt',null,label),el('dd',null,value));area.append(r)}
-function queue(){const open=waiting(),list=$('inbox');list.replaceChildren();$('attention').textContent=open.length?open.length+' need attention':'No decisions waiting';$('attention-desc').textContent=open.length?'Only cases that require a decision.':'All example cases resolved.';
-if(!open.length){selected='';$('case-pane').hidden=true;return}if(!open.some(x=>x.id===selected))selected=open[0].id;$('case-pane').hidden=false;
-for(const item of open){const b=el('button','case-btn');b.type='button';b.dataset.id=item.id;b.setAttribute('aria-current',String(item.id===selected));b.append(el('span','case-kind',item.status==='review'?'Identity conflict':item.status==='new'?'New customer approval':'Delivery exception'),el('strong',null,item.name+' · '+item.email),el('small',null,item.status==='review'?'Confirm customer identity and ownership':item.status==='new'?'Check contact permission before creation':'Reconcile the original delivery receipt'));b.addEventListener('click',()=>{selected=item.id;editing=false;feedback='';render();if(innerWidth<=900)$('case-pane').scrollIntoView({block:'start'})});list.append(b)}
+function queue(){
+ const pending=waiting(),list=$('inbox');list.replaceChildren();
+ $('attention').textContent='See how Acorde handles exceptions';
+ $('attention-desc').textContent='Select a scenario or try an enquiry. No account needed.';
+ if(!pending.some(x=>x.id===selected))selected=pending[0]?.id||'';
+ const type=(item)=>item.status==='review'?['Identity','Two matches']:item.status==='new'?['New customer','Consent check']:['Delivery','Lost receipt'];
+ pending.forEach((item,index)=>{
+  const [name,description]=type(item),b=el('button','case-btn');
+  b.type='button';b.dataset.id=item.id;b.setAttribute('aria-pressed',String(activeTab==='case'&&item.id===selected));
+  b.setAttribute('aria-label',name+': '+item.name);
+  b.append(el('span','case-kind',String(index+1).padStart(2,'0')+' / Scenario'),el('strong',null,name),el('small',null,description));
+  b.addEventListener('click',()=>{activeTab='case';selected=item.id;editing=false;feedback='';render()});
+  list.append(b);
+ });
+ const newTab=el('button','case-btn');
+ newTab.type='button';newTab.id='new-enquiry-tab';newTab.setAttribute('aria-pressed',String(activeTab==='try'));
+ newTab.setAttribute('aria-controls','try');
+ newTab.append(el('span','case-kind','+ / Interactive'),el('strong',null,'Try an enquiry'),el('small',null,'Use fictional inputs'));
+ newTab.addEventListener('click',()=>{activeTab='try';editing=false;feedback='';render()});
+ list.append(newTab);
+ $('case-pane').hidden=activeTab==='try'||!selected;
+ $('try').hidden=activeTab!=='try';
 }
 function showContext(item){const root=$('context');root.replaceChildren();const matches=candidates(item.email);root.append(el('h4','case-subhead',matches.length>1?'Possible customer records':matches.length===1?'Existing customer context':'Customer lookup'));
 if(!matches.length){root.append(el('p','small-note','No customer found. The original message and source are retained.'));return}
@@ -242,7 +261,7 @@ const sync=()=>{const dest=item.status==='new'?'new':$('destination').value;cons
 for(const [x,event] of [[ta,'input'],[v,'change'],[p,'change']])x.addEventListener(event,sync);
 if(item.status==='review')$('destination').addEventListener('change',sync);sync();btn.addEventListener('click',()=>resolve(item));
 }
-function details(){const item=state.cases.find(x=>x.id===selected);if(!item)return;
+function details(){if(activeTab==='try')return;const item=state.cases.find(x=>x.id===selected);if(!item)return;
 $('case-heading').textContent=item.status==='review'?'Identity needs review':item.status==='new'?'New customer approval':item.status==='delivery_check'?'Delivery remains on hold':'Check delivery outcome';
 $('case-reason').textContent=item.reason;$('case-message').textContent=item.message+' ('+item.source+')';showContext(item);
 const actions=$('case-actions');actions.replaceChildren();
@@ -254,8 +273,8 @@ showProof(item);$('feedback').textContent=feedback;
 function render(){queue();details();$('audit-items').replaceChildren(...state.audit.map(x=>el('div','audit-line',x.event+': '+x.detail)))}
 $('form').addEventListener('submit',event=>{event.preventDefault();const name=$('new-name').value.trim(),email=normalize($('new-email').value),message=$('new-message').value.trim();if(!name||!email||!message)return;
 const matches=candidates(email),reason=matches.length>1?'Multiple customer records share this email':matches.length===1?'Email alone is not independent identity proof':'No existing customer matches',status=matches.length?'review':'new',id='ENQ-'+state.seq++;
-state.cases.unshift({id,name,email,message,status,source:'Example intake',reason});log('Enquiry checked',id+' · '+reason);selected=id;editing=false;feedback='';save();$('try').open=false;$('case-pane').scrollIntoView({block:'start'})});
-$('reset').addEventListener('click',()=>{state=seeded();selected='';editing=false;feedback='';save()});render();
+state.cases.unshift({id,name,email,message,status,source:'Example intake',reason});log('Enquiry checked',id+' · '+reason);selected=id;activeTab='case';editing=false;feedback='';save();$('case-pane').scrollIntoView({block:'start',behavior:'smooth'})});
+$('reset').addEventListener('click',()=>{state=seeded();selected='';activeTab='case';editing=false;feedback='';save()});render();
 </script>
 <script id="acorde-source-pass-through">
 (()=>{
