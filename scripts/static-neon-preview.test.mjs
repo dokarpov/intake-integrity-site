@@ -19,7 +19,7 @@ test('homepage, calculator, private policy and JS are served with correct status
  assert.match(home,/Compare current tool vs Acorde costs/);
  const comparison=await (await get('/comparison.html')).text();
  assert.match(comparison,/No dedicated automation/);
- assert.match(comparison,/Existing software \+ manual review/);
+ assert.match(comparison,/Already paying for a tool/);
  const privacy=await (await get('/privacy.html')).text();
  assert.match(privacy,/Privacy/);
 });
