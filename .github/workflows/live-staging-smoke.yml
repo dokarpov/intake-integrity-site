@@ -1,4 +1,5 @@
 name: Acorde isolated live-staging smoke
+# Recheck the deployed Neon preview after refreshing its separate testing artifact.
 on:
   push:
     branches: ['testing/revenue-calculator']
