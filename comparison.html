@@ -1,0 +1,176 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#fff">
+<meta name="description" content="Compare existing deduplication software or manual reviews with a proposed Acorde operating model. Transparent editable assumptions and costs.">
+<title>Acorde — Compare operating costs</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{--ink:#242424;--muted:#666;--border:#dcdcdc;--faint:#f8f8f8;--body:"DM Sans",Arial,sans-serif;--display:"Space Grotesk",Arial,sans-serif}
+*{box-sizing:border-box}
+html{background:#fff;color:var(--ink);-webkit-text-size-adjust:100%;scroll-behavior:smooth}
+body{margin:0;min-width:320px;font:400 15px/1.55 var(--body);-webkit-font-smoothing:antialiased}
+button,input,select{font:inherit}button{cursor:pointer}button:disabled{cursor:not-allowed;opacity:.55}
+a{color:inherit;text-underline-offset:4px}h1,h2,h3,p{margin-top:0}
+h1,h2,h3{font-family:var(--display);letter-spacing:-.05em;line-height:1.14}
+h1{font-size:clamp(34px,5vw,58px);margin:12px 0 15px;max-width:770px}
+h1 span{color:#858585}
+h2{font-size:clamp(24px,2.5vw,30px);margin:0 0 9px}
+h3{font-size:19px;margin:0 0 9px}
+:focus-visible{outline:2px solid #222;outline-offset:3px}
+[hidden]{display:none!important}
+.shell{width:min(calc(100% - 72px),1110px);margin:auto}
+.topbar{min-height:70px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;gap:15px}
+.logo{font:700 21px var(--display);letter-spacing:-.08em;text-decoration:none}
+.nav{display:flex;align-items:center;flex-wrap:wrap;gap:16px;font-size:12px;font-weight:700}
+.eyebrow{font-size:11px;font-weight:700;color:#7a7a7a;letter-spacing:.07em;text-transform:uppercase}
+.intro{padding:37px 0 26px;border-bottom:1px solid var(--border)}
+.intro p{color:var(--muted);max-width:730px;line-height:1.6}
+.mode-selection{padding:24px 0}
+.mode-selection p{color:var(--muted);font-size:13px;margin:0 0 13px}
+.mode-buttons{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.mode-buttons button{background:#fff;color:var(--ink);border:1px solid #c9c9c9;border-radius:7px;text-align:left;min-height:78px;padding:14px 16px}
+.mode-buttons button[aria-pressed="true"]{border:2px solid #242424;background:#f5f5f5;padding:13px 15px}
+.mode-buttons strong{display:block;font:600 16px var(--display);letter-spacing:-.03em}
+.mode-buttons small{display:block;font-size:12px;color:#666;margin-top:4px;line-height:1.4}
+.layout{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,.94fr);gap:30px;align-items:start;padding:5px 0 48px}
+.form-card,.result-card{border:1px solid var(--border);border-radius:8px;min-width:0;padding:23px}
+.form-card{border-color:#e4e4e4}
+.section-top{display:flex;justify-content:space-between;gap:10px;align-items:baseline;margin-bottom:14px}
+.section-top h2{margin:0}
+.section-top small{font-size:11px;color:#777}
+.field-set{padding:18px 0 10px;border-top:1px solid var(--border)}
+.field-set:first-of-type{border-top:0;padding-top:7px}
+.field-set h3{font-size:16px}
+.field-set p{font-size:12px;color:#666;line-height:1.5;margin:0 0 14px}
+.field-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
+.field{min-width:0}
+.field label{font-size:12px;font-weight:700;display:block;margin:0 0 6px;line-height:1.35}
+.field input,.field select{display:block;min-width:0;width:100%;height:45px;border:1px solid #c7c7c7;border-radius:5px;background:#fff;color:var(--ink);padding:10px 11px;font-size:16px}
+.field small{display:block;font-size:11px;line-height:1.4;color:#777;margin-top:5px}
+.field.full{grid-column:1/-1}
+.form-actions{display:flex;flex-wrap:wrap;align-items:center;gap:14px;margin:15px 0 0}
+.action{display:inline-flex;justify-content:center;align-items:center;min-height:45px;padding:10px 17px;border-radius:5px;border:1px solid #242424;color:#fff;background:#242424;font-size:13px;font-weight:700;text-decoration:none;text-align:center}
+.action:hover{background:#444}
+.action.secondary{background:#fff;color:#242424}
+.action.secondary:hover{background:#f4f4f4}
+.text-button{padding:10px 0;border:0;background:none;text-decoration:underline;text-underline-offset:3px;color:#444;font-size:12px;font-weight:700}
+.note{font-size:12px;color:#666;line-height:1.55;margin:14px 0 0}
+#error{color:#a12b26;font-size:13px;min-height:1.2em;margin-top:10px}
+.result-card{position:sticky;top:18px}
+.results-empty{color:#777;font-size:14px;line-height:1.6;min-height:190px;display:flex;align-items:center}
+.result-head{border-bottom:1px solid var(--border);padding-bottom:13px;margin-bottom:16px}
+.compare-pair{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
+.total-card{border:1px solid var(--border);padding:13px;border-radius:5px;min-width:0}
+.total-card.emphasized{background:#f6f6f6}
+.total-card .label{font-size:11px;line-height:1.3;color:#666;min-height:28px}
+.total-card strong{font:600 clamp(20px,2.4vw,28px)/1.1 var(--display);letter-spacing:-.05em;display:block;margin:10px 0 5px;overflow-wrap:anywhere}
+.total-card span{font-size:11px;line-height:1.4;color:#666;display:block}
+.total-card b{display:block;font-size:12px;line-height:1.4}
+.bars{margin:19px 0;padding:15px 0;border-top:1px solid var(--border);border-bottom:1px solid var(--border)}
+.bar-group{margin-bottom:13px}.bar-group:last-child{margin-bottom:0}
+.bar-group label{font-size:11px;color:#666;display:block;margin-bottom:6px}
+.bar-track{width:100%;height:13px;border-radius:3px;background:#f0f0f0;overflow:hidden}
+.bar-fill{display:block;height:100%;min-width:0;background:#868686}
+.bar-fill.proposed{background:#242424}
+.cost-table{width:100%;border-collapse:collapse;font-size:12px;table-layout:fixed}
+.cost-table th{color:#767676;text-align:right;font-size:11px;font-weight:600}
+.cost-table th:first-child{text-align:left;width:46%}
+.cost-table td{border-top:1px solid #e9e9e9;padding:9px 3px;text-align:right;overflow-wrap:anywhere}
+.cost-table td:first-child{text-align:left;color:#666}
+.delta{margin-top:19px;border-top:2px solid #242424;padding-top:15px}
+.delta strong{font:600 clamp(25px,3vw,37px)/1.15 var(--display);letter-spacing:-.05em;display:block;margin:7px 0 4px}
+.delta strong[data-tone="negative"]{color:#b13d30}
+.delta p{font-size:13px;color:#555;margin:3px 0}
+.evidence{background:#f7f7f7;padding:13px 15px;margin:15px 0;color:#555;font-size:12px;line-height:1.5}
+.controls{display:flex;flex-wrap:wrap;gap:9px;align-items:center;margin:17px 0}
+.controls button{min-height:42px}
+.offers{border-top:1px solid var(--border);padding:34px 0 56px}
+.offers p{color:#666;max-width:680px}
+.offer-actions{display:flex;gap:12px;flex-wrap:wrap}
+.offer-actions .action{flex:0 1 auto}
+.legal{border-top:1px solid var(--border);padding:22px 0 40px;color:#777;font-size:12px;line-height:1.6}
+@media(max-width:880px){.layout{grid-template-columns:1fr;gap:15px}.result-card{position:static}.results-empty{min-height:80px}}
+@media(max-width:620px){.shell{width:calc(100% - 30px)}.topbar{min-height:64px}.nav{gap:12px;font-size:11px}.intro{padding:23px 0 17px}.intro p{font-size:13px}.mode-selection{padding:16px 0}.mode-buttons{gap:7px}.mode-buttons button{padding:10px;min-height:90px}.mode-buttons button[aria-pressed="true"]{padding:9px}.mode-buttons strong{font-size:14px}.mode-buttons small{font-size:11px}.form-card,.result-card{padding:16px}.field-grid{gap:11px}.field label{font-size:11px}.total-card{padding:11px}.total-card strong{font-size:21px}.cost-table{font-size:11px}.cost-table th{font-size:10px}.offer-actions .action{width:100%}}
+@media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}}
+</style>
+</head>
+<body>
+<div class="shell">
+<header class="topbar"><a href="./" class="logo" aria-label="Acorde home">acorde</a>
+<nav class="nav"><a href="./calculator.html">Revenue at risk</a><a href="./privacy.html">Privacy</a></nav></header>
+<main>
+<section class="intro"><div class="eyebrow">Transparent cost comparison · experimental estimate</div>
+<h1>What does the current process <span>really cost?</span></h1>
+<p>Compare a manual process or your existing deduplication tool with a proposed Acorde workflow. Enter actual costs and review hours, then see both sides of the calculation. No vendor pricing or savings are assumed.</p></section>
+<section class="mode-selection" aria-labelledby="mode-title"><h2 id="mode-title">How do you handle duplicates today?</h2>
+<p>Choose one baseline. Changing this only changes the current-software cost; it never silently removes staff work.</p>
+<div class="mode-buttons" role="group" aria-label="Existing deduplication setup">
+<button type="button" data-baseline="manual" aria-pressed="true"><strong>No dedicated automation</strong><small>Spreadsheets, manual checks or ordinary CRM features</small></button>
+<button type="button" data-baseline="tool" aria-pressed="false"><strong>Already paying for a tool</strong><small>Existing licence plus human verification and corrections</small></button>
+</div></section>
+<section class="layout" aria-label="Cost model and comparison">
+<form id="comparison-form" class="form-card" novalidate>
+<div class="section-top"><h2>Enter actual costs</h2><small>Per month, except setup</small></div>
+<section class="field-set"><h3>Shared assumptions</h3><div class="field-grid">
+<div class="field"><label for="hourlyCost">Fully loaded staff cost / hour</label><input id="hourlyCost" type="number" min="0" max="1000" step="any" inputmode="decimal" placeholder="Enter actual cost" required><small>Include relevant employer costs, not just net wages.</small></div>
+<div class="field"><label for="currency">Currency (both sides)</label><select id="currency"><option value="EUR">EUR · Euro</option><option value="USD">USD · US dollar</option><option value="GBP">GBP · British pound</option><option value="AED">AED · UAE dirham</option><option value="MXN">MXN · Mexican peso</option></select><small>Do not combine amounts from different currencies.</small></div>
+</div></section>
+<section class="field-set"><h3 id="baseline-label">Manual process — no dedicated dedup tool</h3><p id="baseline-hint">Staff time still counts.</p>
+<div class="field-grid">
+<div class="field" id="tool-name-field" hidden><label for="toolName">Existing software (optional name)</label><input id="toolName" maxlength="80" placeholder="Your current tool"></div>
+<div class="field" id="current-software-field" hidden><label for="currentSoftwareMonthly">Existing tool licence / month</label><input id="currentSoftwareMonthly" type="number" min="0" max="10000000" step="any" inputmode="decimal" placeholder="Actual bill"><small>Include seats and dedup add-ons. Enter 0 if included.</small></div>
+<div class="field"><label for="currentReviewHours">Human identity reviews (hours / month)</label><input id="currentReviewHours" type="number" min="0" max="100000" step="any" inputmode="decimal" placeholder="Hours" required></div>
+<div class="field"><label for="currentFixHours">Duplicate corrections / rework (hours / month)</label><input id="currentFixHours" type="number" min="0" max="100000" step="any" inputmode="decimal" placeholder="Hours" required></div>
+</div></section>
+<section class="field-set"><h3>Proposed Acorde workflow</h3><p>These are estimates, not measured improvements or published Acorde pricing. Keep human verification for uncertain identities.</p>
+<div class="field-grid">
+<div class="field"><label for="newReviewHours">Remaining human reviews (hours / month)</label><input id="newReviewHours" type="number" min="0" max="100000" step="any" inputmode="decimal" placeholder="Expected hours" required></div>
+<div class="field"><label for="newFixHours">Remaining corrections (hours / month)</label><input id="newFixHours" type="number" min="0" max="100000" step="any" inputmode="decimal" placeholder="Expected hours" required></div>
+<div class="field"><label for="newSoftwareMonthly">Acorde licence / month (quote)</label><input id="newSoftwareMonthly" type="number" min="0" max="10000000" step="any" inputmode="decimal" placeholder="Enter a hypothetical or quoted fee" required><small>No official public subscription price is set. Use an actual proposal when available.</small></div>
+<div class="field"><label for="newOperationsMonthly">Integration + running costs / month</label><input id="newOperationsMonthly" type="number" min="0" max="10000000" step="any" inputmode="decimal" placeholder="Include hosting/support" required></div>
+<div class="field full"><label for="newSetupOneOff">One-time implementation / setup</label><input id="newSetupOneOff" type="number" min="0" max="10000000" step="any" inputmode="decimal" placeholder="One-off cost" required><small>Included in first-year total, not repeated in ongoing monthly cost.</small></div>
+</div></section>
+<div class="form-actions"><button class="action" type="submit" id="compare">Compare operating costs</button><button class="text-button" type="button" id="example">Load fictional example</button><button class="text-button" type="button" id="clear">Clear</button></div>
+<p id="example-note" class="note" role="status" hidden></p>
+<p id="error" role="alert"></p>
+<p class="note">Use 0 explicitly where there is no cost. All numbers remain in your browser. Do not enter real customer records or credentials in this staging build.</p>
+</form>
+<aside id="results" class="result-card" aria-live="polite" aria-atomic="false">
+<div class="result-head"><div class="eyebrow">02 / Side-by-side</div><h2>Cost to operate</h2></div>
+<div id="results-empty" class="results-empty">Fill in the assumptions, or select a clearly fictional example to see how the comparison works. We cannot calculate real savings without both sides of the costs.</div>
+<div id="results-data" hidden>
+<div class="compare-pair">
+<div class="total-card"><div class="label" id="current-name">Today</div><strong id="current-monthly"></strong><span>Effective / month in year one</span><b id="current-hours"></b></div>
+<div class="total-card emphasized"><div class="label" id="proposed-name">Proposed</div><strong id="proposed-monthly"></strong><span>Effective / month in year one</span><b id="proposed-hours"></b></div>
+</div>
+<div class="bars" aria-label="Relative first-year operating costs">
+<div class="bar-group"><label for="current-bar">Current first-year cost</label><div class="bar-track"><span class="bar-fill" id="current-bar"></span></div></div>
+<div class="bar-group"><label for="proposed-bar">Proposed first-year cost</label><div class="bar-track"><span class="bar-fill proposed" id="proposed-bar"></span></div></div>
+</div>
+<table class="cost-table" aria-label="Annual cost calculation details"><thead><tr><th scope="col">Annual cost breakdown</th><th scope="col">Current</th><th scope="col">Proposed</th></tr></thead>
+<tbody>
+<tr><td>Software licences</td><td id="current-software"></td><td id="proposed-software"></td></tr>
+<tr><td>Human identity review</td><td id="current-review"></td><td id="proposed-review"></td></tr>
+<tr><td>Corrections + rework</td><td id="current-fix"></td><td id="proposed-fix"></td></tr>
+<tr><td>Operations + integration</td><td id="current-operations"></td><td id="proposed-operations"></td></tr>
+<tr><td>One-off rollout</td><td id="current-setup"></td><td id="proposed-setup"></td></tr>
+<tr><td><strong>First 12 months</strong></td><td><strong id="current-year"></strong></td><td><strong id="proposed-year"></strong></td></tr>
+</tbody></table>
+<div class="delta"><div class="eyebrow">Estimated first-year difference</div><strong id="difference"></strong><p id="difference-label"></p><p id="monthly-difference"></p></div>
+<div id="case-evidence" class="evidence"></div>
+<div class="controls"><button type="button" class="action secondary" id="copy" disabled>Copy assumptions + results</button><span id="copy-status" role="status" class="note"></span></div>
+<p class="note">Pure operating-cost comparison. Does not add modeled revenue recovery or assume all duplicate errors disappear. A negative difference means the proposed approach costs more. Validate actual invoices, staff hours and pilot outcomes.</p>
+</div></aside>
+</section>
+<section class="offers" aria-labelledby="next-title"><div class="eyebrow">03 / Validate with evidence</div><h2 id="next-title">Replace assumptions with a measured pilot.</h2><p>A paid audit can establish current error volumes, staff effort, customer-identity risk and an integration scope. A six-week implementation is scoped separately, not automatically included in a licence estimate.</p>
+<div class="offer-actions"><a id="audit-link" class="action" href="https://tally.so/r/5XbAeE" target="_blank" rel="noopener noreferrer">Request a paid workflow audit</a><a id="build-link" class="action secondary" href="https://tally.so/r/5XbAeE" target="_blank" rel="noopener noreferrer">Discuss six-week implementation</a></div></section>
+</main>
+<div class="legal">This comparison is an editable model, not third-party vendor pricing, Acorde's published tariff, a business case confirmed by data, or a guarantee of savings. <a href="./privacy.html">Privacy &amp; data use</a>.</div>
+</div>
+<script type="module" src="./comparison-ui.mjs"></script>
+</body></html>

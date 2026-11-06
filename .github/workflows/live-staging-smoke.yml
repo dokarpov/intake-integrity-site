@@ -1,0 +1,108 @@
+name: Acorde isolated live-staging smoke
+# Recheck the deployed Neon preview after refreshing its separate testing artifact.
+on:
+  push:
+    branches: ['testing/revenue-calculator']
+    paths:
+      - '.github/workflows/live-staging-smoke.yml'
+      - 'scripts/revenue-calculator.spec.cjs'
+      - 'scripts/comparison.spec.cjs'
+      - 'scripts/live-tally-prefill.spec.cjs'
+  pull_request:
+    branches: [main]
+    paths:
+      - '.github/workflows/live-staging-smoke.yml'
+      - 'scripts/revenue-calculator.spec.cjs'
+      - 'scripts/comparison.spec.cjs'
+      - 'scripts/live-tally-prefill.spec.cjs'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  live-http:
+    runs-on: ubuntu-latest
+    timeout-minutes: 8
+    steps:
+      - name: Verify actual deployed staging — never touch production
+        shell: bash
+        env:
+          FRONT: https://br-shiny-union-bajmnaa3-acordepreview.compute.c-8.eu-central-1.aws.neon.tech
+          API: https://br-shiny-union-bajmnaa3-intakestaging.compute.c-8.eu-central-1.aws.neon.tech
+        run: |
+          set -euxo pipefail
+          mkdir -p /tmp/acorde-smoke
+          req() {
+            local path="$1" output="$2"
+            curl --fail-with-body -L --retry 3 --retry-delay 2 --retry-all-errors \
+              --max-time 50 --connect-timeout 20 -sS \
+              -D "/tmp/acorde-smoke/${output}.headers" \
+              -o "/tmp/acorde-smoke/${output}.body" "$FRONT$path"
+          }
+          req / home
+          req '/calculator.html?mode=orders' calculator
+          req /calculator-engine.mjs math
+          req /calculator-ui.mjs ui
+          req /healthz staging_health
+          echo 'Deployed static preview revision:'
+          cat /tmp/acorde-smoke/staging_health.body
+          req /comparison.html comparison
+          req /comparison-engine.mjs costs
+          req /comparison-ui.mjs costui
+          req /privacy.html privacy
+          grep -Fq 'TESTING PREVIEW' /tmp/acorde-smoke/home.body
+          grep -Fq 'Calculate revenue at risk' /tmp/acorde-smoke/home.body
+          grep -Fq "newTab.id='new-enquiry-tab'" /tmp/acorde-smoke/home.body
+          grep -Fq 'id="recent-select"' /tmp/acorde-smoke/home.body
+          grep -Fq 'Your test enquiries' /tmp/acorde-smoke/home.body
+          grep -Fq 'Request a workflow audit' /tmp/acorde-smoke/calculator.body
+          grep -Fq 'Discuss six-week implementation' /tmp/acorde-smoke/calculator.body
+          grep -Fq 'href="./privacy.html"' /tmp/acorde-smoke/calculator.body
+          grep -Fq 'utm_source' /tmp/acorde-smoke/ui.body
+          grep -Fq 'tally.so/r/5XbAeE' /tmp/acorde-smoke/ui.body
+          grep -Fq 'No dedicated automation' /tmp/acorde-smoke/comparison.body
+          grep -Fq 'Already paying for a tool' /tmp/acorde-smoke/comparison.body
+          grep -Fq 'newSoftwareMonthly' /tmp/acorde-smoke/costs.body
+          grep -Fq 'acorde-cost-comparison' /tmp/acorde-smoke/costui.body
+          grep -Fq 'Nothing is uploaded' /tmp/acorde-smoke/privacy.body
+          grep -iq '^x-robots-tag:.*noindex' /tmp/acorde-smoke/home.headers
+          grep -iq '^x-content-type-options: nosniff' /tmp/acorde-smoke/calculator.headers
+          grep -iq '^content-security-policy:' /tmp/acorde-smoke/calculator.headers
+          # Static preview must not expose source/tests or accept API writes.
+          for p in /scripts/check_public.py /.github/workflows/deploy.yml /api/me; do
+            code=$(curl -sS --max-time 20 -o /dev/null -w '%{http_code}' "$FRONT$p")
+            test "$code" = "404" || { echo "FAIL unexpected public path $p: $code"; exit 1; }
+          done
+          code=$(curl -sS --max-time 20 -X POST -o /dev/null -w '%{http_code}' "$FRONT/calculator.html")
+          test "$code" = "405" || { echo "FAIL preview accepted POST: $code"; exit 1; }
+          curl --fail-with-body --retry 3 --retry-delay 2 --max-time 50 -sS \
+             "$API/readyz" > /tmp/acorde-smoke/backend.json
+          python3 - <<'PY'
+          import json
+          with open('/tmp/acorde-smoke/backend.json') as f: data=json.load(f)
+          assert data.get('ok') is True and data.get('database')=='postgres',data
+          PY
+          code=$(curl -sS --max-time 30 -o /tmp/acorde-smoke/anonymous.json -w '%{http_code}' "$API/api/me")
+          test "$code" = "401" || { echo "FAIL anonymous backend API: $code"; exit 1; }
+          grep -Fq 'unauthorized' /tmp/acorde-smoke/anonymous.json
+          echo 'PASS: Live homepage, calculator, private-data policy, noindex, assets, CSP, allowlist, write denial, DB readiness and anonymous API protection'
+
+  live-browser:
+    needs: live-http
+    runs-on: ubuntu-latest
+    timeout-minutes: 12
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Install Chromium and test dependencies
+        run: |
+          npm install --no-save @playwright/test
+          npx playwright install --with-deps chromium
+      - name: Test deployed calculator across mobile and desktop
+        env:
+          ACORDE_BASE_URL: https://br-shiny-union-bajmnaa3-acordepreview.compute.c-8.eu-central-1.aws.neon.tech
+        run: |
+          npx playwright test scripts/revenue-calculator.spec.cjs --browser chromium --workers=1 --reporter=line
+          npx playwright test scripts/comparison.spec.cjs --browser chromium --workers=1 --reporter=line
+          npx playwright test scripts/live-tally-prefill.spec.cjs --browser chromium --workers=1 --reporter=line
