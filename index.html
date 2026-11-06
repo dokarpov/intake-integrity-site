@@ -136,6 +136,7 @@ h1,h2,h3,h4,p{margin-top:0}h1,h2,h3,h4{font-family:var(--display);font-weight:60
 
 .queue-tools{display:flex;align-items:center;gap:12px}.queue-tools .reset{font-size:12px;color:#444;padding:6px 0;margin:0;white-space:nowrap}.header-privacy{font-size:12px;color:#666;text-decoration:none}
 @media(max-width:440px){.queue-title{gap:6px;align-items:center}.queue-title h2{font-size:22px}.queue-tools{gap:10px}.queue-tools .reset,.header-privacy{font-size:11px}}
+.recent-enquiries{display:flex;flex-wrap:wrap;align-items:center;gap:10px;margin:0 0 18px;padding:0 0 16px;border-bottom:1px solid var(--line)}.recent-enquiries[hidden]{display:none}.recent-enquiries label{font-size:12px;font-weight:700;color:#555}.recent-enquiries select{flex:1 1 180px;min-width:0;min-height:42px;border:1px solid #cfcfcf;border-radius:5px;background:#fff;padding:9px 10px;color:#242424;font:inherit;font-size:13px}.recent-enquiries button{border:1px solid #242424;border-radius:5px;background:#fff;color:#242424;padding:9px 12px;font-weight:700;font-size:12px;min-height:42px}@media(max-width:620px){.recent-enquiries label{width:100%}.recent-enquiries button{flex:0 0 auto}}
 </style>
 </head>
 <body><div class="shell">
@@ -167,6 +168,7 @@ h1,h2,h3,h4,p{margin-top:0}h1,h2,h3,h4{font-family:var(--display);font-weight:60
  <div class="inbox" id="inbox" role="group" aria-label="Choose an interactive scenario"></div>
  <div class="work-detail">
   <article class="case-pane" id="case-pane" aria-live="polite">
+   <div id="recent-enquiries" class="recent-enquiries" hidden><label for="recent-select">Your test enquiries</label><select id="recent-select" aria-label="Switch to a previous test enquiry"></select><button type="button" id="new-enquiry-action">New enquiry</button></div>
    <div class="case-heading-row"><h3 id="case-heading"></h3></div>
    <p id="case-reason"></p>
    <div class="case-body">
@@ -218,12 +220,18 @@ function line(area,label,value){const r=el('dl','details-row');r.append(el('dt',
 function queue(){
  const defaults=['ENQ-201','ENQ-202','ENQ-203'];
  const core=defaults.map(id=>state.cases.find(c=>c.id===id)).filter(Boolean);
- const latest=state.cases.find(c=>!defaults.includes(c.id)&&c.id!=='ENQ-200');
- const pending=latest?[...core,latest]:core;
+ const recent=state.cases.filter(c=>!defaults.includes(c.id)&&c.id!=='ENQ-200');
+ const pending=core;
  const list=$('inbox');list.replaceChildren();
  $('attention').textContent='See how Acorde handles exceptions';
  $('attention-desc').textContent='Select a scenario or try an enquiry. No account needed.';
- if(!pending.some(x=>x.id===selected))selected=pending[0]?.id||'';
+ if(![...pending,...recent].some(x=>x.id===selected))selected=pending[0]?.id||recent[0]?.id||'';
+ const picker=$('recent-select'),switcher=$('recent-enquiries');
+ picker.replaceChildren();
+ const placeholder=el('option',null,'Select a test enquiry');placeholder.value='';picker.append(placeholder);
+ for(const item of recent){const option=el('option',null,item.id+' · '+item.name+' · '+item.status.replaceAll('_',' '));option.value=item.id;picker.append(option)}
+ picker.value=recent.some(item=>item.id===selected)?selected:'';
+ switcher.hidden=!recent.length;
  const type=(item)=>{
   const name=item.id==='ENQ-201'?'Identity':item.id==='ENQ-202'?'New customer':item.id==='ENQ-203'?'Delivery':'New enquiry';
   const detail=['linked','created','delivered'].includes(item.status)?'Completed':
@@ -240,7 +248,7 @@ function queue(){
   list.append(b);
  });
  const newTab=el('button','case-btn');
- newTab.type='button';newTab.id='new-enquiry-tab';newTab.setAttribute('aria-pressed',String(activeTab==='try'));
+ newTab.type='button';newTab.id='new-enquiry-tab';newTab.setAttribute('aria-pressed',String(activeTab==='try'||activeTab==='custom'));
  newTab.setAttribute('aria-controls','try');
  newTab.append(el('span','case-kind','+ / Interactive'),el('strong',null,'Try an enquiry'),el('small',null,'Use fictional inputs'));
  newTab.addEventListener('click',()=>{activeTab='try';editing=false;feedback='';render()});
@@ -291,7 +299,9 @@ showProof(item);$('feedback').textContent=feedback;
 function render(){queue();details();$('audit-items').replaceChildren(...state.audit.map(x=>el('div','audit-line',x.event+': '+x.detail)))}
 $('form').addEventListener('submit',event=>{event.preventDefault();const name=$('new-name').value.trim(),email=normalize($('new-email').value),message=$('new-message').value.trim();if(!name||!email||!message)return;
 const matches=candidates(email),reason=matches.length>1?'Multiple customer records share this email':matches.length===1?'Email alone is not independent identity proof':'No existing customer matches',status=matches.length?'review':'new',id='ENQ-'+state.seq++;
-state.cases.unshift({id,name,email,message,status,source:'Example intake',reason});log('Enquiry checked',id+' · '+reason);selected=id;activeTab='case';editing=false;feedback='';save();$('case-pane').scrollIntoView({block:'start',behavior:'smooth'})});
+state.cases.unshift({id,name,email,message,status,source:'Example intake',reason});log('Enquiry checked',id+' · '+reason);selected=id;activeTab='custom';editing=false;feedback='';save();$('case-pane').scrollIntoView({block:'start',behavior:'smooth'})});
+$('recent-select').addEventListener('change',event=>{const id=event.target.value;if(!state.cases.some(item=>item.id===id))return;selected=id;activeTab='custom';editing=false;feedback='';render()});
+$('new-enquiry-action').addEventListener('click',()=>{activeTab='try';editing=false;feedback='';render()});
 $('reset').addEventListener('click',()=>{state=seeded();selected='';activeTab='case';editing=false;feedback='';save()});render();
 </script>
 <script id="acorde-source-pass-through">
