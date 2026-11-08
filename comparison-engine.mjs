@@ -84,21 +84,3 @@ export function reportText(values){
     'Real savings or feasibility require measured workflow data and an implementation quote.'
   ].join('\n');
 }
-export function emailDraftUrl(address,values){
-  if(typeof address!=='string'||address.length>254||! /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(address))
-    throw new Error('Enter a valid email address.');
-  const subject='My Acorde time & cost estimate';
-  const body=reportText(values)+'\n\nSent from my own email app. No automatic email delivery or mailing-list signup.';
-  return 'mailto:'+encodeURIComponent(address)+'?subject='+encodeURIComponent(subject)+'&body='+encodeURIComponent(body);
-}
-export function newsletterUrl(address,utm={}){
-  if(typeof address!=='string'||address.length>254||!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(address))
-    throw new Error('Enter a valid email address.');
-  const url=new URL('https://tally.so/r/ArK9ZD');
-  url.searchParams.set('subscriber_email',address);
-  for(const name of ['utm_source','utm_medium','utm_campaign']){
-    const v=utm[name];
-    if(typeof v==='string'&&/^[a-zA-Z0-9_. -]{1,64}$/.test(v))url.searchParams.set(name,v);
-  }
-  return url.toString();
-}
