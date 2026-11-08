@@ -1,82 +1,88 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import {EXAMPLES,compareCosts,validateComparison,comparisonReport,money} from '../comparison-engine.mjs';
-test('manual baseline includes all labour even with no automation licence',()=>{
- const r=compareCosts(EXAMPLES.manual);
- assert.equal(r.current.software,0);
- assert.equal(r.current.review,1200);
- assert.equal(r.current.correction,300);
- assert.equal(r.current.monthly,1500);
- assert.equal(r.current.firstYear,18000);
- assert.equal(r.proposed.review,420);
- assert.equal(r.proposed.correction,120);
- assert.equal(r.proposed.monthly,865);
- assert.equal(r.proposed.firstYear,11580);
- assert.equal(r.monthlyEquivalentNew,965);
- assert.equal(r.firstYearDifference,6420);
- assert.equal(r.monthlyDifference,635);
- assert.equal(r.hoursDifference,32);
+import {ASSUMPTIONS,DEFAULTS,calculateScenario,validateScenario,reportText,euro,emailDraftUrl,newsletterUrl} from '../comparison-engine.mjs';
+test('default estimate transparently counts handling time rather than inventing ROI',()=>{
+ const r=calculateScenario(DEFAULTS);
+ assert.equal(r.monthlyRecords,1200);
+ assert.equal(r.affectedRecords,96);
+ assert.equal(r.attentionHours,16);
+ assert.equal(r.currentStaffCost,448);
+ assert.equal(r.midHours,8);
+ assert.equal(r.midValue,224);
+ assert.equal(r.annualMidValue,2688);
+ assert.equal(r.lowHours,4.8);
+ assert.equal(r.highHours,11.2);
+ assert.equal(r.currentSoftware,0);
+ assert.equal(r.currentMonthlyOverhead,448);
 });
-test('existing tool includes a genuine software fee and human cost',()=>{
- const r=compareCosts(EXAMPLES.tool);
- assert.equal(r.current.software,180);
- assert.equal(r.current.monthly,1230);
- assert.equal(r.current.firstYear,14760);
- assert.equal(r.firstYearDifference,3180);
- assert.equal(r.assumptions.toolName,'Existing dedup tool');
+test('100 people scale cleanly with per-worker workload, no timesheets requested',()=>{
+ const r=calculateScenario({...DEFAULTS,workers:100});
+ assert.equal(r.monthlyRecords,24000);
+ assert.equal(r.attentionHours,320);
+ assert.equal(r.midValue,4480);
+ assert.equal(r.currentMonthlyOverhead,8960);
 });
-test('all zero inputs produce no artificial savings or cost',()=>{
- const zero=Object.fromEntries(Object.keys(EXAMPLES.tool).map(key=>[key,0]));
- zero.mode='tool';zero.toolName='';
- const r=compareCosts(zero);
- assert.equal(r.current.firstYear,0);
- assert.equal(r.proposed.firstYear,0);
- assert.equal(r.monthlyDifference,0);
- assert.equal(r.firstYearDifference,0);
+test('one worker scales proportionally, not per company by accident',()=>{
+ const r=calculateScenario({...DEFAULTS,workers:1});
+ assert.equal(r.monthlyRecords,240);
+ assert.equal(r.attentionHours,3.2);
 });
-test('proposal may cost more; negative cost difference is retained',()=>{
- const r=compareCosts({...EXAMPLES.manual,newSoftwareMonthly:5000});
- assert.ok(r.firstYearDifference<0);
- assert.ok(r.monthlyDifference<0);
+test('existing software stays separate from human handling and is not automatically retired',()=>{
+ const r=calculateScenario({...DEFAULTS,mode:'tool',toolMonthly:150});
+ assert.equal(r.currentSoftware,150);
+ assert.equal(r.currentMonthlyOverhead,598);
+ assert.equal(r.midValue,224);
+ assert.equal(r.illustrativeMonthlyLaborBudget,224);
+ assert.match(reportText({...DEFAULTS,mode:'tool'}),/Existing paid dedup tool/);
 });
-test('first-year setup is not charged every month after year one',()=>{
- const x=compareCosts({...EXAMPLES.manual,newSetupOneOff:12000});
- assert.equal(x.proposed.monthly,865);
- assert.equal(x.proposed.firstYear,22380);
- assert.equal(x.afterFirstYearDifference,7620);
- assert.equal(x.monthlyEquivalentNew,1865);
+test('all zero issues means zero lost time, even with 100 people',()=>{
+ const a=calculateScenario({...DEFAULTS,workers:100,issueRate:0});
+ assert.equal(a.attentionHours,0);
+ assert.equal(a.midValue,0);
+ assert.equal(a.currentMonthlyOverhead,0);
+ const b=calculateScenario({...DEFAULTS,workers:100,issueRate:0,mode:'tool',toolMonthly:150});
+ assert.equal(b.currentMonthlyOverhead,150);
+ assert.equal(b.midValue,0);
 });
-test('manual mode cannot accidentally count existing software fees',()=>{
- const x=compareCosts({...EXAMPLES.manual,currentSoftwareMonthly:99999});
- assert.equal(x.current.software,0);
+test('manual mode cannot treat a 150 EUR subscription as already spent',()=>{
+ assert.equal(calculateScenario({...DEFAULTS,toolMonthly:2000}).currentSoftware,0);
 });
-test('existing-tool mode requires explicit licence even if it is free or included',()=>{
- assert.throws(()=>compareCosts({...EXAMPLES.tool,currentSoftwareMonthly:''}),/Enter currentSoftwareMonthly/);
- assert.equal(compareCosts({...EXAMPLES.tool,currentSoftwareMonthly:0}).current.software,0);
-});
-test('new fees and manual-hour forecasts must be supplied, not treated as free',()=>{
- for(const key of ['hourlyCost','newReviewHours','newFixHours','newSoftwareMonthly','newOperationsMonthly','newSetupOneOff','currentReviewHours','currentFixHours']){
-  assert.throws(()=>compareCosts({...EXAMPLES.manual,[key]:''}),/Enter/);
- }
-});
-test('invalid values fail closed rather than offering fabricated savings',()=>{
+test('reject unrealistic slider values and malformed assumptions',()=>{
  for(const bad of [
-  {...EXAMPLES.manual,mode:'unknown'},
-  {...EXAMPLES.manual,newSoftwareMonthly:-1},
-  {...EXAMPLES.manual,currentReviewHours:Infinity},
-  {...EXAMPLES.manual,newFixHours:'not-a-number'},
-  {...EXAMPLES.manual,newSetupOneOff:10000001},
-  {...EXAMPLES.manual,hourlyCost:1001}
- ]) assert.throws(()=>validateComparison(bad));
+ {...DEFAULTS,workers:0},{...DEFAULTS,workers:101},
+ {...DEFAULTS,workers:4.2},{...DEFAULTS,recordsPerWorkerDay:41},
+ {...DEFAULTS,issueRate:-1},{...DEFAULTS,issueRate:30},
+ {...DEFAULTS,toolMonthly:-1},{...DEFAULTS,toolMonthly:3000},
+ {...DEFAULTS,mode:'nonsense'},{...DEFAULTS,workers:''}
+ ]) assert.throws(()=>validateScenario(bad));
 });
-test('report includes assumptions, signed difference and no false vendor pricing',()=>{
- const report=comparisonReport(EXAMPLES.tool,'EUR');
- assert.match(report,/Existing dedup tool/);
- assert.match(report,/Current first-year total: €14,760/);
- assert.match(report,/Proposed first-year total: €11,580/);
- assert.match(report,/First-year difference, current minus proposed: €3,180/);
- assert.match(report,/not a vendor quote/);
- assert.match(report,/Does not include revenue recovery/);
- assert.match(money(1234,'GBP'),/1,234/);
- assert.throws(()=>money(10,'BTC'),/supported currency/);
+test('label assumptions as illustrative, not industry statistics or cash savings',()=>{
+ const report=reportText(DEFAULTS);
+ assert.match(report,/Acorde — illustrative/);
+ assert.match(report,/not industry averages/);
+ assert.match(report,/Value of time is not cash saved/);
+ assert.match(report,/Acorde pricing and setup are not included/);
+ assert.match(report,/€224/);
+ assert.equal(ASSUMPTIONS.workingDays,20);
+ assert.equal(ASSUMPTIONS.minutesPerAffectedRecord,10);
+ assert.equal(euro(150),'€150');
+});
+test('email draft contains full calculation and needs user to press Send',()=>{
+ const uri=emailDraftUrl('test@example.com',DEFAULTS);
+ assert.match(uri,/^mailto:test%40example\.com\?subject=/);
+ assert.match(decodeURIComponent(uri),/Estimated handling time today: 16 hours\/month/);
+ assert.match(decodeURIComponent(uri),/No automatic email delivery/);
+ assert.throws(()=>emailDraftUrl('not-an-email',DEFAULTS),/valid email/);
+ assert.throws(()=>emailDraftUrl('a@b.com\r\nBcc:evil',DEFAULTS),/valid email/);
+});
+test('newsletter URL requires an address and explicitly filters campaigns',()=>{
+ const uri=newsletterUrl('buyer@example.com',{utm_source:'linkedin',utm_campaign:'<script>',utm_medium:'organic'});
+ const url=new URL(uri);
+ assert.equal(url.hostname,'tally.so');
+ assert.equal(url.pathname,'/r/ArK9ZD');
+ assert.equal(url.searchParams.get('subscriber_email'),'buyer@example.com');
+ assert.equal(url.searchParams.get('utm_source'),'linkedin');
+ assert.equal(url.searchParams.get('utm_medium'),'organic');
+ assert.equal(url.searchParams.has('utm_campaign'),false);
+ assert.throws(()=>newsletterUrl('bad'),/valid email/);
 });
