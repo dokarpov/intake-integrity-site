@@ -45,7 +45,8 @@ jobs:
           req /healthz staging_health
           echo 'Deployed static preview revision:'
           cat /tmp/acorde-smoke/staging_health.body
-          grep -Fq '3d69050ca7b4a2135cdfcd13447b1b5151816d9b' /tmp/acorde-smoke/staging_health.body
+          # Neon reserves /healthz for platform readiness; verify our actual
+          # served revision by examining the new calculator's HTML and JS below.
           req /comparison.html comparison
           req /comparison-engine.mjs costs
           req /comparison-ui.mjs costui
