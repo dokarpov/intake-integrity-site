@@ -97,7 +97,7 @@ test('current operating costs never appear as a price quote for Acorde',async({p
  await expect(page.locator('body')).toContainText('not set here');
  await expect(page.locator('#model-explanation')).toContainText('20 workdays');
 });
-test('campaign whitelist carries to audit form without calculator's financial inputs',async({page})=>{
+test('campaign whitelist carries to audit form without financial inputs',async({page})=>{
  await page.goto(base+'?utm_source=linkedin&utm_campaign=nov');
  const url=new URL(await page.locator('#audit-link').getAttribute('href'));
  expect(url.hostname).toBe('tally.so');
