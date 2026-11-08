@@ -1,0 +1,47 @@
+name: Acorde staging artifact (testing branch only)
+# A deterministic, allowlisted static bundle to support exact deployed-revision
+# checks. It is NOT an automatic production deploy.
+on:
+  push:
+    branches: ['testing/revenue-calculator']
+    paths:
+      - 'index.html'
+      - 'privacy.html'
+      - 'calculator.html'
+      - 'calculator-engine.mjs'
+      - 'calculator-ui.mjs'
+      - 'comparison.html'
+      - 'comparison-engine.mjs'
+      - 'comparison-ui.mjs'
+      - 'mailer-config.mjs'
+      - 'scripts/build-staging-neon-preview.mjs'
+      - '.github/workflows/staging-artifact.yml'
+  workflow_dispatch:
+permissions:
+  contents: write
+jobs:
+  bundle:
+    runs-on: ubuntu-latest
+    timeout-minutes: 6
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: testing/revenue-calculator
+          persist-credentials: true
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Generate strictly allowlisted function module
+        run: |
+          node scripts/build-staging-neon-preview.mjs
+          node --check dist/staging-function/index.mjs
+          node --test scripts/static-neon-preview.test.mjs
+          python3 scripts/check_public.py
+      - name: Save immutable source bundle on the testing branch
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add -f dist/staging-function/index.mjs
+          if git diff --cached --quiet; then echo 'Bundle already current'; exit 0; fi
+          git commit -m 'build(staging): refresh exact allowlisted Neon preview bundle [skip ci]'
+          git push origin HEAD:refs/heads/testing/revenue-calculator
