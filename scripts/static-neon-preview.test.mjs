@@ -16,10 +16,12 @@ test('homepage, calculator, private policy and JS are served with correct status
  const home=await (await get('/')).text();
  assert.match(home,/TESTING PREVIEW/);
  assert.match(home,/revenue-loss/);
- assert.match(home,/Compare current tool vs Acorde costs/);
+ assert.match(home,/How much duplicate-record work costs/);
  const comparison=await (await get('/comparison.html')).text();
- assert.match(comparison,/No dedicated automation/);
- assert.match(comparison,/Already paying for a tool/);
+ assert.match(comparison,/No, we check manually/);
+ assert.match(comparison,/Yes, we have a tool/);
+ assert.match(comparison,/id="workers"/);
+ assert.match(comparison,/id="newsletter"/);
  const privacy=await (await get('/privacy.html')).text();
  assert.match(privacy,/Privacy/);
 });
