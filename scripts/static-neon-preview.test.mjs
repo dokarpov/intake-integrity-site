@@ -5,7 +5,7 @@ execFileSync(process.execPath,['scripts/build-staging-neon-preview.mjs'],{stdio:
 const {default:preview}=await import('../dist/staging-function/index.mjs');
 const get=(path,method='GET')=>preview.fetch(new Request('https://staging.example.test'+path,{method}));
 test('homepage, calculator, private policy and JS are served with correct status',async()=>{
- for(const url of ['/','/calculator.html','/calculator-ui.mjs','/comparison.html','/comparison-engine.mjs','/comparison-ui.mjs','/privacy.html','/mvp/']){
+ for(const url of ['/','/calculator.html','/calculator-ui.mjs','/comparison.html','/comparison-engine.mjs','/comparison-ui.mjs','/mailer-config.mjs','/privacy.html','/mvp/']){
    const response=await get(url);assert.equal(response.status,200,url);
    assert.equal(response.headers.get('x-robots-tag'),'noindex, nofollow, noarchive');
    assert.equal(response.headers.get('cache-control'),'no-store');
@@ -22,6 +22,8 @@ test('homepage, calculator, private policy and JS are served with correct status
  assert.match(comparison,/Yes, we have a tool/);
  assert.match(comparison,/id="workers"/);
  assert.match(comparison,/id="newsletter"/);
+ assert.match(comparison,/id="mailer-state"/);
+ assert.doesNotMatch(comparison,/tally\.so\/r\/ArK9ZD/);
  const privacy=await (await get('/privacy.html')).text();
  assert.match(privacy,/Privacy/);
 });
