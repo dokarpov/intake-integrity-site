@@ -1,6 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import {ASSUMPTIONS,DEFAULTS,calculateScenario,validateScenario,reportText,euro,emailDraftUrl,newsletterUrl} from '../comparison-engine.mjs';
+import {ASSUMPTIONS,DEFAULTS,calculateScenario,validateScenario,reportText,euro} from '../comparison-engine.mjs';
 test('default estimate transparently counts handling time rather than inventing ROI',()=>{
  const r=calculateScenario(DEFAULTS);
  assert.equal(r.monthlyRecords,1200);
@@ -67,22 +67,7 @@ test('label assumptions as illustrative, not industry statistics or cash savings
  assert.equal(ASSUMPTIONS.minutesPerAffectedRecord,10);
  assert.equal(euro(150),'€150');
 });
-test('email draft contains full calculation and needs user to press Send',()=>{
- const uri=emailDraftUrl('test@example.com',DEFAULTS);
- assert.match(uri,/^mailto:test%40example\.com\?subject=/);
- assert.match(decodeURIComponent(uri),/Estimated handling time today: 16 hours\/month/);
- assert.match(decodeURIComponent(uri),/No automatic email delivery/);
- assert.throws(()=>emailDraftUrl('not-an-email',DEFAULTS),/valid email/);
- assert.throws(()=>emailDraftUrl('a@b.com\r\nBcc:evil',DEFAULTS),/valid email/);
-});
-test('newsletter URL requires an address and explicitly filters campaigns',()=>{
- const uri=newsletterUrl('buyer@example.com',{utm_source:'linkedin',utm_campaign:'<script>',utm_medium:'organic'});
- const url=new URL(uri);
- assert.equal(url.hostname,'tally.so');
- assert.equal(url.pathname,'/r/ArK9ZD');
- assert.equal(url.searchParams.get('subscriber_email'),'buyer@example.com');
- assert.equal(url.searchParams.get('utm_source'),'linkedin');
- assert.equal(url.searchParams.get('utm_medium'),'organic');
- assert.equal(url.searchParams.has('utm_campaign'),false);
- assert.throws(()=>newsletterUrl('bad'),/valid email/);
+test('report remains suitable for server-side rendering without an email vendor',()=>{
+ assert.match(reportText(DEFAULTS),/Estimated handling time today: 16 hours\/month/);
+ assert.doesNotMatch(reportText(DEFAULTS),/tally\.so|mailto:/);
 });
