@@ -1,6 +1,7 @@
 const {test,expect}=require('@playwright/test');
 const root=(process.env.ACORDE_BASE_URL||'http://127.0.0.1:4173').replace(/\/$/,'');
 const base=root+'/comparison.html';
+async function slide(page,id,value){await page.locator('#'+id).evaluate((el,v)=>{el.value=String(v);el.dispatchEvent(new Event('input',{bubbles:true}))},value)}
 test('homepage and main calculator still link to the simplified cost estimator',async({page})=>{
  await page.goto(root+'/?utm_source=linkedin');
  await expect(page.locator('.loss-compare')).toHaveAttribute('href',/comparison\.html\?utm_source=linkedin/);
@@ -28,16 +29,16 @@ test('starts with legible illustrative values and an immediate answer, no math f
 });
 test('changing team size, records or problem rate immediately recalculates without submit',async({page})=>{
  await page.goto(base);
- await page.locator('#workers').fill('100');
+ await slide(page,'workers',100);
  await expect(page.locator('#attention-hours')).toContainText('320 h');
  await expect(page.locator('#freed-value')).toContainText('4,480');
- await page.locator('#workers').fill('1');
+ await slide(page,'workers',1);
  await expect(page.locator('#attention-hours')).toContainText('3.2 h');
- await page.locator('#issueRate').fill('0');
+ await slide(page,'issueRate',0);
  await expect(page.locator('#attention-hours')).toContainText('0 h');
  await expect(page.locator('#freed-value')).toContainText('€0');
- await page.locator('#issueRate').fill('8');
- await page.locator('#recordsPerWorkerDay').fill('24');
+ await slide(page,'issueRate',8);
+ await slide(page,'recordsPerWorkerDay',24);
  await expect(page.locator('#attention-hours')).toContainText('6.4 h');
 });
 test('current fee applies only in existing-tool mode, and time estimate is unchanged',async({page})=>{
@@ -47,7 +48,7 @@ test('current fee applies only in existing-tool mode, and time estimate is uncha
  await expect(page.locator('#software-controls')).toBeVisible();
  await expect(page.locator('#current-overhead')).toContainText('598');
  await expect(page.locator('#software-explain')).toContainText('do not assume it can be cancelled');
- await page.locator('#toolMonthly').fill('500');
+ await slide(page,'toolMonthly',500);
  await expect(page.locator('#current-overhead')).toContainText('948');
  await expect(page.locator('#attention-hours')).toHaveText(time);
  await page.locator('[data-baseline="manual"]').click();
@@ -87,9 +88,7 @@ test('newsletter link stays disabled until a valid email is present',async({page
  await page.locator('#recipient').fill('no@');
  await expect(page.locator('#newsletter-link')).not.toHaveAttribute('href',/tally/);
  await page.locator('#recipient').fill('valid@example.com');
- await expect(page.locator('#newsletter-link')).toHaveAttribute('aria-disabled','false').catch(async()=>{
-  await expect(page.locator('#newsletter-link')).not.toHaveAttribute('aria-disabled','true');
- });
+ await expect(page.locator('#newsletter-link')).not.toHaveAttribute('aria-disabled','true');
 });
 test('current operating costs never appear as a price quote for Acorde',async({page})=>{
  await page.goto(base);
