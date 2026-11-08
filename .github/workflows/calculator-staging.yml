@@ -12,6 +12,9 @@ on:
       - 'comparison.html'
       - 'comparison-engine.mjs'
       - 'comparison-ui.mjs'
+      - 'mailer-config.mjs'
+      - 'mail/Code.gs'
+      - 'scripts/apps-script-mailer.test.mjs'
       - 'scripts/comparison-engine.test.mjs'
       - 'scripts/comparison.spec.cjs'
       - 'staging-server.mjs'
@@ -35,6 +38,9 @@ on:
       - 'comparison.html'
       - 'comparison-engine.mjs'
       - 'comparison-ui.mjs'
+      - 'mailer-config.mjs'
+      - 'mail/Code.gs'
+      - 'scripts/apps-script-mailer.test.mjs'
       - 'scripts/comparison-engine.test.mjs'
       - 'scripts/comparison.spec.cjs'
       - 'staging-server.mjs'
@@ -60,7 +66,7 @@ jobs:
           node-version: '22'
       - name: Test calculation accuracy and public privacy rules
         run: |
-          node --test scripts/revenue-calculator.test.mjs scripts/comparison-engine.test.mjs scripts/staging-server.test.mjs
+          node --test scripts/revenue-calculator.test.mjs scripts/comparison-engine.test.mjs scripts/apps-script-mailer.test.mjs scripts/staging-server.test.mjs
           node --test mvp/engine.test.mjs mvp/scenarios-12.test.mjs
           python3 scripts/check_public.py
           node scripts/check-ui-content.mjs
@@ -68,6 +74,7 @@ jobs:
           node --check calculator-ui.mjs
           node --check comparison-engine.mjs
           node --check comparison-ui.mjs
+          node --check mailer-config.mjs
           node --check staging-server.mjs
       - name: Generate and verify isolated staging bundle
         run: |
