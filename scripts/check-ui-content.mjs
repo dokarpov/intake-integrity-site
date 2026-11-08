@@ -29,6 +29,8 @@ assert.ok(calculator.includes('class="next-step"'), 'service CTAs are not groupe
 assert.ok(!calculator.includes('id="next-action"'), 'duplicate scroll CTA must stay removed');
 const comp=readFileSync('comparison.html','utf8');
 assert.ok(comp.includes('data-baseline="manual"')&&comp.includes('data-baseline="tool"'));
-assert.ok(comp.includes('id="newSoftwareMonthly"')&&comp.includes('id="newSetupOneOff"'));
-assert.ok(comp.includes('id="current-year"')&&comp.includes('id="proposed-year"'));
+assert.ok(comp.includes('id="workers"')&&comp.includes('id="recordsPerWorkerDay"')&&comp.includes('id="issueRate"'));
+assert.ok(comp.includes('id="send"')&&comp.includes('id="newsletter"')&&comp.includes('id="newsletter-link"'));
+assert.ok(!/type="number"|<select\b/.test(comp),'simple calculator must use sliders, not numeric text entry or dropdowns');
+assert.ok(comp.includes('id="attention-hours"')&&comp.includes('id="freed-hours"')&&comp.includes('id="freed-value"'));
 console.log('Acorde UI content and progressive disclosure gates PASS');
