@@ -1,145 +1,121 @@
-import {MODES,FIELDS,EXAMPLES,compareCosts,money,comparisonReport} from './comparison-engine.mjs';
+import {ASSUMPTIONS,DEFAULTS,LIMITS,calculateScenario,euro,number,reportText,emailDraftUrl,newsletterUrl} from './comparison-engine.mjs';
+
 const $=id=>document.getElementById(id);
-const modeButtons=[...document.querySelectorAll('[data-baseline]')];
-const params=new URLSearchParams(location.search);
-const VALID_CURRENCIES=['EUR','USD','GBP','AED','MXN'];
-const currency=params.get('currency');
-if(VALID_CURRENCIES.includes(currency))$('currency').value=currency;
-const campaign=new URLSearchParams();
+const qs=new URLSearchParams(location.search);
+const validCampaign={};
 for(const key of ['utm_source','utm_medium','utm_campaign']){
- const value=params.get(key);
- if(value&&/^[a-zA-Z0-9_. -]{1,64}$/.test(value))campaign.set(key,value);
+ const value=qs.get(key);
+ if(value&&/^[a-zA-Z0-9_. -]{1,64}$/.test(value))validCampaign[key]=value;
 }
-let mode=MODES.includes(params.get('baseline'))?params.get('baseline'):'manual';
-let last=null,toolFeeDraft='';
-function linkOffers(){
- const map=[['audit-link','audit','Paid workflow audit'],['build-link','implementation','Six-week implementation']];
- for(const [id,offer,name] of map){
-  const url=new URL('https://tally.so/r/5XbAeE');
-  url.searchParams.set('offer',offer);
-  url.searchParams.set('offer_name',name);
-  url.searchParams.set('flow','sales');
-  url.searchParams.set('flow_name','Sales enquiries and follow-up');
-  url.searchParams.set('source','acorde-cost-comparison');
-  for(const [key,value] of campaign)url.searchParams.set(key,value);
-  $(id).href=url.toString();
- }
-}
-function empty(){
- last=null;
- $('results-empty').hidden=false;
- $('results-data').hidden=true;
- $('copy').disabled=true;
- $('copy-status').textContent='';
-}
-function setMode(next){
- if(mode==='tool'&&!$('currentSoftwareMonthly').disabled)toolFeeDraft=$('currentSoftwareMonthly').value;
- mode=next;
- $('currentSoftwareMonthly').value=mode==='manual'?'0':toolFeeDraft;
- modeButtons.forEach(button=>button.setAttribute('aria-pressed',String(button.dataset.baseline===mode)));
- $('current-software-field').hidden=mode==='manual';
- $('currentSoftwareMonthly').disabled=mode==='manual';
- $('tool-name-field').hidden=mode==='manual';
- $('baseline-label').textContent=mode==='manual'?'Manual process — no dedicated dedup tool':'Existing software + manual review';
- $('baseline-hint').textContent=mode==='manual'
-  ? 'Licence assumed 0. Staff time and correction costs still count.'
-  : 'Enter your contracted licence, including seats/add-ons. Do not assume CRM licence equals dedup price.';
- $('error').textContent='';
- empty();
- if(history.replaceState){
-  const next=new URL(location.href);
-  next.searchParams.set('baseline',mode);
-  history.replaceState(null,'',next.pathname+next.search);
- }
-}
+let mode=qs.get('baseline')==='tool'?'tool':'manual';
+const sliders=['workers','recordsPerWorkerDay','issueRate','toolMonthly'];
 function values(){
- const input={mode,toolName:$('toolName').value};
- for(const key of FIELDS)input[key]=key==='currentSoftwareMonthly'&&mode==='manual'?0:$(key).value;
- return input;
+ const v={mode};
+ for(const id of sliders)v[id]=Number($(id).value);
+ return v;
+}
+function setProgress(el){
+ const low=Number(el.min),high=Number(el.max);
+ el.style.setProperty('--progress',((Number(el.value)-low)/(high-low)*100)+'%');
+}
+function updateNewsletter(){
+ const checked=$('newsletter').checked;
+ $('newsletter-step').hidden=!checked;
+ const address=$('recipient').value.trim();
+ const valid=$('recipient').checkValidity()&&address.length>0;
+ if(checked&&valid){
+  $('newsletter-link').href=newsletterUrl(address,validCampaign);
+  $('newsletter-link').removeAttribute('aria-disabled');
+  $('newsletter-link').tabIndex=0;
+ }else{
+  $('newsletter-link').removeAttribute('href');
+  $('newsletter-link').setAttribute('aria-disabled','true');
+  $('newsletter-link').tabIndex=-1;
+ }
 }
 function render(){
- try{
-  const result=compareCosts(values()),unit=$('currency').value;
-  const fmt=n=>money(n,unit);
-  $('current-name').textContent=mode==='manual'?'No automation':result.assumptions.toolName||'Existing tool';
-  $('proposed-name').textContent='Acorde — proposed';
-  $('current-monthly').textContent=fmt(result.monthlyEquivalentCurrent);
-  $('proposed-monthly').textContent=fmt(result.monthlyEquivalentNew);
-  $('current-year').textContent=fmt(result.current.firstYear);
-  $('proposed-year').textContent=fmt(result.proposed.firstYear);
-  $('current-hours').textContent=result.staffHoursCurrent.toLocaleString('en-GB')+' h / month';
-  $('proposed-hours').textContent=result.staffHoursNew.toLocaleString('en-GB')+' h / month';
-  for(const [id,current,newValue] of [
-   ['software',result.current.software*12,result.proposed.software*12],
-   ['review',result.current.review*12,result.proposed.review*12],
-   ['fix',result.current.correction*12,result.proposed.correction*12],
-   ['operations',0,result.proposed.operations*12],
-   ['setup',0,result.proposed.setup]
-  ]){
-   $('current-'+id).textContent=fmt(current);
-   $('proposed-'+id).textContent=fmt(newValue);
-  }
-  const ratio=Math.max(result.current.firstYear,result.proposed.firstYear,1);
-  $('current-bar').style.width=(100*result.current.firstYear/ratio)+'%';
-  $('proposed-bar').style.width=(100*result.proposed.firstYear/ratio)+'%';
-  const diff=result.firstYearDifference;
-  $('difference').textContent=fmt(Math.abs(diff));
-  $('difference-label').textContent=diff>0?'Lower first-year cost with proposed setup':
-    diff<0?'Higher first-year cost with proposed setup':'Equal first-year costs';
-  $('difference').dataset.tone=diff>0?'positive':diff<0?'negative':'neutral';
-  $('monthly-difference').textContent=(result.monthlyDifference<0?'Higher by ':'Lower by ')+
-   fmt(Math.abs(result.monthlyDifference))+' per month after setup';
-  if(result.monthlyDifference===0)$('monthly-difference').textContent='Equal monthly running costs after setup';
-  $('case-evidence').textContent='With '+result.staffHoursCurrent.toLocaleString('en-GB')+
-   ' → '+result.staffHoursNew.toLocaleString('en-GB')+
-   ' staff hours per month, at '+fmt(result.assumptions.hourlyCost)+
-   '/hour; proposed one-time setup '+fmt(result.proposed.setup)+'.';
-  $('results-empty').hidden=true;$('results-data').hidden=false;$('error').textContent='';
-  $('copy').disabled=false;last={input:result.assumptions,currency:unit};
-  return true;
- }catch(error){
-  $('error').textContent=error.message;
-  empty();return false;
- }
+ const v=values(),r=calculateScenario(v);
+ $('workers-value').textContent=number(v.workers);
+ $('records-value').textContent=number(v.recordsPerWorkerDay);
+ $('rate-value').textContent=number(v.issueRate)+'%';
+ $('tool-value').textContent=euro(v.toolMonthly);
+ $('attention-hours').textContent=number(r.attentionHours)+' h';
+ $('attention-summary').textContent='About '+number(r.affectedRecords)+' of '+number(r.monthlyRecords)+' records may need extra attention.';
+ $('freed-hours').textContent=number(r.lowHours)+'–'+number(r.highHours)+' h';
+ $('freed-value').textContent=euro(r.midValue);
+ $('current-overhead').textContent=euro(r.currentMonthlyOverhead);
+ $('potential-year').textContent=euro(r.annualMidValue);
+ $('free-progress').style.width=(ASSUMPTIONS.midTimeReduction*100)+'%';
+ $('software-explain').textContent=mode==='manual'
+  ? 'No paid deduplication subscription: €0. Staff time remains a cost.'
+  : 'Current deduplication subscription: '+euro(r.currentSoftware)+'/month, in addition to staff time. We do not assume it can be cancelled.';
+ $('model-explanation').textContent=''+v.workers+' people × '+v.recordsPerWorkerDay+
+  ' records each/day × '+ASSUMPTIONS.workingDays+' workdays = '+number(r.monthlyRecords)+
+  ' records/month. At '+v.issueRate+'% needing '+ASSUMPTIONS.minutesPerAffectedRecord+
+  ' minutes of attention each, that is '+number(r.attentionHours)+' staff hours/month. Staff time is valued at an illustrative '+
+  euro(ASSUMPTIONS.fullStaffCostPerHourEUR)+'/hour. Time-freed range assumes 30–70% less review, with 50% used for the value estimate.';
+ for(const id of sliders)setProgress($(id));
+ updateNewsletter();
+ return r;
 }
-function sample(){
- const preset=EXAMPLES[mode];
- for(const key of FIELDS)$(key).value=preset[key];
- $('toolName').value=preset.toolName;
- $('example-note').textContent='Fictional values loaded. Replace every figure with actual contracts, workload and an Acorde quote.';
- $('example-note').hidden=false;
+function setMode(next){
+ mode=next;
+ for(const button of document.querySelectorAll('[data-baseline]')){
+  button.setAttribute('aria-pressed',String(button.dataset.baseline===mode));
+ }
+ $('software-controls').hidden=mode==='manual';
+ const url=new URL(location.href);
+ url.searchParams.set('baseline',mode);
+ if(history.replaceState)history.replaceState(null,'',url.pathname+url.search);
  render();
 }
-function clear(){
- for(const key of FIELDS)$(key).value=key==='currentSoftwareMonthly'&&mode==='manual'?'0':'';
- $('toolName').value='';
- $('example-note').hidden=true;
- $('error').textContent='';
- empty();
+for(const id of sliders){
+ $(id).addEventListener('input',render);
+ $(id).addEventListener('change',render);
+ $(id).min=String(LIMITS[id][0]);
+ $(id).max=String(LIMITS[id][1]);
+ $(id).value=String(DEFAULTS[id]);
 }
-modeButtons.forEach(b=>b.addEventListener('click',()=>setMode(b.dataset.baseline)));
-$('comparison-form').addEventListener('submit',event=>{
+for(const button of document.querySelectorAll('[data-baseline]')){
+ button.addEventListener('click',()=>setMode(button.dataset.baseline));
+}
+$('recipient').addEventListener('input',()=>{
+ $('email-status').textContent='';
+ updateNewsletter();
+});
+$('newsletter').addEventListener('change',updateNewsletter);
+$('email-form').addEventListener('submit',event=>{
  event.preventDefault();
- if(render()&&matchMedia('(max-width:850px)').matches){
-  $('results').scrollIntoView({behavior:'auto',block:'start'});
+ const address=$('recipient').value.trim();
+ if(!$('recipient').checkValidity()||!address){
+  $('email-status').textContent='Enter a valid email address to prepare your report.';
+  $('recipient').focus();
+  return;
  }
-});
-$('comparison-form').addEventListener('input',()=>{
- if(last)render();
- if(!$('example-note').hidden)$('example-note').textContent='Example edited. Treat all remaining figures as assumptions until verified.';
-});
-$('currency').addEventListener('change',()=>{if(last)render()});
-$('example').addEventListener('click',sample);
-$('clear').addEventListener('click',clear);
-$('copy').addEventListener('click',async()=>{
- if(!last)return;
  try{
-  await navigator.clipboard.writeText(comparisonReport(last.input,last.currency));
-  $('copy-status').textContent='Copied with all assumptions';
- }catch{
-  $('copy-status').textContent='Clipboard unavailable. Compare the on-screen breakdown.';
+  const mailto=emailDraftUrl(address,values());
+  $('email-status').textContent='Your email app should open with the estimate. Press Send there; Acorde does not send it automatically.';
+  updateNewsletter();
+  location.href=mailto;
+ }catch(error){
+  $('email-status').textContent='Could not prepare the email: '+error.message;
  }
 });
-linkOffers();
+$('copy').addEventListener('click',async()=>{
+ const report=reportText(values());
+ try{
+  await navigator.clipboard.writeText(report);
+  $('email-status').textContent='Copied your estimate and assumptions.';
+ }catch{
+  $('email-status').textContent='Copy is unavailable in this browser. Use Prepare my email instead.';
+ }
+});
+const audit=new URL('https://tally.so/r/5XbAeE');
+audit.searchParams.set('offer','audit');
+audit.searchParams.set('offer_name','Paid workflow audit');
+audit.searchParams.set('flow','sales');
+audit.searchParams.set('flow_name','Sales enquiries and follow-up');
+audit.searchParams.set('source','acorde-fast-estimate');
+for(const [key,value] of Object.entries(validCampaign))audit.searchParams.set(key,value);
+$('audit-link').href=audit.toString();
 setMode(mode);
-clear();
