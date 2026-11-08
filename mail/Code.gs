@@ -110,6 +110,18 @@ function reserveSend(email){
     const personKey='sent:'+today+':'+hash;
     const globalCount=Number(props.getProperty(globalKey)||'0');
     const personCount=Number(props.getProperty(personKey)||'0');
+    if(globalCount===0){
+      // Daily cleanup prevents PropertiesService (500 KB) from accumulating
+      // a permanent record of all report recipients. Old hashes are removed.
+      const all=props.getProperties();
+      for(const key of Object.keys(all)){
+        if(/^sent:\d{8}(?::|$)/.test(key)&&!key.startsWith('sent:'+today))props.deleteProperty(key);
+        if(key.startsWith('pending:')){
+          try{if(Date.now()-JSON.parse(all[key]).at>ACORDE_SETTINGS.consentValidityHours*3600000)
+            props.deleteProperty(key);}catch{props.deleteProperty(key);}
+        }
+      }
+    }
     const cache=CacheService.getScriptCache();
     if(globalCount>=ACORDE_SETTINGS.globalDailyLimit)throw Error('Daily sending limit reached. Try again tomorrow.');
     if(personCount>=ACORDE_SETTINGS.perRecipientDailyLimit||cache.get('recent:'+hash))
@@ -132,7 +144,7 @@ function scriptLink(){
 }
 function pendingConsent(email,p){
   const token=newToken();
-  const record={email,at:Date.now(),source:String(p.utm_source||'').slice(0,60),version:CONSENT_VERSION};
+  const record={email,at:Date.now(),source:/^[a-zA-Z0-9_. -]{1,60}$/.test(String(p.utm_source||''))?String(p.utm_source):'',version:CONSENT_VERSION};
   PropertiesService.getScriptProperties().setProperty('pending:'+token,JSON.stringify(record));
   return {token,url:scriptLink()+'?confirm='+token};
 }
