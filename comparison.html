@@ -22,6 +22,8 @@
 .convert{border-top:1px solid var(--line);padding:35px 0 43px;display:grid;grid-template-columns:minmax(0,1fr) minmax(0,.85fr);gap:40px}.convert h2{font-size:29px;margin:8px 0 10px}.convert p{font-size:13px;line-height:1.65;color:#666;margin:0 0 12px}.email-form{background:#f8f8f8;border:1px solid #e0e0e0;border-radius:8px;padding:22px;min-width:0}.email-form label{font-size:13px;font-weight:700;display:block;margin-bottom:8px}.email-line{display:flex;gap:8px}.email-line input{min-width:0;flex:1;height:47px;border:1px solid #c4c4c4;border-radius:5px;font-size:16px;padding:10px 12px;background:#fff;color:#222}.action{border:1px solid #242424;background:#242424;color:#fff;border-radius:5px;text-decoration:none;padding:11px 17px;font-size:13px;font-weight:700;min-height:47px;display:inline-flex;justify-content:center;align-items:center;text-align:center;cursor:pointer}.action:hover{background:#444}.action.secondary{background:#fff;color:#242424}.action.secondary:hover{background:#eee}.actions{display:flex;gap:10px;flex-wrap:wrap;margin-top:11px}.mail-hint{margin-top:8px!important;font-size:11px!important}.optin{margin-top:15px;display:flex;align-items:flex-start;gap:10px}.optin input{flex:0 0 19px;width:19px;height:19px;margin:1px 0 0;accent-color:#222}.optin label{font-size:12px;line-height:1.5;font-weight:500;margin:0}.newsletter-step{margin-top:12px;padding:14px;background:#fff;border:1px solid #ddd;border-radius:5px}.newsletter-step p{font-size:12px;margin:0 0 10px}.newsletter-step a{min-height:43px}.status{margin-top:10px;color:#444;font-size:12px;line-height:1.45;min-height:0}.next{border-top:1px solid var(--line);padding:27px 0 40px;display:flex;justify-content:space-between;align-items:center;gap:20px}.next h2{font-size:25px;margin-bottom:6px}.next p{font-size:13px;color:#666;max-width:720px;margin:0}.footer{border-top:1px solid var(--line);padding:18px 0 35px;color:#777;font-size:12px}
 @media(max-width:880px){.comparison-layout{grid-template-columns:1fr;gap:14px}.result{position:static}.convert{grid-template-columns:1fr;gap:14px}.intro{padding-top:28px}}
 @media(max-width:620px){.wrap{width:calc(100% - 30px)}.nav{height:64px}.links{font-size:11px;gap:12px}.intro{padding:22px 0 20px}h1{font-size:clamp(33px,8.5vw,44px)}.intro p{font-size:14px}.controls,.result{padding:19px}.controls h2{font-size:24px}.modes{gap:7px}.modes button{padding:11px 9px;font-size:12px;min-height:83px}.modes button[aria-pressed=true]{padding:10px 8px}.slider label{font-size:13px}.slider output{font-size:26px}.result h2{font-size:23px}.huge{font-size:57px}.convert{padding-top:26px}.email-form{padding:16px}.email-line{flex-direction:column}.email-line .action{width:100%}.next{align-items:flex-start;flex-direction:column}.next .action{width:100%}}
+ .trap{position:absolute!important;left:-10000px!important;top:auto!important;width:1px!important;height:1px!important;overflow:hidden!important}
+button:disabled{opacity:.45;cursor:not-allowed}
 </style>
 </head>
 <body><div class="wrap">
@@ -65,19 +67,19 @@
 <section class="how"><h3>How did we calculate this?</h3><p id="model-explanation"></p><p>This is a workload estimate, not proven savings or a price comparison with an Acorde subscription. Reduced review hours are not necessarily cash savings; staff may spend that time on other work. Acorde's recurring price and implementation cost are not set here.</p></section>
 </aside>
 </div>
-<section class="convert" id="send-result" aria-label="Email estimate and optional updates">
+<section class="convert" id="send-result" aria-label="Direct estimate email and optional consent">
 <div>
-<div class="eyebrow">Keep your estimate</div><h2>Email the result to yourself</h2>
-<p>We'll prepare the calculation and its assumptions for email. Your email app opens a ready-to-send draft addressed to you; <strong>you press Send</strong>. We don't have automatic delivery enabled yet.</p>
-<p>Want real numbers rather than example assumptions? The paid audit can measure correction time, identify risky handoffs and scope a credible implementation.</p>
+<div class="eyebrow">Keep your estimate</div><h2>Have Acorde email you the result</h2>
+<p>After the owner's Google account is connected, we'll send the estimate <strong>directly from Acorde's email address</strong> — no email draft and no Tally form.</p>
+<p>We show you the real connection status before you submit. Your consent to useful updates stays separate and unchecked.</p>
 </div>
-<form id="email-form" class="email-form" novalidate>
-<label for="recipient">Your email address</label>
-<div class="email-line"><input type="email" id="recipient" autocomplete="email" placeholder="you@company.com" required maxlength="254"><button class="action" type="submit" id="send">Prepare my email</button></div>
-<p class="mail-hint">Opens your own email program. Nothing is sent until you confirm there. Your address stays in this browser unless you choose to open the separate subscription form.</p>
-<div class="optin"><input type="checkbox" id="newsletter"><label for="newsletter">I'd also like occasional <strong>useful</strong> CRM and data-quality guides. No unrelated promotions. Completely optional.</label></div>
-<div id="newsletter-step" class="newsletter-step" hidden><p>To subscribe, confirm your choice in the separate consent form. Checking this box alone does not subscribe you.</p><a class="action secondary" id="newsletter-link" href="https://tally.so/r/ArK9ZD" target="_blank" rel="noopener noreferrer">Confirm useful-updates subscription</a></div>
-<div class="actions"><button type="button" class="action secondary" id="copy">Copy result instead</button></div>
+<form id="email-form" class="email-form" method="POST" novalidate>
+<label for="recipient">Where should we send the estimate?</label>
+<div class="email-line"><input type="email" name="email" id="recipient" autocomplete="email" placeholder="you@company.com" required maxlength="254"><button class="action" type="submit" id="send" disabled>Send my estimate</button></div>
+<p id="mailer-state" class="mail-hint" role="status">Google email sender not connected yet. You can still copy your estimate below.</p>
+<div class="optin" id="consent-control" hidden><input type="checkbox" id="newsletter" name="newsletter" value="yes"><label for="newsletter">Optionally send me occasional <strong>useful CRM and data-quality guides</strong>. No unrelated promotions. I'll confirm by email before I'm subscribed.</label></div>
+<label class="trap" for="companyFax" aria-hidden="true">Leave blank</label><input class="trap" type="text" id="companyFax" name="companyFax" autocomplete="off" tabindex="-1" aria-hidden="true">
+<div class="actions"><button type="button" class="action secondary" id="copy">Copy estimate instead</button></div>
 <p id="email-status" role="status" class="status"></p>
 </form>
 </section>
