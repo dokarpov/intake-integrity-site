@@ -1,4 +1,5 @@
-import {ASSUMPTIONS,DEFAULTS,LIMITS,calculateScenario,euro,number,reportText,emailDraftUrl,newsletterUrl} from './comparison-engine.mjs';
+import {ASSUMPTIONS,DEFAULTS,LIMITS,calculateScenario,euro,number,reportText} from './comparison-engine.mjs';
+import {MAILER_URL} from './mailer-config.mjs';
 
 const $=id=>document.getElementById(id);
 const qs=new URLSearchParams(location.search);
@@ -18,20 +19,24 @@ function setProgress(el){
  const low=Number(el.min),high=Number(el.max);
  el.style.setProperty('--progress',((Number(el.value)-low)/(high-low)*100)+'%');
 }
-function updateNewsletter(){
- const checked=$('newsletter').checked;
- $('newsletter-step').hidden=!checked;
- const address=$('recipient').value.trim();
- const valid=$('recipient').checkValidity()&&address.length>0;
- if(checked&&valid){
-  $('newsletter-link').href=newsletterUrl(address,validCampaign);
-  $('newsletter-link').removeAttribute('aria-disabled');
-  $('newsletter-link').tabIndex=0;
- }else{
-  $('newsletter-link').removeAttribute('href');
-  $('newsletter-link').setAttribute('aria-disabled','true');
-  $('newsletter-link').tabIndex=-1;
- }
+// No sender address, passwords, auth tokens or secret API keys in public JS.
+// Once the owner deploys Apps Script, this is a native cross-origin FORM POST;
+// no browser-side CORS workaround, arbitrary email content, or Tally involved.
+function trustedMailerUrl(){
+ try{
+  const u=new URL(MAILER_URL);
+  if(u.protocol!=='https:'||u.host!=='script.google.com'||
+    !/^\/macros\/s\/[A-Za-z0-9_-]+\/exec$/.test(u.pathname)||u.search||u.hash)return null;
+  return u.href;
+ }catch{return null;}
+}
+const mailerUrl=trustedMailerUrl();
+function updateDeliveryGate(){
+ $('send').disabled=!mailerUrl;
+ $('consent-control').hidden=!mailerUrl;
+ $('mailer-state').textContent=mailerUrl
+  ? 'Connected to the owner-authorized Google sender. The report will be emailed by Acorde; delivery to your inbox is not guaranteed.'
+  : 'Direct sending needs a one-time Google account authorization. No report will be sent yet. Use Copy estimate instead.';
 }
 function render(){
  const v=values(),r=calculateScenario(v);
@@ -55,7 +60,6 @@ function render(){
   ' minutes of attention each, that is '+number(r.attentionHours)+' staff hours/month. Staff time is valued at an illustrative '+
   euro(ASSUMPTIONS.fullStaffCostPerHourEUR)+'/hour. Time-freed range assumes 30–70% less review, with 50% used for the value estimate.';
  for(const id of sliders)setProgress($(id));
- updateNewsletter();
  return r;
 }
 function setMode(next){
@@ -79,27 +83,30 @@ for(const id of sliders){
 for(const button of document.querySelectorAll('[data-baseline]')){
  button.addEventListener('click',()=>setMode(button.dataset.baseline));
 }
-$('recipient').addEventListener('input',()=>{
- $('email-status').textContent='';
- updateNewsletter();
-});
-$('newsletter').addEventListener('change',updateNewsletter);
 $('email-form').addEventListener('submit',event=>{
  event.preventDefault();
  const address=$('recipient').value.trim();
+ if(!mailerUrl){
+  $('email-status').textContent='Automatic emailing is not connected yet. Use Copy estimate instead.';
+  return;
+ }
  if(!$('recipient').checkValidity()||!address){
-  $('email-status').textContent='Enter a valid email address to prepare your report.';
+  $('email-status').textContent='Enter a valid email address to receive the estimate.';
   $('recipient').focus();
   return;
  }
- try{
-  const mailto=emailDraftUrl(address,values());
-  $('email-status').textContent='Your email app should open with the estimate. Press Send there; Acorde does not send it automatically.';
-  updateNewsletter();
-  location.href=mailto;
- }catch(error){
-  $('email-status').textContent='Could not prepare the email: '+error.message;
+ const form=$('email-form');
+ form.action=mailerUrl;
+ for(const input of form.querySelectorAll('.mailer-payload'))input.remove();
+ const fields={action:'send',...values()};
+ for(const [key,value] of Object.entries(fields)){
+  const input=document.createElement('input');
+  input.type='hidden';input.className='mailer-payload';
+  input.name=key;input.value=String(value);
+  form.append(input);
  }
+ $('email-status').textContent='Submitting to the Google email service; the next page will confirm if Google accepted the request.';
+ HTMLFormElement.prototype.submit.call(form);
 });
 $('copy').addEventListener('click',async()=>{
  const report=reportText(values());
@@ -107,7 +114,7 @@ $('copy').addEventListener('click',async()=>{
   await navigator.clipboard.writeText(report);
   $('email-status').textContent='Copied your estimate and assumptions.';
  }catch{
-  $('email-status').textContent='Copy is unavailable in this browser. Use Prepare my email instead.';
+  $('email-status').textContent='Copy is unavailable in this browser. Try selecting the results above.';
  }
 });
 const audit=new URL('https://tally.so/r/5XbAeE');
@@ -118,4 +125,5 @@ audit.searchParams.set('flow_name','Sales enquiries and follow-up');
 audit.searchParams.set('source','acorde-fast-estimate');
 for(const [key,value] of Object.entries(validCampaign))audit.searchParams.set(key,value);
 $('audit-link').href=audit.toString();
+updateDeliveryGate();
 setMode(mode);
