@@ -59,10 +59,14 @@ jobs:
           grep -Fq 'href="./privacy.html"' /tmp/acorde-smoke/calculator.body
           grep -Fq 'utm_source' /tmp/acorde-smoke/ui.body
           grep -Fq 'tally.so/r/5XbAeE' /tmp/acorde-smoke/ui.body
-          grep -Fq 'No dedicated automation' /tmp/acorde-smoke/comparison.body
-          grep -Fq 'Already paying for a tool' /tmp/acorde-smoke/comparison.body
-          grep -Fq 'newSoftwareMonthly' /tmp/acorde-smoke/costs.body
-          grep -Fq 'acorde-cost-comparison' /tmp/acorde-smoke/costui.body
+          grep -Fq 'No, we check manually' /tmp/acorde-smoke/comparison.body
+          grep -Fq 'Yes, we have a tool' /tmp/acorde-smoke/comparison.body
+          grep -Fq 'id="workers"' /tmp/acorde-smoke/comparison.body
+          grep -Fq 'id="newsletter"' /tmp/acorde-smoke/comparison.body
+          grep -Fq 'tally.so/r/ArK9ZD' /tmp/acorde-smoke/comparison.body
+          grep -Fq 'calculateScenario' /tmp/acorde-smoke/costs.body
+          grep -Fq 'emailDraftUrl' /tmp/acorde-smoke/costui.body
+          grep -Fq 'newsletterUrl' /tmp/acorde-smoke/costui.body
           grep -Fq 'Nothing is uploaded' /tmp/acorde-smoke/privacy.body
           grep -iq '^x-robots-tag:.*noindex' /tmp/acorde-smoke/home.headers
           grep -iq '^x-content-type-options: nosniff' /tmp/acorde-smoke/calculator.headers
