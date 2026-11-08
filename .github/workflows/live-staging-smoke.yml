@@ -7,6 +7,7 @@ on:
       - '.github/workflows/live-staging-smoke.yml'
       - 'scripts/revenue-calculator.spec.cjs'
       - 'scripts/comparison.spec.cjs'
+      - 'mailer-config.mjs'
       - 'scripts/live-tally-prefill.spec.cjs'
   pull_request:
     branches: [main]
@@ -50,6 +51,7 @@ jobs:
           req /comparison.html comparison
           req /comparison-engine.mjs costs
           req /comparison-ui.mjs costui
+          req /mailer-config.mjs mailconfig
           req /privacy.html privacy
           grep -Fq 'TESTING PREVIEW' /tmp/acorde-smoke/home.body
           grep -Fq 'Calculate revenue at risk' /tmp/acorde-smoke/home.body
@@ -66,10 +68,13 @@ jobs:
           grep -Fq 'Yes, we have a tool' /tmp/acorde-smoke/comparison.body
           grep -Fq 'id="workers"' /tmp/acorde-smoke/comparison.body
           grep -Fq 'id="newsletter"' /tmp/acorde-smoke/comparison.body
-          grep -Fq 'tally.so/r/ArK9ZD' /tmp/acorde-smoke/comparison.body
+          grep -Fq 'id="mailer-state"' /tmp/acorde-smoke/comparison.body
+          grep -Fq 'id="consent-control"' /tmp/acorde-smoke/comparison.body
+          grep -Fq 'export const MAILER_URL' /tmp/acorde-smoke/mailconfig.body
+          if grep -Fq 'tally.so/r/ArK9ZD' /tmp/acorde-smoke/comparison.body; then echo 'FAIL: old Tally newsletter route'; exit 1; fi
           grep -Fq 'calculateScenario' /tmp/acorde-smoke/costs.body
           grep -Fq 'emailDraftUrl' /tmp/acorde-smoke/costui.body
-          grep -Fq 'newsletterUrl' /tmp/acorde-smoke/costui.body
+          grep -Fq 'trustedMailerUrl' /tmp/acorde-smoke/costui.body
           grep -Fq 'Nothing is uploaded' /tmp/acorde-smoke/privacy.body
           grep -iq '^x-robots-tag:.*noindex' /tmp/acorde-smoke/home.headers
           grep -iq '^x-content-type-options: nosniff' /tmp/acorde-smoke/calculator.headers
