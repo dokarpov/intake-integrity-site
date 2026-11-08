@@ -13,7 +13,7 @@ function setup(){
  const records=[],props=new Map(),cache=new Map();
  const rows=[['Email','Confirmed UTC','Consent version','Source','Status','Unsubscribe token']];
  const sheet={
-  setName(){},appendRow(row){rows.push(row)},
+  setName(){},appendRow(row){if(row[0]==='Email'&&rows[0]?.[0]==='Email')return;rows.push(row)},
   getDataRange(){return {getValues(){return rows.map(x=>[...x]);}}},
   getRange(r,c){return {setValue(v){rows[r-1][c-1]=v;}}}
  };
