@@ -73,7 +73,7 @@ jobs:
           grep -Fq 'export const MAILER_URL' /tmp/acorde-smoke/mailconfig.body
           if grep -Fq 'tally.so/r/ArK9ZD' /tmp/acorde-smoke/comparison.body; then echo 'FAIL: old Tally newsletter route'; exit 1; fi
           grep -Fq 'calculateScenario' /tmp/acorde-smoke/costs.body
-          grep -Fq 'emailDraftUrl' /tmp/acorde-smoke/costui.body
+          grep -Fq 'trustedMailerUrl' /tmp/acorde-smoke/costui.body
           grep -Fq 'trustedMailerUrl' /tmp/acorde-smoke/costui.body
           grep -Fq 'Nothing is uploaded' /tmp/acorde-smoke/privacy.body
           grep -iq '^x-robots-tag:.*noindex' /tmp/acorde-smoke/home.headers
