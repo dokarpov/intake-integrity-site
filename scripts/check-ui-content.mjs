@@ -30,7 +30,9 @@ assert.ok(!calculator.includes('id="next-action"'), 'duplicate scroll CTA must s
 const comp=readFileSync('comparison.html','utf8');
 assert.ok(comp.includes('data-baseline="manual"')&&comp.includes('data-baseline="tool"'));
 assert.ok(comp.includes('id="workers"')&&comp.includes('id="recordsPerWorkerDay"')&&comp.includes('id="issueRate"'));
-assert.ok(comp.includes('id="send"')&&comp.includes('id="newsletter"')&&comp.includes('id="newsletter-link"'));
+assert.ok(comp.includes('id="send"')&&comp.includes('id="newsletter"')&&comp.includes('id="consent-control"'));
 assert.ok(!/type="number"|<select\b/.test(comp),'simple calculator must use sliders, not numeric text entry or dropdowns');
 assert.ok(comp.includes('id="attention-hours"')&&comp.includes('id="freed-hours"')&&comp.includes('id="freed-value"'));
+assert.ok(!comp.includes('tally.so/r/ArK9ZD'),'no Tally subscription funnel in calculator');
+assert.ok(comp.includes('id="mailer-state"'),'mail send availability must be explicit');
 console.log('Acorde UI content and progressive disclosure gates PASS');
