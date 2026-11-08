@@ -1,95 +1,104 @@
 /**
- * Operating-cost scenario only. Not an ROI prediction, vendor price quote, or
- * a claim about the separate revenue-at-risk calculator.
- * Baseline includes staff work even when the software licence is zero.
+ * Acorde fast estimator. Values are illustrative product assumptions, NOT
+ * researched averages, benchmarks, promises, measured dedup rates or a quote.
+ *
+ * Each record is counted once at most. Estimates staff attention, not lost
+ * revenue. All math runs locally, with no analytics, personal-data storage,
+ * backend transfer or user profiling.
  */
+export const ASSUMPTIONS=Object.freeze({
+  workingDays:20,
+  minutesPerAffectedRecord:10,
+  fullStaffCostPerHourEUR:28,
+  lowTimeReduction:0.30,
+  midTimeReduction:0.50,
+  highTimeReduction:0.70
+});
+export const DEFAULTS=Object.freeze({
+  mode:'manual',workers:5,recordsPerWorkerDay:12,issueRate:8,toolMonthly:150
+});
 export const LIMITS=Object.freeze({
- hourlyCost:[0,1000],currentReviewHours:[0,100000],currentFixHours:[0,100000],
- currentSoftwareMonthly:[0,10000000],newReviewHours:[0,100000],
- newFixHours:[0,100000],newSoftwareMonthly:[0,10000000],
- newOperationsMonthly:[0,10000000],newSetupOneOff:[0,10000000]
+  workers:[1,100],
+  recordsPerWorkerDay:[1,40],
+  issueRate:[0,20],
+  toolMonthly:[0,2000]
 });
-export const FIELDS=Object.freeze(Object.keys(LIMITS));
-export const MODES=Object.freeze(['manual','tool']);
-export const EXAMPLES=Object.freeze({
- manual:Object.freeze({
-  mode:'manual',toolName:'',hourlyCost:30,currentReviewHours:40,
-  currentFixHours:10,currentSoftwareMonthly:0,newReviewHours:14,
-  newFixHours:4,newSoftwareMonthly:250,newOperationsMonthly:75,newSetupOneOff:1200
- }),
- tool:Object.freeze({
-  mode:'tool',toolName:'Existing dedup tool',hourlyCost:30,currentReviewHours:25,
-  currentFixHours:10,currentSoftwareMonthly:180,newReviewHours:14,
-  newFixHours:4,newSoftwareMonthly:250,newOperationsMonthly:75,newSetupOneOff:1200
- })
-});
-function readNumber(name,raw){
- if(raw===''||raw===undefined||raw===null)throw Error('Enter '+name+' (use 0 if none).');
- const value=Number(raw),[min,max]=LIMITS[name];
- if(!Number.isFinite(value)||value<min||value>max)throw Error(name+' must be between '+min+' and '+max+'.');
- return value;
+export function validateScenario(raw){
+  if(!raw||!['manual','tool'].includes(raw.mode))throw new Error('Choose a current process.');
+  const v={mode:raw.mode};
+  for(const [name,[low,high]] of Object.entries(LIMITS)){
+    const value=raw[name];
+    if(value===null||value===''||value===undefined)throw new Error('Missing '+name);
+    const n=Number(value);
+    if(!Number.isFinite(n)||n<low||n>high)throw new Error(name+' is outside its allowed range');
+    if(name==='workers'&&!Number.isInteger(n))throw new Error('workers must be a whole number');
+    v[name]=n;
+  }
+  if(v.mode==='manual')v.toolMonthly=0;
+  return Object.freeze(v);
 }
-export function validateComparison(input){
- if(!input||!MODES.includes(input.mode))throw Error('Choose an existing setup.');
- const fields={};
- for(const name of FIELDS)fields[name]=input.mode==='manual'&&name==='currentSoftwareMonthly'?0:readNumber(name,input[name]);
- return Object.freeze({...fields,mode:input.mode,toolName:String(input.toolName||'').trim().slice(0,80)});
+export function calculateScenario(values){
+  const v=validateScenario(values),a=ASSUMPTIONS;
+  const monthlyRecords=v.workers*v.recordsPerWorkerDay*a.workingDays;
+  const affectedRecords=monthlyRecords*v.issueRate/100;
+  const attentionHours=affectedRecords*a.minutesPerAffectedRecord/60;
+  const currentStaffCost=attentionHours*a.fullStaffCostPerHourEUR;
+  const lowHours=attentionHours*a.lowTimeReduction;
+  const midHours=attentionHours*a.midTimeReduction;
+  const highHours=attentionHours*a.highTimeReduction;
+  const midValue=midHours*a.fullStaffCostPerHourEUR;
+  const currentSoftware=v.mode==='tool'?v.toolMonthly:0;
+  return Object.freeze({
+    settings:v,monthlyRecords,affectedRecords,
+    attentionHours,currentStaffCost,currentSoftware,
+    currentMonthlyOverhead:currentStaffCost+currentSoftware,
+    lowHours,midHours,highHours,
+    midValue,annualHours:attentionHours*12,
+    annualMidValue:midValue*12,
+    // Labor-only upper limit for *potentially* offsetting recurring fees.
+    // Does not assume layoffs, cancelled licences or implementation payback.
+    illustrativeMonthlyLaborBudget:midValue
+  });
 }
-export function compareCosts(input){
- const v=validateComparison(input);
- const currentReview=v.currentReviewHours*v.hourlyCost;
- const currentFix=v.currentFixHours*v.hourlyCost;
- const newReview=v.newReviewHours*v.hourlyCost;
- const newFix=v.newFixHours*v.hourlyCost;
- const currentMonthly=v.currentSoftwareMonthly+currentReview+currentFix;
- const newMonthly=v.newSoftwareMonthly+v.newOperationsMonthly+newReview+newFix;
- const currentAnnual=currentMonthly*12;
- const newAnnual=newMonthly*12+v.newSetupOneOff;
- const monthlyDifference=currentMonthly-newMonthly;
- const firstYearDifference=currentAnnual-newAnnual;
- return Object.freeze({
-  assumptions:v,
-  current:Object.freeze({software:v.currentSoftwareMonthly,review:currentReview,
-   correction:currentFix,operations:0,setup:0,monthly:currentMonthly,
-   firstYear:currentAnnual}),
-  proposed:Object.freeze({software:v.newSoftwareMonthly,review:newReview,
-   correction:newFix,operations:v.newOperationsMonthly,
-   setup:v.newSetupOneOff,monthly:newMonthly,firstYear:newAnnual}),
-  monthlyDifference,firstYearDifference,
-  monthlyEquivalentCurrent:currentMonthly,
-  monthlyEquivalentNew:newAnnual/12,
-  afterFirstYearDifference:monthlyDifference*12,
-  staffHoursCurrent:v.currentReviewHours+v.currentFixHours,
-  staffHoursNew:v.newReviewHours+v.newFixHours,
-  hoursDifference:(v.currentReviewHours+v.currentFixHours)-(v.newReviewHours+v.newFixHours)
- });
+export const euro=(v)=>new Intl.NumberFormat('en-IE',{style:'currency',currency:'EUR',maximumFractionDigits:0}).format(v);
+export const number=(v)=>new Intl.NumberFormat('en-GB',{maximumFractionDigits:1}).format(v);
+export function reportText(values){
+  const r=calculateScenario(values),a=ASSUMPTIONS;
+  return [
+    'Acorde — illustrative duplicate-record workload estimate',
+    'Current approach: '+(r.settings.mode==='manual'?'No dedicated paid dedup tool':'Existing paid dedup tool'),
+    'People handling records: '+r.settings.workers,
+    'Records handled per person per day: '+r.settings.recordsPerWorkerDay,
+    'Potential duplicate or unclear records: '+r.settings.issueRate+'%',
+    'Monthly records in scope: '+number(r.monthlyRecords),
+    'Estimated records needing attention: '+number(r.affectedRecords)+' per month',
+    'Estimated handling time today: '+number(r.attentionHours)+' hours/month',
+    'Possible time freed if 30–70% of handling is removed: '+number(r.lowHours)+'–'+number(r.highHours)+' hours/month',
+    'Illustrative 50% midpoint: '+number(r.midHours)+' hours/month',
+    'Potential labor-time value at midpoint: '+euro(r.midValue)+'/month',
+    'Existing paid tool monthly cost (if entered): '+euro(r.currentSoftware),
+    'Assumptions: '+a.workingDays+' workdays/month; '+a.minutesPerAffectedRecord+
+      ' minutes/affected record; '+euro(a.fullStaffCostPerHourEUR)+'/staff hour.',
+    'All defaults and reduction scenarios are fictional working assumptions, not industry averages.',
+    'Value of time is not cash saved. Acorde pricing and setup are not included.',
+    'Real savings or feasibility require measured workflow data and an implementation quote.'
+  ].join('\n');
 }
-export function money(value,currency='EUR'){
- if(!['EUR','USD','GBP','AED','MXN'].includes(currency))throw Error('Choose a supported currency.');
- return new Intl.NumberFormat('en-GB',{style:'currency',currency,
-  maximumFractionDigits:0}).format(value);
+export function emailDraftUrl(address,values){
+  if(typeof address!=='string'||address.length>254||! /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(address))
+    throw new Error('Enter a valid email address.');
+  const subject='My Acorde time & cost estimate';
+  const body=reportText(values)+'\n\nSent from my own email app. No automatic email delivery or mailing-list signup.';
+  return 'mailto:'+encodeURIComponent(address)+'?subject='+encodeURIComponent(subject)+'&body='+encodeURIComponent(body);
 }
-export function comparisonReport(input,currency='EUR'){
- const r=compareCosts(input),baseline=r.assumptions.mode==='manual'?'No dedicated automation':(r.assumptions.toolName||'Existing tool');
- return [
-  'Acorde — editable operating-cost comparison (not a vendor quote)',
-  'Current approach: '+baseline,
-  'All values in '+currency+'. First year includes one-time setup.',
-  'Current software / month: '+money(r.current.software,currency),
-  'Current review staff hours / month: '+r.assumptions.currentReviewHours,
-  'Current correction staff hours / month: '+r.assumptions.currentFixHours,
-  'New Acorde software / month (user-entered scenario, not price): '+money(r.proposed.software,currency),
-  'New operating & integration / month: '+money(r.proposed.operations,currency),
-  'New review staff hours / month: '+r.assumptions.newReviewHours,
-  'New correction staff hours / month: '+r.assumptions.newFixHours,
-  'Staff cost / hour: '+money(r.assumptions.hourlyCost,currency),
-  'New one-off setup: '+money(r.proposed.setup,currency),
-  'Current first-year total: '+money(r.current.firstYear,currency),
-  'Proposed first-year total: '+money(r.proposed.firstYear,currency),
-  'First-year difference, current minus proposed: '+money(r.firstYearDifference,currency),
-  'Monthly difference after setup, current minus proposed: '+money(r.monthlyDifference,currency),
-  'A negative difference means Acorde costs more under these assumptions.',
-  'Does not include revenue recovery, prevented fines or unverified error reduction.',
-  'All figures are user-supplied or fictional examples. Verify actual contracts, workload and pilot performance before buying.'
- ].join('\n');
+export function newsletterUrl(address,utm={}){
+  if(typeof address!=='string'||address.length>254||!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(address))
+    throw new Error('Enter a valid email address.');
+  const url=new URL('https://tally.so/r/ArK9ZD');
+  url.searchParams.set('subscriber_email',address);
+  for(const name of ['utm_source','utm_medium','utm_campaign']){
+    const v=utm[name];
+    if(typeof v==='string'&&/^[a-zA-Z0-9_. -]{1,64}$/.test(v))url.searchParams.set(name,v);
+  }
+  return url.toString();
 }
