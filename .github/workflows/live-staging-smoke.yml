@@ -45,6 +45,7 @@ jobs:
           req /healthz staging_health
           echo 'Deployed static preview revision:'
           cat /tmp/acorde-smoke/staging_health.body
+          grep -Fq '3d69050ca7b4a2135cdfcd13447b1b5151816d9b' /tmp/acorde-smoke/staging_health.body
           req /comparison.html comparison
           req /comparison-engine.mjs costs
           req /comparison-ui.mjs costui
@@ -59,6 +60,7 @@ jobs:
           grep -Fq 'href="./privacy.html"' /tmp/acorde-smoke/calculator.body
           grep -Fq 'utm_source' /tmp/acorde-smoke/ui.body
           grep -Fq 'tally.so/r/5XbAeE' /tmp/acorde-smoke/ui.body
+          grep -Fq 'How much team time gets' /tmp/acorde-smoke/comparison.body
           grep -Fq 'No, we check manually' /tmp/acorde-smoke/comparison.body
           grep -Fq 'Yes, we have a tool' /tmp/acorde-smoke/comparison.body
           grep -Fq 'id="workers"' /tmp/acorde-smoke/comparison.body
