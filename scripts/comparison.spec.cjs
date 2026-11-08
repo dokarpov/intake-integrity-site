@@ -55,40 +55,62 @@ test('current fee applies only in existing-tool mode, and time estimate is uncha
  await expect(page.locator('#software-controls')).toBeHidden();
  await expect(page.locator('#current-overhead')).toContainText('448');
 });
-test('email is never sent silently: no network write, creates an editable mailto draft',async({page})=>{
+test('without connected Google sender, automatic email fails closed and copy stays usable',async({page})=>{
  await page.goto(base);
- const outbound=[];
- page.on('request',r=>{if(r.method()!=='GET'&&r.method()!=='HEAD')outbound.push(r.url())});
- await page.locator('#send').click();
- await expect(page.locator('#email-status')).toContainText('Enter a valid email');
- await page.locator('#recipient').fill('reader@example.com');
- await page.locator('#send').click();
- await expect(page.locator('#email-status')).toContainText('Press Send there');
- expect(outbound).toEqual([]);
+ await expect(page.locator('#send')).toBeDisabled();
+ await expect(page.locator('#consent-control')).toBeHidden();
+ await expect(page.locator('#mailer-state')).toContainText('one-time Google account authorization');
+ await expect(page.locator('#email-form')).not.toContainText('Tally');
+ await expect(page.locator('#email-form')).not.toContainText('mail app');
+ await expect(page.locator('#copy')).toBeVisible();
 });
-test('newsletter requires explicit separate opt-in, not merely entering email',async({page})=>{
- await page.goto(base+'?utm_source=reddit');
+test('configured sender submits bounded data directly to Apps Script, not to Tally',async({page})=>{
+ const script='https://script.google.com/macros/s/AKfycTESTCODE/exec';
+ await page.route('**/mailer-config.mjs',route=>route.fulfill({
+  status:200,contentType:'text/javascript',
+  body:"export const MAILER_URL = '"+script+"';"
+ }));
+ const posted=[];
+ await page.route(script,async(route)=>{
+  const request=route.request();
+  posted.push({method:request.method(),data:Object.fromEntries(new URLSearchParams(request.postData()||''))});
+  await route.fulfill({status:200,contentType:'text/html',body:'<h1>Your report was sent for delivery</h1>'});
+ });
+ await page.goto(base);
+ await expect(page.locator('#send')).toBeEnabled();
+ await expect(page.locator('#consent-control')).toBeVisible();
  await expect(page.locator('#newsletter')).not.toBeChecked();
- await expect(page.locator('#newsletter-step')).toBeHidden();
  await page.locator('#recipient').fill('reader@example.com');
- await expect(page.locator('#newsletter-step')).toBeHidden();
- await page.locator('#newsletter').check();
- await expect(page.locator('#newsletter-step')).toBeVisible();
- await expect(page.locator('#newsletter-link')).toHaveAttribute('href',/tally\.so\/r\/ArK9ZD/);
- const link=new URL(await page.locator('#newsletter-link').getAttribute('href'));
- expect(link.searchParams.get('subscriber_email')).toBe('reader@example.com');
- expect(link.searchParams.get('utm_source')).toBe('reddit');
- await page.locator('#newsletter').uncheck();
- await expect(page.locator('#newsletter-step')).toBeHidden();
+ await page.locator('#send').click();
+ await expect(page.locator('h1')).toContainText('sent for delivery');
+ expect(posted).toHaveLength(1);
+ expect(posted[0].method).toBe('POST');
+ expect(posted[0].data).toMatchObject({
+  action:'send',email:'reader@example.com',mode:'manual',
+  workers:'5',recordsPerWorkerDay:'12',issueRate:'8',toolMonthly:'150'
+ });
+ expect(posted[0].data).not.toHaveProperty('newsletter');
+ expect(posted[0].data).not.toHaveProperty('subject');
+ expect(posted[0].data).not.toHaveProperty('body');
 });
-test('newsletter link stays disabled until a valid email is present',async({page})=>{
+test('newsletter is optional and requires its own explicit checked box in the direct POST',async({page})=>{
+ const script='https://script.google.com/macros/s/AKfycTESTCODE/exec';
+ await page.route('**/mailer-config.mjs',route=>route.fulfill({
+  status:200,contentType:'text/javascript',
+  body:"export const MAILER_URL = '"+script+"';"
+ }));
+ let sent=null;
+ await page.route(script,async(route)=>{
+  sent=Object.fromEntries(new URLSearchParams(route.request().postData()||''));
+  await route.fulfill({status:200,contentType:'text/html',body:'<h1>Google accepted email</h1>'});
+ });
  await page.goto(base);
+ await page.locator('#recipient').fill('reader@example.com');
  await page.locator('#newsletter').check();
- await expect(page.locator('#newsletter-link')).toHaveAttribute('aria-disabled','true');
- await page.locator('#recipient').fill('no@');
- await expect(page.locator('#newsletter-link')).not.toHaveAttribute('href',/tally/);
- await page.locator('#recipient').fill('valid@example.com');
- await expect(page.locator('#newsletter-link')).not.toHaveAttribute('aria-disabled','true');
+ await page.locator('#send').click();
+ await expect(page.locator('h1')).toContainText('Google accepted email');
+ expect(sent.newsletter).toBe('yes');
+ expect(sent.email).toBe('reader@example.com');
 });
 test('current operating costs never appear as a price quote for Acorde',async({page})=>{
  await page.goto(base);
@@ -115,7 +137,8 @@ for(const width of [320,375,390,768,1440]){
   await page.locator('#workers').fill('100');
   await expect(page.locator('#attention-hours')).toContainText('320 h');
   await expect(page.locator('#send')).toBeVisible();
-  await expect(page.locator('#newsletter')).toBeVisible();
+  await expect(page.locator('#copy')).toBeVisible();
+  await expect(page.locator('#consent-control')).toBeHidden();
   expect(errors).toEqual([]);
   await context.close();
  });
