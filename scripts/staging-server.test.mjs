@@ -9,6 +9,7 @@ test('allowlisted public files and no private repo paths',()=>{
   assert.equal(route('/calculator-engine.mjs'),'calculator-engine.mjs');
   assert.equal(route('/comparison.html'),'comparison.html');
   assert.equal(route('/comparison-ui.mjs'),'comparison-ui.mjs');
+  assert.equal(route('/mailer-config.mjs'),'mailer-config.mjs');
   assert.equal(route('/preview/'),'preview/index.html');
   assert.equal(route('/mvp/'),'mvp/index.html');
   for(const path of ['/.github/workflows/deploy.yml','/README.md','/scripts/revenue-calculator.test.mjs','/scripts/comparison-engine.test.mjs','/src/service/app.js','/%2E%2E/.env'])
