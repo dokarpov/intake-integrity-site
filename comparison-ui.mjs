@@ -39,6 +39,17 @@ function updateDeliveryGate(){
   ? 'Email sending is connected. You will see a confirmation once the request is accepted.'
   : 'Direct sending needs a one-time Google account authorization. No report will be sent yet. Use Copy estimate instead.';
 }
+// Slider max values control drag precision, not company-size eligibility.
+// "More +" extends the scale without resetting the selected value.
+const RANGE_SCALES={
+ workers:[20,100,1000,10000],
+ recordsPerWorkerDay:[40,200,1000,10000],
+ issueRate:[20,50,100],
+ toolMonthly:[500,2000,20000,1000000]
+};
+function rangeLabel(id,max){
+ return id==='toolMonthly'?euro(max):id==='issueRate'?max+'%':number(max);
+}
 function render(){
  const v=values(),r=calculateScenario(v);
  $('workers-value').textContent=number(v.workers);
@@ -46,40 +57,63 @@ function render(){
  $('rate-value').textContent=number(v.issueRate)+'%';
  $('tool-value').textContent=euro(v.toolMonthly);
  $('attention-hours').textContent=number(r.attentionHours)+' h';
- $('attention-summary').textContent='About '+number(r.affectedRecords)+' of '+number(r.monthlyRecords)+' records may need extra attention.';
- $('freed-hours').textContent=number(r.lowHours)+'–'+number(r.highHours)+' h';
+ $('attention-summary').textContent=number(r.affectedRecords)+' of '+number(r.monthlyRecords)+' records may need a check';
+ $('freed-hours').textContent=number(r.midHours)+' h';
  $('freed-value').textContent=euro(r.midValue);
  $('current-overhead').textContent=euro(r.currentMonthlyOverhead);
- $('potential-year').textContent=euro(r.annualMidValue);
- $('free-progress').style.width=(ASSUMPTIONS.midTimeReduction*100)+'%';
- $('software-explain').textContent=mode==='manual'
-  ? 'No paid deduplication subscription: €0. Staff time remains a cost.'
-  : 'Current deduplication subscription: '+euro(r.currentSoftware)+'/month, in addition to staff time. We do not assume it can be cancelled.';
- $('model-explanation').textContent=''+v.workers+' people × '+v.recordsPerWorkerDay+
-  ' records each/day × '+ASSUMPTIONS.workingDays+' workdays = '+number(r.monthlyRecords)+
-  ' records/month. At '+v.issueRate+'% needing '+ASSUMPTIONS.minutesPerAffectedRecord+
-  ' minutes of attention each, that is '+number(r.attentionHours)+' staff hours/month. Staff time is valued at an illustrative '+
-  euro(ASSUMPTIONS.fullStaffCostPerHourEUR)+'/hour. Time-freed range assumes 30–70% less review, with 50% used for the value estimate.';
+ $('mode-caption').textContent=mode==='tool'?'With your current tool':'Manual checks';
+ $('software-explain').textContent=euro(r.currentStaffCost)+' staff review + '+euro(r.currentSoftware)+' existing tool';
+ $('tool-inline-effect').textContent=euro(r.currentSoftware)+'/month included in current cost ↓';
+ $('model-explanation').textContent=v.workers+' × '+v.recordsPerWorkerDay+' × '+ASSUMPTIONS.workingDays+
+   ' days × '+v.issueRate+'% × '+ASSUMPTIONS.minutesPerAffectedRecord+' min = '+number(r.attentionHours)+' h';
  for(const id of sliders)setProgress($(id));
  return r;
 }
 function setMode(next){
+ const changed=mode!==next;
  mode=next;
  for(const button of document.querySelectorAll('[data-baseline]')){
   button.setAttribute('aria-pressed',String(button.dataset.baseline===mode));
  }
- $('software-controls').hidden=mode==='manual';
+ const software=$('software-controls');
+ software.hidden=mode==='manual';
  const url=new URL(location.href);
  url.searchParams.set('baseline',mode);
  if(history.replaceState)history.replaceState(null,'',url.pathname+url.search);
  render();
+ // Reveal the new, relevant fee control right where the choice was made.
+ // Only scroll if needed; do not jump when both controls are already visible.
+ if(changed&&mode==='tool'){
+  requestAnimationFrame(()=>{
+   if(software.getBoundingClientRect().bottom>window.innerHeight-24){
+    software.scrollIntoView({block:'nearest',behavior:'smooth'});
+   }
+  });
+ }
 }
 for(const id of sliders){
- $(id).addEventListener('input',render);
- $(id).addEventListener('change',render);
- $(id).min=String(LIMITS[id][0]);
- $(id).max=String(LIMITS[id][1]);
- $(id).value=String(DEFAULTS[id]);
+ const input=$(id);
+ input.addEventListener('input',render);
+ input.addEventListener('change',render);
+ input.min=String(LIMITS[id][0]);
+ input.value=String(DEFAULTS[id]);
+ // HTML declares a small initial scale for finer, easier mobile adjustment.
+ const ranges=RANGE_SCALES[id];
+ input.max=String(ranges[0]);
+ $(id+'-max-label').textContent=rangeLabel(id,ranges[0]);
+}
+for(const button of document.querySelectorAll('[data-expand]')){
+ button.addEventListener('click',()=>{
+  const id=button.dataset.expand,input=$(id),ranges=RANGE_SCALES[id];
+  const current=Number(input.max),i=ranges.findIndex(max=>max===current);
+  if(i<0||i===ranges.length-1)return;
+  const max=ranges[i+1];
+  input.max=String(max);
+  $(id+'-max-label').textContent=rangeLabel(id,max);
+  button.setAttribute('aria-label','Extend '+id+' range beyond '+rangeLabel(id,max));
+  if(i+1===ranges.length-1)button.hidden=true;
+  render();
+ });
 }
 for(const button of document.querySelectorAll('[data-baseline]')){
  button.addEventListener('click',()=>setMode(button.dataset.baseline));
