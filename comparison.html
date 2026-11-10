@@ -24,6 +24,12 @@
 @media(max-width:620px){.wrap{width:calc(100% - 30px)}.nav{height:64px}.links{font-size:11px;gap:12px}.intro{padding:22px 0 20px}h1{font-size:clamp(33px,8.5vw,44px)}.intro p{font-size:14px}.controls,.result{padding:19px}.controls h2{font-size:24px}.modes{gap:7px}.modes button{padding:11px 9px;font-size:12px;min-height:83px}.modes button[aria-pressed=true]{padding:10px 8px}.slider label{font-size:13px}.slider output{font-size:26px}.result h2{font-size:23px}.huge{font-size:57px}.convert{padding-top:26px}.email-form{padding:16px}.email-line{flex-direction:column}.email-line .action{width:100%}.next{align-items:flex-start;flex-direction:column}.next .action{width:100%}}
  .trap{position:absolute!important;left:-10000px!important;top:auto!important;width:1px!important;height:1px!important;overflow:hidden!important}
 button:disabled{opacity:.45;cursor:not-allowed}
+.api-fit{border-top:1px solid var(--line);padding:31px 0 30px;max-width:810px}
+.api-fit h2{font-size:28px;margin:10px 0}
+.api-fit>p{font-size:14px;line-height:1.65;color:#555;max-width:750px;margin:0 0 9px}
+.email-form .send-action{display:flex;width:100%;margin-top:17px}
+.email-form .email-line input{width:100%}
+.email-form .optin{margin-top:14px}
 </style>
 </head>
 <body><div class="wrap">
@@ -67,19 +73,25 @@ button:disabled{opacity:.45;cursor:not-allowed}
 <section class="how"><h3>How did we calculate this?</h3><p id="model-explanation"></p><p>This is a workload estimate, not proven savings or a price comparison with an Acorde subscription. Reduced review hours are not necessarily cash savings; staff may spend that time on other work. Acorde's recurring price and implementation cost are not set here.</p></section>
 </aside>
 </div>
-<section class="convert" id="send-result" aria-label="Direct estimate email and optional consent">
+<section class="api-fit" id="api-fit" aria-labelledby="api-heading">
+<div class="eyebrow">Designed for your existing workflow</div>
+<h2 id="api-heading">Duplicate checks inside your CRM</h2>
+<p>Acorde's intended API workflow checks incoming enquiries for likely duplicates, routes uncertain matches for review and returns the decision to your current tools. Sales and account managers can keep working in their familiar CRM.</p>
+<p class="hint">A focused pilot starts with one enquiry source and one CRM connection. Live third-party integrations require a compatibility check.</p>
+</section>
+<section class="convert" id="send-result" aria-label="Email estimate and optional updates">
 <div>
-<div class="eyebrow">Keep your estimate</div><h2>Have Acorde email you the result</h2>
-<p>After the owner's Google account is connected, we'll send the estimate <strong>directly from Acorde's email address</strong> — no email draft and no Tally form.</p>
-<p>We show you the real connection status before you submit. Your consent to useful updates stays separate and unchecked.</p>
+<div class="eyebrow">Your results</div><h2>Send this estimate by email</h2>
+<p>Receive your figures and a short outline of an API-based CRM integration.</p>
 </div>
 <form id="email-form" class="email-form" method="POST" novalidate>
-<label for="recipient">Where should we send the estimate?</label>
-<div class="email-line"><input type="email" name="email" id="recipient" autocomplete="email" placeholder="you@company.com" required maxlength="254"><button class="action" type="submit" id="send" disabled>Send my estimate</button></div>
-<p id="mailer-state" class="mail-hint" role="status">Google email sender not connected yet. You can still copy your estimate below.</p>
-<div class="optin" id="consent-control" hidden><input type="checkbox" id="newsletter" name="newsletter" value="yes"><label for="newsletter">Optionally send me occasional <strong>useful CRM and data-quality guides</strong>. No unrelated promotions. I'll confirm by email before I'm subscribed.</label></div>
+<label for="recipient">Your email address</label>
+<div class="email-line"><input type="email" name="email" id="recipient" autocomplete="email" placeholder="you@company.com" required maxlength="254"></div>
+<div class="optin" id="consent-control"><input type="checkbox" id="newsletter" name="newsletter" value="yes"><label for="newsletter">I agree to receive occasional practical emails about CRM data quality and duplicate records. Optional; confirmation by email. I can unsubscribe anytime.</label></div>
+<button class="action send-action" type="submit" id="send" disabled>Send my estimate</button>
+<p id="mailer-state" class="mail-hint" role="status">Direct email delivery is not connected yet. You can copy the estimate below.</p>
 <label class="trap" for="companyFax" aria-hidden="true">Leave blank</label><input class="trap" type="text" id="companyFax" name="companyFax" autocomplete="off" tabindex="-1" aria-hidden="true">
-<div class="actions"><button type="button" class="action secondary" id="copy">Copy estimate instead</button></div>
+<div class="actions"><button type="button" class="action secondary" id="copy">Copy estimate</button></div>
 <p id="email-status" role="status" class="status"></p>
 </form>
 </section>
