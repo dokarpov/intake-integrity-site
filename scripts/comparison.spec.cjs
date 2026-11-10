@@ -58,11 +58,35 @@ test('current fee applies only in existing-tool mode, and time estimate is uncha
 test('without connected Google sender, automatic email fails closed and copy stays usable',async({page})=>{
  await page.goto(base);
  await expect(page.locator('#send')).toBeDisabled();
- await expect(page.locator('#consent-control')).toBeHidden();
+ await expect(page.locator('#consent-control')).toBeVisible();
+ await expect(page.locator('#newsletter')).not.toBeChecked();
+ await expect(page.locator('#newsletter')).toBeDisabled();
  await expect(page.locator('#mailer-state')).toContainText('one-time Google account authorization');
  await expect(page.locator('#email-form')).not.toContainText('Tally');
  await expect(page.locator('#email-form')).not.toContainText('mail app');
  await expect(page.locator('#copy')).toBeVisible();
+});
+test('consent checkbox is visibly before Send and never preselected',async({page})=>{
+ await page.goto(base);
+ const order=await page.locator('#email-form').evaluate(form=>{
+  const checkbox=form.querySelector('#newsletter');
+  const button=form.querySelector('#send');
+  return Boolean(checkbox&&button&&(checkbox.compareDocumentPosition(button)&Node.DOCUMENT_POSITION_FOLLOWING));
+ });
+ expect(order).toBe(true);
+ await expect(page.locator('#newsletter')).not.toBeChecked();
+ await expect(page.locator('#newsletter')).toBeDisabled();
+});
+test('API workflow promise appears without claiming a live provider connection',async({page})=>{
+ await page.goto(root+'/');
+ await expect(page.locator('#integrations')).toContainText('existing CRM');
+ await expect(page.locator('#integrations')).toContainText('familiar tools').catch(async()=>{
+  await expect(page.locator('#integrations')).toContainText('daily workspace');
+ });
+ await expect(page.locator('#integrations')).toContainText('Live connector compatibility is verified');
+ await page.goto(base);
+ await expect(page.locator('#api-fit')).toContainText('API workflow');
+ await expect(page.locator('#api-fit')).toContainText('existing CRM');
 });
 test('configured sender submits bounded data directly to Apps Script, not to Tally',async({page})=>{
  const script='https://script.google.com/macros/s/AKfycTESTCODE/exec';
@@ -80,6 +104,7 @@ test('configured sender submits bounded data directly to Apps Script, not to Tal
  await expect(page.locator('#send')).toBeEnabled();
  await expect(page.locator('#consent-control')).toBeVisible();
  await expect(page.locator('#newsletter')).not.toBeChecked();
+ await expect(page.locator('#newsletter')).toBeEnabled();
  await page.locator('#recipient').fill('reader@example.com');
  await page.locator('#send').click();
  await expect(page.locator('h1')).toContainText('sent for delivery');
@@ -138,7 +163,9 @@ for(const width of [320,375,390,768,1440]){
   await expect(page.locator('#attention-hours')).toContainText('320 h');
   await expect(page.locator('#send')).toBeVisible();
   await expect(page.locator('#copy')).toBeVisible();
-  await expect(page.locator('#consent-control')).toBeHidden();
+  await expect(page.locator('#consent-control')).toBeVisible();
+ await expect(page.locator('#newsletter')).not.toBeChecked();
+ await expect(page.locator('#newsletter')).toBeDisabled();
   expect(errors).toEqual([]);
   await context.close();
  });
