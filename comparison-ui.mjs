@@ -33,9 +33,10 @@ function trustedMailerUrl(){
 const mailerUrl=trustedMailerUrl();
 function updateDeliveryGate(){
  $('send').disabled=!mailerUrl;
- $('consent-control').hidden=!mailerUrl;
+ // Keep the optional consent visible directly above Send, including before activation.
+ $('newsletter').disabled=!mailerUrl;
  $('mailer-state').textContent=mailerUrl
-  ? 'Connected to the owner-authorized Google sender. The report will be emailed by Acorde; delivery to your inbox is not guaranteed.'
+  ? 'Email sending is connected. You will see a confirmation once the request is accepted.'
   : 'Direct sending needs a one-time Google account authorization. No report will be sent yet. Use Copy estimate instead.';
 }
 function render(){
