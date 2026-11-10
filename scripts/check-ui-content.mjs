@@ -35,6 +35,12 @@ assert.ok(!/type="number"|<select\b/.test(comp),'simple calculator must use slid
 assert.ok(comp.includes('id="attention-hours"')&&comp.includes('id="freed-hours"')&&comp.includes('id="freed-value"'));
 assert.ok(!comp.includes('tally.so/r/ArK9ZD'),'no Tally subscription funnel in calculator');
 assert.ok(comp.includes('id="mailer-state"'),'mail send availability must be explicit');
+assert.ok(comp.indexOf('id="software-controls"')<comp.indexOf('id="workers"'),'tool cost must appear immediately after choice');
+for(const key of ['workers','recordsPerWorkerDay','issueRate','toolMonthly']){
+ assert.ok(comp.includes('data-expand="'+key+'"'),'slider '+key+' must offer a wider scale');
+}
+assert.ok(!comp.includes('Annual value of'),'remove redundant annual panel');
+assert.ok(!comp.includes('How did we calculate this?'),'remove oversized explanation section');
 const consentAt=comp.indexOf('id="newsletter"');
 const sendAt=comp.indexOf('id="send"');
 assert.ok(consentAt>=0&&sendAt>consentAt,'optional consent checkbox must appear before Send');
@@ -42,5 +48,5 @@ assert.match(comp,/id="newsletter"[^>]*name="newsletter"[^>]*value="yes"/,'conse
 assert.ok(!/id="newsletter"[^>]*checked/.test(comp),'newsletter must not be preselected');
 const home=readFileSync('index.html','utf8');
 assert.ok(home.includes('id="integrations"')&&home.includes('existing CRM'),'describe CRM-native integration');
-assert.ok(comp.includes('id="api-fit"')&&comp.includes('API workflow'),'describe integrated product value');
+assert.ok(comp.includes('id="api-fit"')&&comp.includes('proposed API integration'),'describe integrated product value');
 console.log('Acorde UI content and progressive disclosure gates PASS');
