@@ -1,22 +1,25 @@
-# Acorde — one-screen, five-minute first email
+# Acorde — initial estimate email (short API-first version)
 
-**Source:** `mail/Code.gs` → `reportData`, `formatReport`, `formatHtmlReport`. **Release:** testing branch. Requires authorized Google sender and a real inbox acceptance test before production.
+**Canonical implementation:** `mail/Code.gs` → `reportData`, `formatReport`, `formatHtmlReport`. **Status:** draft/testing. No owner-authorized Google sender or actual inbox delivery has been confirmed.
 
-## Copy and UX constraints
+## Rules for customer-facing copy
 
-- Send the requested estimate immediately in an HTML email with plain-text fallback.
-- Lead with the figures the recipient already entered, and the estimated review hours and illustrative capacity value.
-- Give **one optional action taking five minutes**: inspect five recent CRM contacts by email/phone and check the follow-up owner. The recipient only notes possible repeats or split ownership. Do not ask them to implement a fix.
-- Follow with **one clear question**: which CRM they use and where enquiries arrive. We can suggest one appropriate check.
-- Keep the email readable in under one minute. No multi-day plans, 50-case audits, long checklists, complex exercises, artificial oppositions, repeated disclaimers, inflated claims or unsolicited product promises.
-- Example assumptions go in one short note: 20 workdays/month, 10 minutes per affected record, €28/staff hour. The 50% reduction is illustrative. Time value is not cash recovered. Pricing/setup omitted.
-- Tone: precise, calm, self-contained. Use straightforward positive sentences. **Never use contrast constructions or rhetorical oppositions merely for effect**, especially “not X, but Y”.
-- Respect unknown recipient context: a five-contact check is a fast heuristic and cannot prove a company-wide rate; never ask to share customer personal data.
-- Further communications require independently confirmed newsletter consent. Sending the requested report does not subscribe the visitor.
+- One screen, roughly 100 words beyond the results. Explain the recipient's monthly duplicate-review workload and the potential value of time.
+- Product value: detect likely duplicates, route ambiguous identities for review and return decisions through an API to the **existing CRM**. Sales and account managers continue in their usual software.
+- Fast initial scope: one enquiry source and one CRM integration; **verify provider support before promising delivery timelines**.
+- One question requiring a quick reply: “Which CRM do you use, and where do enquiries arrive from?” No meeting, long form, five-record exercise or multi-day homework.
+- The estimate is a modeled scenario, so include exactly one brief note about estimated inputs; avoid lengthy defensive disclaimers and unsupported measured performance claims.
+- No rhetorical contrasts, filler, fake ROI or guaranteed live connectors.
+- HTML and plain-text version must communicate the same numbers and promise.
 
-## Release acceptance
+## Consent
 
-- Server independently recomputes totals, rejects injection and arbitrary email bodies, and respects the existing cap.
-- Plain text and HTML contain the same numbers and five-minute advice; optional consent only appears after the visitor opts in.
-- Automated tests assert no seven-day plan or long homework in the customer email.
-- Rendering and genuine Gmail delivery must be owner-tested after Google authorization.
+- **A visible, optional, unchecked newsletter-consent checkbox must appear ABOVE the Send button.** It remains visible but disabled when the email sender is disconnected. It is never required to receive the one-time requested estimate.
+- When checked, the send request carries `newsletter=yes` and the report includes a separate confirmation link; **no subscriber is active until confirmed**. Without the checkbox, it is a single requested transactional email with no future marketing contact.
+- The sender requires owner Google authorization and is fail-closed until configured; no live sending claims until test evidence.
+
+## Test acceptance
+
+- Source and live browser tests verify the physical order of checkbox and submit button, unchecked state, opt-in POST, and absence of opt-in when unchecked.
+- Mailer tests verify actual subject, monthly review figures, concise API-first copy, absence of the five-record exercise, and mocked server-side MailApp delivery.
+- No production merge until owner approves real CRM-provider evidence, legal privacy notice, the sender identity, and a verified inbox.
