@@ -25,7 +25,7 @@ const revision=String(process.env.GITHUB_SHA||'testing-preview').slice(0,40);
 const handler=`
 const files=${JSON.stringify(files)};
 const mimes={html:"text/html; charset=utf-8",mjs:"text/javascript; charset=utf-8",css:"text/css; charset=utf-8"};
-const head={"X-Robots-Tag":"noindex, nofollow, noarchive","Cache-Control":"no-store","X-Content-Type-Options":"nosniff","Referrer-Policy":"no-referrer","X-Frame-Options":"DENY","Content-Security-Policy":"default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; connect-src 'self'; img-src 'self' data:; form-action 'none'; frame-ancestors 'none'; base-uri 'none'"};
+const head={"X-Robots-Tag":"noindex, nofollow, noarchive","Cache-Control":"no-store","X-Content-Type-Options":"nosniff","Referrer-Policy":"no-referrer","X-Frame-Options":"DENY","Content-Security-Policy":"default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; connect-src 'self'; img-src 'self' data:; form-action https://script.google.com https://script.googleusercontent.com; frame-ancestors 'none'; base-uri 'none'"};
 const meta='<meta name="robots" content="noindex,nofollow,noarchive">';
 const banner='<div style="background:#242424;color:#fff;padding:7px 18px;text-align:center;font:600 12px Arial,sans-serif">ACORDE · TESTING PREVIEW — NOT PRODUCTION</div>';
 export default {async fetch(request){
