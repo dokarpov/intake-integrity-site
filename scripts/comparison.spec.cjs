@@ -58,7 +58,7 @@ test('tool choice reveals fee slider directly beneath the choice and above team 
  const fee=page.locator('#software-controls');
  await expect(fee).toBeVisible();
  await expect(page.locator('#tool-value')).toHaveText('€150');
- await expect(page.locator('#tool-inline-effect')).toContainText('€150/month included');
+ await expect(page.locator('#tool-inline-effect')).toContainText('Adds €150/month');
  await expect(page.locator('#mode-caption')).toHaveText('With your current tool');
  await expect(page.locator('#current-overhead')).toHaveText('€598');
  await expect(page.locator('#software-explain')).toContainText('€448 staff review + €150 existing tool');
@@ -73,7 +73,7 @@ test('tool choice reveals fee slider directly beneath the choice and above team 
  expect(positions.visible).toBe(true);
  await slide(page,'toolMonthly',500);
  await expect(page.locator('#current-overhead')).toHaveText('€948');
- await expect(page.locator('#tool-inline-effect')).toContainText('€500/month');
+ await expect(page.locator('#tool-inline-effect')).toContainText('Adds €500/month');
  await page.locator('[data-baseline="manual"]').click();
  await expect(page.locator('#software-controls')).toBeHidden();
  await expect(page.locator('#current-overhead')).toHaveText('€448');
