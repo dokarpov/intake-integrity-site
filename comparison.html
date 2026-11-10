@@ -41,7 +41,7 @@ h1,h2,h3{font-family:var(--display);line-height:1.15;letter-spacing:-.045em;marg
 .slider input[type=range]::-moz-range-thumb{width:16px;height:16px;border:3px solid #fff;background:#242424;border-radius:50%}
 .scale{display:flex;justify-content:space-between;align-items:center;gap:10px;color:#777;font-size:11px;min-height:25px}
 .scale-end{display:inline-flex;align-items:center;gap:9px}
-.expand{background:#fff;color:var(--ink);border:1px solid #cfcfcf;border-radius:5px;padding:3px 7px;min-height:29px;min-width:60px;font-size:11px;font-weight:700}
+.expand{white-space:nowrap;background:#fff;color:var(--ink);border:1px solid #cfcfcf;border-radius:5px;padding:3px 7px;min-height:29px;min-width:60px;font-size:11px;font-weight:700}
 .expand:hover{background:#efefef}
 .software-slider{background:#f7f7f7;border:1px solid #dadada;border-radius:6px;padding:11px 12px;margin-bottom:7px}
 .software-slider .slider{border:0;padding:0}
@@ -117,24 +117,24 @@ button:disabled{opacity:.5;cursor:not-allowed}
 <div class="slider">
 <div class="slider-top"><label for="toolMonthly">Your tool costs / month</label><output for="toolMonthly" id="tool-value">€150</output></div>
 <input id="toolMonthly" type="range" min="0" max="500" step="25" value="150">
-<div class="scale"><span>€0</span><div class="scale-end"><span id="toolMonthly-max-label">€500</span><button type="button" class="expand" data-expand="toolMonthly" aria-label="Extend tool fee slider range">More +</button></div></div>
+<div class="scale"><span>€0</span><div class="scale-end"><span id="toolMonthly-max-label">€500</span><button type="button" class="expand" data-expand="toolMonthly" aria-label="Extend tool fee slider range">More range</button></div></div>
 </div>
-<p id="tool-inline-effect" class="tool-effect">€150/month is included in current cost ↓</p>
+<p id="tool-inline-effect" class="tool-effect">Adds €150/month to cost. Review rate stays as selected.</p>
 </div>
 <div class="slider">
 <div class="slider-top"><label for="workers">People handling records</label><output for="workers" id="workers-value">5</output></div>
 <input id="workers" type="range" min="1" max="20" step="1" value="5">
-<div class="scale"><span>1</span><div class="scale-end"><span id="workers-max-label">20</span><button class="expand" type="button" data-expand="workers" aria-label="Extend team size slider range">More +</button></div></div>
+<div class="scale"><span>1</span><div class="scale-end"><span id="workers-max-label">20</span><button class="expand" type="button" data-expand="workers" aria-label="Extend team size slider range">More range</button></div></div>
 </div>
 <div class="slider">
 <div class="slider-top"><label for="recordsPerWorkerDay">Records per person / day</label><output for="recordsPerWorkerDay" id="records-value">12</output></div>
 <input id="recordsPerWorkerDay" type="range" min="1" max="40" step="1" value="12">
-<div class="scale"><span>1</span><div class="scale-end"><span id="recordsPerWorkerDay-max-label">40</span><button class="expand" type="button" data-expand="recordsPerWorkerDay" aria-label="Extend daily records slider range">More +</button></div></div>
+<div class="scale"><span>1</span><div class="scale-end"><span id="recordsPerWorkerDay-max-label">40</span><button class="expand" type="button" data-expand="recordsPerWorkerDay" aria-label="Extend daily records slider range">More range</button></div></div>
 </div>
 <div class="slider">
 <div class="slider-top"><label for="issueRate">Need a second check</label><output for="issueRate" id="rate-value">8%</output></div>
 <input id="issueRate" type="range" min="0" max="20" step="1" value="8">
-<div class="scale"><span>0%</span><div class="scale-end"><span id="issueRate-max-label">20%</span><button class="expand" type="button" data-expand="issueRate" aria-label="Extend review rate slider range">More +</button></div></div>
+<div class="scale"><span>0%</span><div class="scale-end"><span id="issueRate-max-label">20%</span><button class="expand" type="button" data-expand="issueRate" aria-label="Extend review rate slider range">More range</button></div></div>
 </div>
 </section>
 <aside class="result" id="results" aria-live="polite" aria-atomic="false">
