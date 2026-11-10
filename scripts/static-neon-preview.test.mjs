@@ -38,5 +38,6 @@ test('HEAD route returns no body and declared privacy header',async()=>{
  const result=await get('/calculator.html','HEAD');
  assert.equal(result.status,200);
  assert.equal(await result.text(),'');
- assert.match(result.headers.get('content-security-policy'),/form-action 'none'/);
+ assert.match(result.headers.get('content-security-policy'),/form-action https:\/\/script\.google\.com/);
+ assert.match(result.headers.get('content-security-policy'),/https:\/\/script\.googleusercontent\.com/);
 });
