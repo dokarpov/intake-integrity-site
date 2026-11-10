@@ -129,6 +129,7 @@ function formatReport(p){
     '',
     'WHAT THIS ESTIMATE DOES NOT KNOW',
     'Your true exception rate, staff handling time, CRM mapping quality, existing contract terms, Acorde deployment cost or achievable reduction. These must be measured before making an ROI claim.',
+    'Acorde subscription, implementation and maintenance costs are not included in this calculation.',
     'Example assumptions: 20 workdays/month, 10 minutes per affected record, €28/hour loaded staff cost. Neither these defaults nor the 30–70% improvement scenario are industry averages or proven Acorde results.',
     '',
     'REPLY WITH JUST TWO DETAILS',
