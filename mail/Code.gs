@@ -46,10 +46,10 @@ function integer(input,min,max,label){
 }
 function scenario(p){
   if(!p||!['manual','tool'].includes(p.mode))throw Error('Invalid baseline');
-  const workers=integer(p.workers,1,100,'workers');
-  const recordsPerWorkerDay=integer(p.recordsPerWorkerDay,1,40,'daily records');
-  const issueRate=integer(p.issueRate,0,20,'issue percentage');
-  const toolMonthly=integer(p.toolMonthly,0,2000,'existing tool fee');
+  const workers=integer(p.workers,1,10000,'workers');
+  const recordsPerWorkerDay=integer(p.recordsPerWorkerDay,1,10000,'daily records');
+  const issueRate=integer(p.issueRate,0,100,'issue percentage');
+  const toolMonthly=integer(p.toolMonthly,0,1000000,'existing tool fee');
   const existingTool=p.mode==='tool'?toolMonthly:0;
   const records=workers*recordsPerWorkerDay*ACORDE_SETTINGS.workingDays;
   const affected=records*issueRate/100;
