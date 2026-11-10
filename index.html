@@ -140,6 +140,15 @@ h1,h2,h3,h4,p{margin-top:0}h1,h2,h3,h4{font-family:var(--display);font-weight:60
 .queue-tools{display:flex;align-items:center;gap:12px}.queue-tools .reset{font-size:12px;color:#444;padding:6px 0;margin:0;white-space:nowrap}.header-privacy{font-size:12px;color:#666;text-decoration:none}
 @media(max-width:440px){.queue-title{gap:6px;align-items:center}.queue-title h2{font-size:22px}.queue-tools{gap:10px}.queue-tools .reset,.header-privacy{font-size:11px}}
 .recent-enquiries{display:flex;flex-wrap:wrap;align-items:center;gap:10px;margin:0 0 18px;padding:0 0 16px;border-bottom:1px solid var(--line)}.recent-enquiries[hidden]{display:none}.recent-enquiries label{font-size:12px;font-weight:700;color:#555}.recent-enquiries select{flex:1 1 180px;min-width:0;min-height:42px;border:1px solid #cfcfcf;border-radius:5px;background:#fff;padding:9px 10px;color:#242424;font:inherit;font-size:13px}.recent-enquiries button{border:1px solid #242424;border-radius:5px;background:#fff;color:#242424;padding:9px 12px;font-weight:700;font-size:12px;min-height:42px}@media(max-width:620px){.recent-enquiries label{width:100%}.recent-enquiries button{flex:0 0 auto}}
+
+.api-bridge{border-top:1px solid var(--border);border-bottom:1px solid var(--border);padding:26px 0;margin:0 0 26px;display:grid;grid-template-columns:minmax(0,1.2fr) minmax(0,.8fr);gap:30px;align-items:center}
+.api-bridge h2{font-size:clamp(22px,2.6vw,31px);line-height:1.18;margin:9px 0}
+.api-bridge p{font-size:13px;line-height:1.6;color:#555;margin:0}
+.api-bridge .bridge-note{font-size:11px;color:#777;margin-top:9px}
+.bridge-steps{display:grid;grid-template-columns:1fr;gap:8px;counter-reset:steps}
+.bridge-steps span{display:block;border:1px solid var(--border);border-radius:5px;padding:11px 12px;font-size:12px;font-weight:600}
+.bridge-steps span::before{counter-increment:steps;content:counter(steps,decimal-leading-zero);font-size:10px;margin-right:12px;color:#777}
+@media(max-width:760px){.api-bridge{grid-template-columns:1fr;gap:16px;padding:21px 0}.bridge-steps{gap:6px}}
 </style>
 </head>
 <body><div class="shell">
@@ -147,7 +156,7 @@ h1,h2,h3,h4,p{margin-top:0}h1,h2,h3,h4{font-family:var(--display);font-weight:60
 <main>
 <section class="intro"><div class="eyebrow">Customer identity and revenue leakage</div>
 <h1>Keep the conversation.<br><span>Not another contact.</span></h1>
-<p>Catch missed enquiries and uncertain customer matches before another CRM change. See the decisions, evidence and delivery outcomes in a fictional walkthrough.</p></section>
+<p>Acorde's proposed API workflow checks likely duplicates and routes uncertain customer matches for review around your existing CRM. Sales and account managers continue in their familiar tools. Explore the fictional decision flow below.</p></section>
 <section class="loss-entrance" id="revenue-loss" aria-labelledby="loss-title">
   <div class="loss-copy">
     <div class="eyebrow">01 / Free diagnostic</div>
@@ -161,6 +170,17 @@ h1,h2,h3,h4,p{margin-top:0}h1,h2,h3,h4{font-family:var(--display);font-weight:60
     <a href="./calculator.html?mode=sales"><span>01</span><b>Sales enquiries</b><small>Missed follow-up</small></a>
     <a href="./calculator.html?mode=orders"><span>02</span><b>Orders</b><small>Failed handoffs</small></a>
     <a href="./calculator.html?mode=operations"><span>03</span><b>Operations</b><small>Unowned requests</small></a>
+  </div>
+</section>
+<section class="api-bridge" id="integrations" aria-labelledby="api-bridge-title">
+  <div>
+    <div class="eyebrow">Designed to integrate by API</div>
+    <h2 id="api-bridge-title">Keep your CRM and your team’s workflow</h2>
+    <p>Connect an enquiry source, check likely duplicates, route uncertain identity matches for review and pass decisions back to the CRM your team already uses. Sales and account managers don't need another daily workspace.</p>
+    <p class="bridge-note">A focused integration starts with one source and one CRM. Live connector compatibility is verified before setup.</p>
+  </div>
+  <div class="bridge-steps" aria-label="Proposed API integration sequence">
+    <span>Existing enquiry source</span><span>Duplicate check and review</span><span>Your existing CRM</span>
   </div>
 </section>
 <section class="queue-title" id="workflows" aria-label="Interactive product demonstration">
