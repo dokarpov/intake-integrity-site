@@ -59,18 +59,23 @@ test('a valid single POST sends from the authorizing Google account with server-
  const msg=t.records[0];
  assert.equal(msg.to,'reader@example.com');
  assert.equal(msg.name,'Acorde');
- assert.equal(msg.subject,'Your Acorde estimate: 16 hours/month reviewing customer records');
- assert.match(msg.body,/Estimated time spent on checks: 16 hours\/month/);
- assert.match(msg.body,/€224/);
- assert.match(msg.body,/not included/);
- assert.match(msg.body,/A USEFUL 5-MINUTE CHECK/);
- assert.match(msg.body,/WANT A RECOMMENDATION FOR YOUR CRM/);
- assert.match(msg.body,/your five most recent CRM contacts/i);
- assert.match(msg.htmlBody, /A useful 5-minute check/);
- assert.match(msg.htmlBody, /Records needing extra review/);
- assert.match(msg.htmlBody, /hours\/month checking customer records/i);
- assert.match(msg.htmlBody, /Further emails require separate confirmed consent/i);
- assert.doesNotMatch(msg.htmlBody, /Confirm updates with a separate step/);
+ assert.equal(msg.subject,'Your Acorde estimate: 16 hours/month reviewing records');
+ assert.match(msg.body,/Records needing review: 96 \/ month/);
+ assert.match(msg.body,/Time spent reviewing: 16 hours \/ month/);
+ assert.match(msg.body,/Potential time freed at 50% improvement: 8 hours \/ month/);
+ assert.match(msg.body,/Value of that time: €224 \/ month/);
+ assert.match(msg.body,/HOW ACORDE CAN HELP/);
+ assert.match(msg.body,/existing CRM through an API/);
+ assert.match(msg.body,/Sales and account managers stay in their familiar tools/);
+ assert.match(msg.body,/one enquiry source and one CRM/);
+ assert.match(msg.body,/CHECK COMPATIBILITY/);
+ assert.match(msg.htmlBody,/How Acorde can help/);
+ assert.match(msg.htmlBody,/Records needing review/);
+ assert.match(msg.htmlBody,/through an API/);
+ assert.match(msg.htmlBody,/existing tools/);
+ assert.doesNotMatch(msg.body,/five most recent|5-minute|7-day|check 5 records|50 records/i);
+ assert.doesNotMatch(msg.htmlBody,/five most recent|5-minute|7-day|check 5 records|50 records/i);
+ assert.doesNotMatch(msg.htmlBody,/live integration|already connected|guaranteed savings/i);
  assert.doesNotMatch(msg.body,/OPTIONAL NEWSLETTER/);
  assert.doesNotMatch(msg.body,/7-DAY|50 recent|weekly|7-day validation/i);
  assert.doesNotMatch(msg.htmlBody,/7-day|50 recent|30–70%/i);
@@ -82,7 +87,7 @@ test('no GET endpoint or arbitrary body, CC, BCC or sender can deliver mail',()=
  assert.equal(t.records.length,0);
  t.post({...valid,subject:'ATTACK',body:'spam!',cc:'all@example.com',from:'evil@example.com'});
  assert.equal(t.records.length,1);
- assert.equal(t.records[0].subject,'Your Acorde estimate: 16 hours/month reviewing customer records');
+ assert.equal(t.records[0].subject,'Your Acorde estimate: 16 hours/month reviewing records');
  assert.doesNotMatch(t.records[0].body,/spam!/);
  assert.equal(t.records[0].cc,undefined);
  assert.equal(t.records[0].from,undefined);
@@ -105,8 +110,8 @@ test('invalid addresses, bad slider inputs, bots and accidental consent fail clo
 test('manual mode does not add current tool fee and exactly 100 workers scale as expected',()=>{
  const t=setup();
  t.post({...valid,workers:'100',toolMonthly:'2000'});
- assert.match(t.records[0].body,/Estimated time spent on checks: 320 hours\/month/);
- assert.match(t.records[0].body,/Existing tool subscription: €0\/month/);
+ assert.match(t.records[0].body,/Time spent reviewing: 320 hours \/ month/);
+ assert.match(t.records[0].body,/Value of that time: €4,480 \/ month/);
 });
 test('duplicate requests are throttled and limited to a safe daily cap',()=>{
  const t=setup();
@@ -154,14 +159,14 @@ test('newsletter confirmation rejects nonexistent or expired tokens and unsafe s
  assert.equal(t.rows[1][3],'');
 });
 
-test('manual vs existing-tool delivery gets appropriate five-minute guidance',()=>{
+test('manual and current-tool scenarios use the same concise API-first message',()=>{
  const manual=setup();manual.post(valid);
- assert.match(manual.records[0].body,/flag them for review/);
- const paid=setup();paid.post({...valid,mode:'tool'});
- assert.match(paid.records[0].body,/If you use a matching tool/);
- for(const item of [manual.records[0],paid.records[0]]){
-  assert.match(item.body,/A USEFUL 5-MINUTE CHECK/);
-  assert.match(item.body,/50% improvement/);
-  assert.doesNotMatch(item.body,/7-DAY|50 recent|week-long|daily task/i);
+ const tool=setup();tool.post({...valid,mode:'tool'});
+ for(const item of [manual.records[0],tool.records[0]]){
+  assert.match(item.body,/HOW ACORDE CAN HELP/);
+  assert.match(item.body,/Sales and account managers stay in their familiar tools/);
+  assert.match(item.body,/CHECK COMPATIBILITY/);
+  assert.match(item.htmlBody,/Reply with your CRM/);
+  assert.doesNotMatch(item.body,/5-minute|five most recent|7-day|multi-day|50 records/i);
  }
 });
