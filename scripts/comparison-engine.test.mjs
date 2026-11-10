@@ -33,7 +33,7 @@ test('existing software stays separate from human handling and is not automatica
  assert.equal(r.currentMonthlyOverhead,598);
  assert.equal(r.midValue,224);
  assert.equal(r.illustrativeMonthlyLaborBudget,224);
- assert.match(reportText({...DEFAULTS,mode:'tool'}),/Existing paid dedup tool/);
+ assert.match(reportText({...DEFAULTS,mode:'tool'}),/€150 existing tool/);
 });
 test('all zero issues means zero lost time, even with 100 people',()=>{
  const a=calculateScenario({...DEFAULTS,workers:100,issueRate:0});
@@ -68,7 +68,7 @@ test('label assumptions as illustrative, not industry statistics or cash savings
  assert.equal(euro(150),'€150');
 });
 test('report remains suitable for server-side rendering without an email vendor',()=>{
- assert.match(reportText(DEFAULTS),/Estimated handling time today: 16 hours\/month/);
+ assert.match(reportText(DEFAULTS),/Review time: 16 hours\/month/);
  assert.doesNotMatch(reportText(DEFAULTS),/tally\.so|mailto:/);
 });
 
