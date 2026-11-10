@@ -18,10 +18,10 @@ export const DEFAULTS=Object.freeze({
   mode:'manual',workers:5,recordsPerWorkerDay:12,issueRate:8,toolMonthly:150
 });
 export const LIMITS=Object.freeze({
-  workers:[1,100],
-  recordsPerWorkerDay:[1,40],
-  issueRate:[0,20],
-  toolMonthly:[0,2000]
+  workers:[1,10000],
+  recordsPerWorkerDay:[1,10000],
+  issueRate:[0,100],
+  toolMonthly:[0,1000000]
 });
 export function validateScenario(raw){
   if(!raw||!['manual','tool'].includes(raw.mode))throw new Error('Choose a current process.');
@@ -63,24 +63,17 @@ export function calculateScenario(values){
 export const euro=(v)=>new Intl.NumberFormat('en-IE',{style:'currency',currency:'EUR',maximumFractionDigits:0}).format(v);
 export const number=(v)=>new Intl.NumberFormat('en-GB',{maximumFractionDigits:1}).format(v);
 export function reportText(values){
-  const r=calculateScenario(values),a=ASSUMPTIONS;
-  return [
-    'Acorde — illustrative duplicate-record workload estimate',
-    'Current approach: '+(r.settings.mode==='manual'?'No dedicated paid dedup tool':'Existing paid dedup tool'),
-    'People handling records: '+r.settings.workers,
-    'Records handled per person per day: '+r.settings.recordsPerWorkerDay,
-    'Potential duplicate or unclear records: '+r.settings.issueRate+'%',
-    'Monthly records in scope: '+number(r.monthlyRecords),
-    'Estimated records needing attention: '+number(r.affectedRecords)+' per month',
-    'Estimated handling time today: '+number(r.attentionHours)+' hours/month',
-    'Possible time freed if 30–70% of handling is removed: '+number(r.lowHours)+'–'+number(r.highHours)+' hours/month',
-    'Illustrative 50% midpoint: '+number(r.midHours)+' hours/month',
-    'Potential labor-time value at midpoint: '+euro(r.midValue)+'/month',
-    'Existing paid tool monthly cost (if entered): '+euro(r.currentSoftware),
-    'Assumptions: '+a.workingDays+' workdays/month; '+a.minutesPerAffectedRecord+
-      ' minutes/affected record; '+euro(a.fullStaffCostPerHourEUR)+'/staff hour.',
-    'All defaults and reduction scenarios are fictional working assumptions, not industry averages.',
-    'Value of time is not cash saved. Acorde pricing and setup are not included.',
-    'Real savings or feasibility require measured workflow data and an implementation quote.'
-  ].join('\n');
+ const r=calculateScenario(values),a=ASSUMPTIONS;
+ return [
+  'Acorde · monthly duplicate-review estimate',
+  'People: '+r.settings.workers,
+  'Records per person/day: '+r.settings.recordsPerWorkerDay,
+  'Records requiring review: '+number(r.affectedRecords)+' ('+r.settings.issueRate+'%)',
+  'Review time: '+number(r.attentionHours)+' hours/month',
+  'Potential capacity at 50% fewer checks: '+number(r.midHours)+' hours/month',
+  'Value of this time: '+euro(r.midValue)+'/month',
+  'Current cost: '+euro(r.currentMonthlyOverhead)+'/month ('+euro(r.currentStaffCost)+' staff + '+euro(r.currentSoftware)+' existing tool)',
+  'Illustrative assumptions: '+a.workingDays+' workdays, '+a.minutesPerAffectedRecord+' minutes/case, '+euro(a.fullStaffCostPerHourEUR)+'/staff-hour. The 50% reduction is a scenario, not measured savings.',
+  'Acorde pricing and setup are not included.'
+ ].join('\n');
 }
