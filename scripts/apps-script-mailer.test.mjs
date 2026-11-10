@@ -65,7 +65,7 @@ test('a valid single POST sends from the authorizing Google account with server-
  assert.match(msg.body,/not included/);
  assert.match(msg.body,/A FREE 7-DAY VALIDATION PLAN/);
  assert.match(msg.body,/REPLY WITH JUST TWO DETAILS/);
- assert.match(msg.body,/Rare issues/);
+ assert.match(msg.body,/Few exceptions\?/);
  assert.match(msg.htmlBody, /Your 7-day verification plan/);
  assert.match(msg.htmlBody, /Possible exceptions \/ month/);
  assert.match(msg.htmlBody, /Your first workflow snapshot/i);
