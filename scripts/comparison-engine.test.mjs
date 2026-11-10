@@ -49,18 +49,18 @@ test('manual mode cannot treat a 150 EUR subscription as already spent',()=>{
 });
 test('reject unrealistic slider values and malformed assumptions',()=>{
  for(const bad of [
- {...DEFAULTS,workers:0},{...DEFAULTS,workers:101},
- {...DEFAULTS,workers:4.2},{...DEFAULTS,recordsPerWorkerDay:41},
- {...DEFAULTS,issueRate:-1},{...DEFAULTS,issueRate:30},
- {...DEFAULTS,toolMonthly:-1},{...DEFAULTS,toolMonthly:3000},
+ {...DEFAULTS,workers:0},{...DEFAULTS,workers:10001},
+ {...DEFAULTS,workers:4.2},{...DEFAULTS,recordsPerWorkerDay:10001},
+ {...DEFAULTS,issueRate:-1},{...DEFAULTS,issueRate:101},
+ {...DEFAULTS,toolMonthly:-1},{...DEFAULTS,toolMonthly:1000001},
  {...DEFAULTS,mode:'nonsense'},{...DEFAULTS,workers:''}
  ]) assert.throws(()=>validateScenario(bad));
 });
 test('label assumptions as illustrative, not industry statistics or cash savings',()=>{
  const report=reportText(DEFAULTS);
- assert.match(report,/Acorde — illustrative/);
- assert.match(report,/not industry averages/);
- assert.match(report,/Value of time is not cash saved/);
+ assert.match(report,/Acorde · monthly duplicate-review estimate/);
+ assert.match(report,/Illustrative assumptions/);
+ assert.match(report,/not measured savings/);
  assert.match(report,/Acorde pricing and setup are not included/);
  assert.match(report,/€224/);
  assert.equal(ASSUMPTIONS.workingDays,20);
@@ -70,4 +70,12 @@ test('label assumptions as illustrative, not industry statistics or cash savings
 test('report remains suitable for server-side rendering without an email vendor',()=>{
  assert.match(reportText(DEFAULTS),/Estimated handling time today: 16 hours\/month/);
  assert.doesNotMatch(reportText(DEFAULTS),/tally\.so|mailto:/);
+});
+
+test('large-team ranges do not impose the original arbitrary ceilings',()=>{
+ const r=calculateScenario({...DEFAULTS,workers:350,recordsPerWorkerDay:120,issueRate:28,mode:'tool',toolMonthly:8500});
+ assert.equal(r.monthlyRecords,840000);
+ assert.equal(r.affectedRecords,235200);
+ assert.equal(r.attentionHours,39200);
+ assert.equal(r.currentSoftware,8500);
 });
