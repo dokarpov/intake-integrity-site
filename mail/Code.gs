@@ -67,131 +67,89 @@ function euro(n){return Number(n).toLocaleString('en-IE',{style:'currency',curre
  * helps the recipient validate a hypothesis before buying anything.
  * This report does NOT enroll the recipient in subsequent mailings.
  */
+/**
+ * Transactional result: 1 glance, 1 five-minute check, 1 optional reply.
+ * Do not ask a recipient for a multi-day audit or customer records.
+ */
 function reportData(p){
   const r=scenario(p);
+  const hours=format(r.hours);
   return {
     r,
-    currentMode:p.mode==='tool'?'Existing paid matching tool + human review':'No dedicated paid deduplication tool',
-    lowHours:format(r.hours*0.3),
-    highHours:format(r.hours*0.7),
-    midHours:format(r.halfTime),
-    hours:format(r.hours),
+    hours,
     records:format(r.records),
     affected:format(r.affected),
+    midHours:format(r.halfTime),
     potentialMonthly:euro(r.possibleMonthlyValue),
-    currentMonthly:euro(r.currentMonthlyCost),
     softwareMonthly:euro(r.existingTool),
-    subject:'Your Acorde snapshot: ~'+format(r.hours)+' h/month to investigate'
+    currentMode:p.mode==='tool'?'Existing matching tool':'Manual checks',
+    subject:'Your Acorde estimate: '+hours+' hours/month reviewing customer records'
   };
 }
-function nextDiagnostic(mode){
+function fiveMinuteNote(mode){
   return mode==='tool'
-   ? 'Your current tool may already prevent errors. Look specifically at what it leaves for humans: uncertain matches, record corrections and CRM handoffs. Do not assume its subscription can be cancelled.'
-   : 'Start with one inbound channel and trace each record through the CRM. Repeated contact details and uncertain identity should be reviewed safely, not automatically merged.';
+    ? 'If you use a matching tool, note whether it flagged any of those cases.'
+    : 'If two records seem to describe the same person, flag them for review.';
 }
 function formatReport(p){
   const v=reportData(p);
   return [
-    'ACORDE / YOUR FIRST WORKFLOW SNAPSHOT',
+    'YOUR ACORDE ESTIMATE',
     '',
+    'Your team may spend '+v.hours+' hours a month checking customer records.',
+    '',
+    'Based on your inputs:',
+    'People handling records: '+v.r.workers,
+    'Records processed per month: '+v.records,
+    'Records needing extra review: '+v.affected+' ('+v.r.issueRate+'%)',
     'Estimated time spent on checks: '+v.hours+' hours/month',
-    'This is a starting hypothesis, not a measured result.',
+    'Possible time freed at 50% improvement: '+v.midHours+' hours/month',
+    'Value of that time: '+v.potentialMonthly+'/month',
+    'Existing tool subscription: '+v.softwareMonthly+'/month',
     '',
-    'YOUR SCENARIO',
-    '- Current approach: '+v.currentMode,
-    '- People handling records: '+v.r.workers,
-    '- Records per person per day: '+v.r.recordsPerWorkerDay,
-    '- Records potentially needing another look: '+v.r.issueRate+'%',
-    '- Total records in scope: '+v.records+'/month',
-    '- Records needing a check: '+v.affected+'/month',
-    '- Estimated time spent on checks: '+v.hours+' hours/month',
-    '- Existing tool subscription: '+v.softwareMonthly+'/month',
-    '- Estimated current staff + existing-tool cost: '+v.currentMonthly+'/month',
+    'A USEFUL 5-MINUTE CHECK',
+    'Open your five most recent CRM contacts. Search each by email or phone, then check who owns the follow-up. Note any duplicate contacts or follow-ups assigned to different people.',
+    fiveMinuteNote(p.mode),
+    'These cases give you a starting point for the first workflow check.',
     '',
-    'WHAT MAY BE AT STAKE',
-    'If 30–70% of review time can safely be removed, that represents '+v.lowHours+'–'+
-      v.highHours+' hours/month. At a hypothetical 50% improvement, '+v.midHours+
-      ' hours of capacity are worth approximately '+v.potentialMonthly+'/month.',
-    'This is time value, NOT proven cash savings or product performance.',
+    'WANT A RECOMMENDATION FOR YOUR CRM?',
+    'Reply with the CRM you use and where enquiries arrive from. We can suggest one specific check for your workflow.',
     '',
-    'WHERE TO LOOK FIRST',
-    nextDiagnostic(p.mode),
+    'Illustrative assumptions: 20 workdays/month, 10 minutes per affected record, €28 per staff hour. The 50% improvement is hypothetical. The euro figure represents staff time; Acorde pricing and setup are not included.',
+    'You requested this report. Further emails require separate confirmed consent.',
     '',
-    'A FREE 7-DAY VALIDATION PLAN',
-    '1. Pick one real inbound source (forms, email, calls, imports) and a recent sequence of ~50 records. For a large team, treat this as a pilot sample, not representative statistics.',
-    '2. For each case, log only the category (clear match / possible duplicate / uncertain identity / new record), minutes spent checking, and the handoff stage. Keep customer-identifying data out of any shared sample.',
-    '3. Count the cases needing human attention and the actual minutes. Compare the result to this estimate; separate safe rules from cases that still require human judgment.',
-    '',
-    'THE NEXT DECISION',
-    '- Few exceptions? Fix upstream capture and avoid adding an unnecessary tool.',
-    '- Frequent, unambiguous repeats? Test a narrowly scoped, reversible automated rule.',
-    '- Ambiguous identity or risky handoffs? Keep explicit reviewer approval and an audit trail.',
-    '',
-    'WHAT THIS ESTIMATE DOES NOT KNOW',
-    'Your true exception rate, staff handling time, CRM mapping quality, existing contract terms, Acorde deployment cost or achievable reduction. These must be measured before making an ROI claim.',
-    'Acorde subscription, implementation and maintenance costs are not included in this calculation.',
-    'Example assumptions: 20 workdays/month, 10 minutes per affected record, €28/hour loaded staff cost. Neither these defaults nor the 30–70% improvement scenario are industry averages or proven Acorde results.',
-    '',
-    'REPLY WITH JUST TWO DETAILS',
-    'Where do duplicates first appear (inbound, CRM import or handoff), and which CRM do you use? We can suggest the first low-risk check.',
-    '',
-    'You requested this one-time calculation. You will not receive ongoing updates unless you separately confirm an optional subscription.',
     'Acorde | '+ACORDE_HOME
   ].join('\n');
 }
 function formatHtmlReport(p){
   const v=reportData(p);
-  const th='font:600 11px Arial,sans-serif;color:#666;padding:10px 0;border-bottom:1px solid #e5e5e5;text-align:left;';
-  const td='font:600 14px Arial,sans-serif;color:#242424;padding:10px 0;border-bottom:1px solid #e5e5e5;text-align:right;';
-  const row=(left,right)=>'<tr><th style="'+th+'">'+esc(left)+'</th><td style="'+td+'">'+esc(right)+'</td></tr>';
-  const li=(text)=>'<li style="margin-bottom:12px;">'+text+'</li>';
-  const bullet=(strong,detail)=>li('<strong>'+esc(strong)+'</strong> '+esc(detail));
-  return '<!doctype html><html lang="en"><head><meta charset="utf-8">'+
-    '<meta name="viewport" content="width=device-width,initial-scale=1"></head>'+
+  const th='font:500 13px Arial,sans-serif;color:#666;padding:10px 4px 10px 0;border-bottom:1px solid #e8e8e8;text-align:left;';
+  const td='font:700 14px Arial,sans-serif;color:#242424;padding:10px 0 10px 4px;border-bottom:1px solid #e8e8e8;text-align:right;';
+  const row=(name,value)=>'<tr><th style="'+th+'">'+esc(name)+'</th><td style="'+td+'">'+esc(value)+'</td></tr>';
+  return '<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"></head>'+
     '<body style="margin:0;padding:0;background:#f5f5f5;color:#242424;font-family:Arial,Helvetica,sans-serif;">'+
-    '<div style="display:none;font-size:1px;max-height:0;overflow:hidden;opacity:0;">Your estimate, the assumptions behind it, and a practical 7-day verification plan.</div>'+
-    '<table role="presentation" cellspacing="0" cellpadding="0" style="border-collapse:collapse;width:100%;background:#f5f5f5;"><tr><td align="center" style="padding:24px 12px;">'+
-    '<table role="presentation" cellspacing="0" cellpadding="0" style="border-collapse:collapse;width:100%;max-width:600px;background:#fff;"><tr><td style="padding:32px 30px 12px;">'+
-    '<div style="font-size:24px;font-weight:800;letter-spacing:-1.5px;">acorde</div>'+
-    '<p style="color:#777;font-size:11px;font-weight:700;letter-spacing:1.3px;text-transform:uppercase;margin:30px 0 10px;">Your first workflow snapshot</p>'+
-    '<h1 style="font-size:32px;letter-spacing:-1.5px;line-height:1.15;margin:0 0 16px;">'+esc(v.hours)+' hours/month<br><span style="color:#888;">worth investigating.</span></h1>'+
-    '<p style="font-size:15px;color:#555;line-height:1.7;margin:0 0 20px;">This is a starting hypothesis about record checks across your team, not a measured saving. Here is how to make it useful.</p>'+
-    '<table role="presentation" cellspacing="0" cellpadding="0" style="width:100%;border-collapse:collapse;margin:16px 0 22px;">'+
+    '<div style="display:none;font-size:1px;max-height:0;overflow:hidden;opacity:0;">Your figures and a five-minute CRM check you can use today.</div>'+
+    '<table role="presentation" cellspacing="0" cellpadding="0" style="border-collapse:collapse;width:100%;background:#f5f5f5;"><tr><td align="center" style="padding:18px 10px;">'+
+    '<table role="presentation" cellspacing="0" cellpadding="0" style="border-collapse:collapse;width:100%;max-width:580px;background:#fff;"><tr><td style="padding:26px 23px 12px;">'+
+    '<div style="font-size:23px;font-weight:800;letter-spacing:-1.5px;">acorde</div>'+
+    '<h1 style="font-size:30px;line-height:1.16;letter-spacing:-1px;margin:25px 0 13px;">'+esc(v.hours)+' hours/month checking customer records</h1>'+
+    '<p style="font-size:14px;line-height:1.6;color:#555;margin:0 0 18px;">Here is your estimate using the settings you selected.</p>'+
+    '<table role="presentation" cellspacing="0" cellpadding="0" style="width:100%;border-collapse:collapse;margin:0 0 20px;">'+
       row('People handling records',String(v.r.workers))+
-      row('Current process',v.currentMode)+
-      row('Records per person / workday',String(v.r.recordsPerWorkerDay))+
-      row('Records needing a second look',String(v.r.issueRate)+'%')+
-      row('Possible exceptions / month',v.affected+' of '+v.records)+
-      row('Existing tool subscription / month',v.softwareMonthly)+
-      row('Existing tool + attention cost / month',v.currentMonthly)+
+      row('Records processed / month',v.records)+
+      row('Records needing extra review',v.affected+' ('+v.r.issueRate+'%)')+
+      row('Review time / month',v.hours+' hours')+
+      row('Time freed at 50% improvement',v.midHours+' hours / month')+
+      row('Illustrative value of that time',v.potentialMonthly+' / month')+
     '</table>'+
-    '<div style="background:#f5f5f5;border-left:3px solid #242424;padding:18px 18px 15px;margin:20px 0 26px;">'+
-      '<p style="font-size:11px;letter-spacing:1px;text-transform:uppercase;font-weight:bold;color:#666;margin:0 0 9px;">Potential capacity to recover</p>'+
-      '<p style="font-size:25px;font-weight:700;letter-spacing:-1px;margin:0;">'+esc(v.lowHours)+'–'+esc(v.highHours)+' hours / month</p>'+
-      '<p style="font-size:13px;color:#555;line-height:1.55;margin:8px 0 0;">If a hypothetical 30–70% of review work could be safely removed. The 50% midpoint equals '+esc(v.midHours)+' hours, valued at '+esc(v.potentialMonthly)+'/month of staff time <strong>— not guaranteed cash savings.</strong></p>'+
-    '</div>'+
-    '<h2 style="font-size:22px;letter-spacing:-.6px;margin:28px 0 8px;">Where to look first</h2>'+
-    '<p style="font-size:14px;color:#4b4b4b;line-height:1.7;margin:0 0 22px;">'+esc(nextDiagnostic(p.mode))+'</p>'+
-    '<h2 style="font-size:22px;letter-spacing:-.6px;margin:26px 0 12px;">Your 7-day verification plan</h2>'+
-    '<ol style="font-size:14px;color:#484848;line-height:1.6;padding-left:21px;">'+
-      bullet('Take a small consecutive sample.','Select roughly 50 recent cases from one inbound source. For a large company, this is only an initial pilot.')+
-      bullet('Label the friction.','For each case, record clear match, possible duplicate, uncertain identity or new record; the stage; and minutes spent checking. Do not share customer-identifying data.')+
-      bullet('Separate safe from risky.','Count actual exception cases and checking minutes. Automate only verified low-risk rules; send uncertain identities to a reviewer.')+
-    '</ol>'+
-    '<h2 style="font-size:22px;letter-spacing:-.6px;margin:26px 0 12px;">How to decide what to fix</h2>'+
-    '<ul style="font-size:14px;color:#484848;line-height:1.65;padding-left:20px;">'+
-      bullet('Rare issues?','Improve source fields instead of adding software.')+
-      bullet('Predictable repeats?','Pilot a narrow, reversible matching rule.')+
-      bullet('Ambiguous identities?','Keep human approval and a decision trail.')+
-    '</ul>'+
-    '<div style="border-top:1px solid #e3e3e3;padding-top:16px;margin:24px 0;">'+
-    '<h2 style="font-size:19px;margin:0 0 8px;">What we still need to know</h2>'+
-    '<p style="font-size:12px;color:#666;line-height:1.65;margin:0;">Actual exception rate, minutes per case, CRM mapping quality, existing contract costs, implementation expenses and achievable improvement. This model assumes 20 workdays/month, 10 minutes per affected case, and €28/hour of staff cost. These are illustrative inputs, not industry benchmarks or verified Acorde performance.</p>'+
-    '</div>'+
-    '<p style="font-size:15px;font-weight:bold;margin:22px 0 8px;">Want a useful next step without another meeting?</p>'+
-    '<p style="font-size:14px;line-height:1.65;color:#555;margin:0 0 22px;">Reply with where duplicates first appear (inbound, CRM import or handoff) and the CRM you use. We can suggest a first low-risk check.</p>'+
-    '<p style="margin:0 0 26px;"><a href="'+esc(ACORDE_HOME)+'" style="display:inline-block;background:#242424;color:#fff;text-decoration:none;border-radius:4px;padding:13px 19px;font-size:13px;font-weight:bold;">Adjust your estimate</a></p>'+
-    '<p style="border-top:1px solid #e4e4e4;padding-top:16px;color:#888;font-size:11px;line-height:1.6;">You requested this one-time report. No ongoing updates will be sent unless you separately confirm an optional subscription. Time value is not cash saved. Acorde pricing and setup are not included.</p>'+
+    '<h2 style="font-size:20px;line-height:1.25;margin:20px 0 9px;">A useful 5-minute check</h2>'+
+    '<p style="font-size:14px;line-height:1.65;color:#444;margin:0 0 11px;">Open your five most recent CRM contacts. Search each by email or phone, then check who owns the follow-up. Note any duplicate contacts or follow-ups assigned to different people.</p>'+
+    '<p style="font-size:13px;line-height:1.6;color:#555;margin:0 0 18px;">'+esc(fiveMinuteNote(p.mode))+'</p>'+
+    '<h2 style="font-size:20px;line-height:1.25;margin:20px 0 9px;">Want a recommendation for your CRM?</h2>'+
+    '<p style="font-size:14px;line-height:1.65;color:#444;margin:0 0 21px;">Reply with the CRM you use and where enquiries arrive from. We can suggest one specific check for your workflow.</p>'+
+    '<p style="margin:0 0 22px;"><a href="'+esc(ACORDE_HOME)+'" style="display:inline-block;background:#242424;color:#fff;text-decoration:none;border-radius:4px;padding:12px 17px;font-size:13px;font-weight:bold;">Adjust your estimate</a></p>'+
+    '<p style="border-top:1px solid #e8e8e8;padding-top:15px;font-size:11px;line-height:1.55;color:#777;">Assumptions: 20 workdays/month, 10 minutes per affected record, €28 per staff hour. The 50% improvement is a scenario. The euro figure values staff time; Acorde pricing and setup are excluded.</p>'+
+    '<p style="font-size:11px;line-height:1.55;color:#777;">You requested this report. Further emails require separate confirmed consent.</p>'+
     '</td></tr></table></td></tr></table></body></html>';
 }
 function page(title,body){
