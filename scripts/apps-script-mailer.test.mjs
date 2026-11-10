@@ -59,10 +59,18 @@ test('a valid single POST sends from the authorizing Google account with server-
  const msg=t.records[0];
  assert.equal(msg.to,'reader@example.com');
  assert.equal(msg.name,'Acorde');
- assert.equal(msg.subject,'Your Acorde workload estimate');
+ assert.equal(msg.subject,'Your Acorde snapshot: ~16 h/month to investigate');
  assert.match(msg.body,/Estimated time spent on checks: 16 hours\/month/);
  assert.match(msg.body,/€224/);
  assert.match(msg.body,/not included/);
+ assert.match(msg.body,/A FREE 7-DAY VALIDATION PLAN/);
+ assert.match(msg.body,/REPLY WITH JUST TWO DETAILS/);
+ assert.match(msg.body,/Rare issues/);
+ assert.match(msg.htmlBody, /Your 7-day verification plan/);
+ assert.match(msg.htmlBody, /Possible exceptions \/ month/);
+ assert.match(msg.htmlBody, /Your first workflow snapshot/i);
+ assert.match(msg.htmlBody, /No ongoing updates/i);
+ assert.doesNotMatch(msg.htmlBody, /Confirm updates with a separate step/);
  assert.doesNotMatch(msg.body,/OPTIONAL NEWSLETTER/);
 });
 test('no GET endpoint or arbitrary body, CC, BCC or sender can deliver mail',()=>{
@@ -115,6 +123,8 @@ test('consent interest is not subscription: only a second deliberate POST confir
  assert.match(output,/not subscribed yet/);
  assert.equal(t.records.length,1);
  assert.equal(t.rows.length,1);
+ assert.match(t.records[0].htmlBody,/Confirm updates with a separate step/);
+ assert.match(t.records[0].htmlBody,/not subscribed yet/i);
  const token=t.records[0].body.match(/confirm=([a-f0-9]{64})/)[1];
  const preview=t.get({confirm:token});
  assert.match(preview,/Confirm subscription/);
