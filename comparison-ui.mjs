@@ -63,7 +63,7 @@ function render(){
  $('current-overhead').textContent=euro(r.currentMonthlyOverhead);
  $('mode-caption').textContent=mode==='tool'?'With your current tool':'Manual checks';
  $('software-explain').textContent=euro(r.currentStaffCost)+' staff review + '+euro(r.currentSoftware)+' existing tool';
- $('tool-inline-effect').textContent=euro(r.currentSoftware)+'/month included in current cost ↓';
+ $('tool-inline-effect').textContent='Adds '+euro(r.currentSoftware)+'/month to cost. Review rate stays as selected.';
  $('model-explanation').textContent=v.workers+' × '+v.recordsPerWorkerDay+' × '+ASSUMPTIONS.workingDays+
    ' days × '+v.issueRate+'% × '+ASSUMPTIONS.minutesPerAffectedRecord+' min = '+number(r.attentionHours)+' h';
  for(const id of sliders)setProgress($(id));
