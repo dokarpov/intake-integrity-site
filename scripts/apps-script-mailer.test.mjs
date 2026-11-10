@@ -59,19 +59,22 @@ test('a valid single POST sends from the authorizing Google account with server-
  const msg=t.records[0];
  assert.equal(msg.to,'reader@example.com');
  assert.equal(msg.name,'Acorde');
- assert.equal(msg.subject,'Your Acorde snapshot: ~16 h/month to investigate');
+ assert.equal(msg.subject,'Your Acorde estimate: 16 hours/month reviewing customer records');
  assert.match(msg.body,/Estimated time spent on checks: 16 hours\/month/);
  assert.match(msg.body,/€224/);
  assert.match(msg.body,/not included/);
- assert.match(msg.body,/A FREE 7-DAY VALIDATION PLAN/);
- assert.match(msg.body,/REPLY WITH JUST TWO DETAILS/);
- assert.match(msg.body,/Few exceptions\?/);
- assert.match(msg.htmlBody, /Your 7-day verification plan/);
- assert.match(msg.htmlBody, /Possible exceptions \/ month/);
- assert.match(msg.htmlBody, /Your first workflow snapshot/i);
- assert.match(msg.htmlBody, /No ongoing updates/i);
+ assert.match(msg.body,/A USEFUL 5-MINUTE CHECK/);
+ assert.match(msg.body,/WANT A RECOMMENDATION FOR YOUR CRM/);
+ assert.match(msg.body,/your five most recent CRM contacts/i);
+ assert.match(msg.htmlBody, /A useful 5-minute check/);
+ assert.match(msg.htmlBody, /Records needing extra review/);
+ assert.match(msg.htmlBody, /hours\/month checking customer records/i);
+ assert.match(msg.htmlBody, /Further emails require separate confirmed consent/i);
  assert.doesNotMatch(msg.htmlBody, /Confirm updates with a separate step/);
  assert.doesNotMatch(msg.body,/OPTIONAL NEWSLETTER/);
+ assert.doesNotMatch(msg.body,/7-DAY|50 recent|weekly|7-day validation/i);
+ assert.doesNotMatch(msg.htmlBody,/7-day|50 recent|30–70%/i);
+ assert.match(msg.htmlBody,/Adjust your estimate/);
 });
 test('no GET endpoint or arbitrary body, CC, BCC or sender can deliver mail',()=>{
  const t=setup();
@@ -79,7 +82,7 @@ test('no GET endpoint or arbitrary body, CC, BCC or sender can deliver mail',()=
  assert.equal(t.records.length,0);
  t.post({...valid,subject:'ATTACK',body:'spam!',cc:'all@example.com',from:'evil@example.com'});
  assert.equal(t.records.length,1);
- assert.equal(t.records[0].subject,'Your Acorde snapshot: ~16 h/month to investigate');
+ assert.equal(t.records[0].subject,'Your Acorde estimate: 16 hours/month reviewing customer records');
  assert.doesNotMatch(t.records[0].body,/spam!/);
  assert.equal(t.records[0].cc,undefined);
  assert.equal(t.records[0].from,undefined);
@@ -149,4 +152,16 @@ test('newsletter confirmation rejects nonexistent or expired tokens and unsafe s
  const token=t.records[0].body.match(/confirm=([a-f0-9]{64})/)[1];
  t.post({action:'confirm',token});
  assert.equal(t.rows[1][3],'');
+});
+
+test('manual vs existing-tool delivery gets appropriate five-minute guidance',()=>{
+ const manual=setup();manual.post(valid);
+ assert.match(manual.records[0].body,/flag them for review/);
+ const paid=setup();paid.post({...valid,mode:'tool'});
+ assert.match(paid.records[0].body,/If you use a matching tool/);
+ for(const item of [manual.records[0],paid.records[0]]){
+  assert.match(item.body,/A USEFUL 5-MINUTE CHECK/);
+  assert.match(item.body,/50% improvement/);
+  assert.doesNotMatch(item.body,/7-DAY|50 recent|week-long|daily task/i);
+ }
 });
