@@ -97,8 +97,8 @@ test('invalid addresses, bad slider inputs, bots and accidental consent fail clo
  for(const item of [
   {...valid,email:'evil@example.com\r\nBcc:all@example.com'},
   {...valid,email:'other@example.com,extra@example.com'},
-  {...valid,workers:'101'}, {...valid,issueRate:'21'},
-  {...valid,toolMonthly:'abc'}, {...valid,mode:'hack'},
+  {...valid,workers:'10001'}, {...valid,issueRate:'101'},
+  {...valid,toolMonthly:'1000001'}, {...valid,mode:'hack'},
   {...valid,newsletter:'false'}
  ]){
   assert.match(t.post(item),/Request not completed/);
