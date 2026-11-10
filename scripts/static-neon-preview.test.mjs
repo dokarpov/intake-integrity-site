@@ -18,10 +18,12 @@ test('homepage, calculator, private policy and JS are served with correct status
  assert.match(home,/revenue-loss/);
  assert.match(home,/How much duplicate-record work costs/);
  const comparison=await (await get('/comparison.html')).text();
- assert.match(comparison,/No, we check manually/);
- assert.match(comparison,/Yes, we have a tool/);
+ assert.match(comparison,/No paid tool/);
+ assert.match(comparison,/We use a tool/);
  assert.match(comparison,/id="workers"/);
  assert.match(comparison,/id="newsletter"/);
+ assert.ok(comparison.indexOf('id="software-controls"')<comparison.indexOf('id="workers"'));
+ assert.match(comparison,/data-expand="workers"/);
  assert.match(comparison,/id="mailer-state"/);
  assert.doesNotMatch(comparison,/tally\.so\/r\/ArK9ZD/);
  const privacy=await (await get('/privacy.html')).text();
