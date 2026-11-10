@@ -84,7 +84,7 @@ test('API workflow promise appears without claiming a live provider connection',
  await expect(page.locator('#integrations')).toContainText('Live connector compatibility is verified');
  await page.goto(base);
  await expect(page.locator('#api-fit')).toContainText('API workflow');
- await expect(page.locator('#api-fit')).toContainText('existing CRM');
+ await expect(page.locator('#api-fit')).toContainText('familiar CRM');
 });
 test('configured sender submits bounded data directly to Apps Script, not to Tally',async({page})=>{
  const script='https://script.google.com/macros/s/AKfycTESTCODE/exec';
