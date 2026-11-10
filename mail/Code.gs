@@ -71,53 +71,40 @@ function euro(n){return Number(n).toLocaleString('en-IE',{style:'currency',curre
  * Transactional result: 1 glance, 1 five-minute check, 1 optional reply.
  * Do not ask a recipient for a multi-day audit or customer records.
  */
+/**
+ * Requested one-time estimate. Compact, with one practical commercial CTA.
+ * Follow-up information is sent only after separate confirmed opt-in.
+ */
 function reportData(p){
   const r=scenario(p);
-  const hours=format(r.hours);
   return {
     r,
-    hours,
+    hours:format(r.hours),
     records:format(r.records),
     affected:format(r.affected),
     midHours:format(r.halfTime),
-    potentialMonthly:euro(r.possibleMonthlyValue),
-    softwareMonthly:euro(r.existingTool),
-    currentMode:p.mode==='tool'?'Existing matching tool':'Manual checks',
-    subject:'Your Acorde estimate: '+hours+' hours/month reviewing customer records'
+    value:euro(r.possibleMonthlyValue),
+    subject:'Your Acorde estimate: '+format(r.hours)+' hours/month reviewing records'
   };
-}
-function fiveMinuteNote(mode){
-  return mode==='tool'
-    ? 'If you use a matching tool, note whether it flagged any of those cases.'
-    : 'If two records seem to describe the same person, flag them for review.';
 }
 function formatReport(p){
   const v=reportData(p);
   return [
     'YOUR ACORDE ESTIMATE',
     '',
-    'Your team may spend '+v.hours+' hours a month checking customer records.',
+    'Records needing review: '+v.affected+' / month',
+    'Time spent reviewing: '+v.hours+' hours / month',
+    'Potential time freed at 50% improvement: '+v.midHours+' hours / month',
+    'Value of that time: '+v.value+' / month',
     '',
-    'Based on your inputs:',
-    'People handling records: '+v.r.workers,
-    'Records processed per month: '+v.records,
-    'Records needing extra review: '+v.affected+' ('+v.r.issueRate+'%)',
-    'Estimated time spent on checks: '+v.hours+' hours/month',
-    'Possible time freed at 50% improvement: '+v.midHours+' hours/month',
-    'Value of that time: '+v.potentialMonthly+'/month',
-    'Existing tool subscription: '+v.softwareMonthly+'/month',
+    'HOW ACORDE CAN HELP',
+    'Acorde is designed to detect likely duplicates, flag uncertain matches for review and send decisions back to your existing CRM through an API.',
+    'Sales and account managers stay in their familiar tools. We can scope a focused integration around one enquiry source and one CRM.',
     '',
-    'A USEFUL 5-MINUTE CHECK',
-    'Open your five most recent CRM contacts. Search each by email or phone, then check who owns the follow-up. Note any duplicate contacts or follow-ups assigned to different people.',
-    fiveMinuteNote(p.mode),
-    'These cases give you a starting point for the first workflow check.',
+    'CHECK COMPATIBILITY',
+    'Reply with your CRM and where enquiries arrive from. We will identify a suitable first integration.',
     '',
-    'WANT A RECOMMENDATION FOR YOUR CRM?',
-    'Reply with the CRM you use and where enquiries arrive from. We can suggest one specific check for your workflow.',
-    '',
-    'Illustrative assumptions: 20 workdays/month, 10 minutes per affected record, €28 per staff hour. The 50% improvement is hypothetical. The euro figure represents staff time; Acorde pricing and setup are not included.',
-    'You requested this report. Further emails require separate confirmed consent.',
-    '',
+    'Figures are estimates based on your selected inputs.',
     'Acorde | '+ACORDE_HOME
   ].join('\n');
 }
@@ -125,31 +112,27 @@ function formatHtmlReport(p){
   const v=reportData(p);
   const th='font:500 13px Arial,sans-serif;color:#666;padding:10px 4px 10px 0;border-bottom:1px solid #e8e8e8;text-align:left;';
   const td='font:700 14px Arial,sans-serif;color:#242424;padding:10px 0 10px 4px;border-bottom:1px solid #e8e8e8;text-align:right;';
-  const row=(name,value)=>'<tr><th style="'+th+'">'+esc(name)+'</th><td style="'+td+'">'+esc(value)+'</td></tr>';
+  const row=(name,value)=>'<tr><th scope="row" style="'+th+'">'+esc(name)+'</th><td style="'+td+'">'+esc(value)+'</td></tr>';
   return '<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"></head>'+
     '<body style="margin:0;padding:0;background:#f5f5f5;color:#242424;font-family:Arial,Helvetica,sans-serif;">'+
-    '<div style="display:none;font-size:1px;max-height:0;overflow:hidden;opacity:0;">Your figures and a five-minute CRM check you can use today.</div>'+
+    '<div style="display:none;font-size:1px;max-height:0;overflow:hidden;opacity:0;">Your review-time estimate and a simple API integration path.</div>'+
     '<table role="presentation" cellspacing="0" cellpadding="0" style="border-collapse:collapse;width:100%;background:#f5f5f5;"><tr><td align="center" style="padding:18px 10px;">'+
     '<table role="presentation" cellspacing="0" cellpadding="0" style="border-collapse:collapse;width:100%;max-width:580px;background:#fff;"><tr><td style="padding:26px 23px 12px;">'+
     '<div style="font-size:23px;font-weight:800;letter-spacing:-1.5px;">acorde</div>'+
-    '<h1 style="font-size:30px;line-height:1.16;letter-spacing:-1px;margin:25px 0 13px;">'+esc(v.hours)+' hours/month checking customer records</h1>'+
-    '<p style="font-size:14px;line-height:1.6;color:#555;margin:0 0 18px;">Here is your estimate using the settings you selected.</p>'+
+    '<h1 style="font-size:27px;line-height:1.2;letter-spacing:-1px;margin:25px 0 13px;">Your Acorde estimate</h1>'+
     '<table role="presentation" cellspacing="0" cellpadding="0" style="width:100%;border-collapse:collapse;margin:0 0 20px;">'+
-      row('People handling records',String(v.r.workers))+
-      row('Records processed / month',v.records)+
-      row('Records needing extra review',v.affected+' ('+v.r.issueRate+'%)')+
-      row('Review time / month',v.hours+' hours')+
+      row('Records needing review',v.affected+' / month')+
+      row('Time spent reviewing',v.hours+' hours / month')+
       row('Time freed at 50% improvement',v.midHours+' hours / month')+
-      row('Illustrative value of that time',v.potentialMonthly+' / month')+
+      row('Value of that time',v.value+' / month')+
     '</table>'+
-    '<h2 style="font-size:20px;line-height:1.25;margin:20px 0 9px;">A useful 5-minute check</h2>'+
-    '<p style="font-size:14px;line-height:1.65;color:#444;margin:0 0 11px;">Open your five most recent CRM contacts. Search each by email or phone, then check who owns the follow-up. Note any duplicate contacts or follow-ups assigned to different people.</p>'+
-    '<p style="font-size:13px;line-height:1.6;color:#555;margin:0 0 18px;">'+esc(fiveMinuteNote(p.mode))+'</p>'+
-    '<h2 style="font-size:20px;line-height:1.25;margin:20px 0 9px;">Want a recommendation for your CRM?</h2>'+
-    '<p style="font-size:14px;line-height:1.65;color:#444;margin:0 0 21px;">Reply with the CRM you use and where enquiries arrive from. We can suggest one specific check for your workflow.</p>'+
-    '<p style="margin:0 0 22px;"><a href="'+esc(ACORDE_HOME)+'" style="display:inline-block;background:#242424;color:#fff;text-decoration:none;border-radius:4px;padding:12px 17px;font-size:13px;font-weight:bold;">Adjust your estimate</a></p>'+
-    '<p style="border-top:1px solid #e8e8e8;padding-top:15px;font-size:11px;line-height:1.55;color:#777;">Assumptions: 20 workdays/month, 10 minutes per affected record, €28 per staff hour. The 50% improvement is a scenario. The euro figure values staff time; Acorde pricing and setup are excluded.</p>'+
-    '<p style="font-size:11px;line-height:1.55;color:#777;">You requested this report. Further emails require separate confirmed consent.</p>'+
+    '<h2 style="font-size:19px;line-height:1.25;margin:20px 0 9px;">How Acorde can help</h2>'+
+    '<p style="font-size:14px;line-height:1.65;color:#444;margin:0 0 10px;">Acorde is designed to detect likely duplicates, flag uncertain matches for review and pass decisions back to your CRM through an API.</p>'+
+    '<p style="font-size:14px;line-height:1.65;color:#444;margin:0 0 19px;">Your sales and account managers keep working in their existing tools. We can scope a focused integration around one enquiry source and one CRM.</p>'+
+    '<h2 style="font-size:19px;line-height:1.25;margin:18px 0 9px;">Check compatibility</h2>'+
+    '<p style="font-size:14px;line-height:1.65;color:#444;margin:0 0 20px;">Reply with your CRM and where enquiries arrive from. We will identify a suitable first integration.</p>'+
+    '<p style="margin:0 0 18px;"><a href="'+esc(ACORDE_HOME)+'" style="display:inline-block;background:#242424;color:#fff;text-decoration:none;border-radius:4px;padding:12px 17px;font-size:13px;font-weight:bold;">Adjust your estimate</a></p>'+
+    '<p style="border-top:1px solid #e8e8e8;padding-top:14px;font-size:11px;line-height:1.55;color:#777;">Figures are estimates based on your calculator inputs.</p>'+
     '</td></tr></table></td></tr></table></body></html>';
 }
 function page(title,body){
