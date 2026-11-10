@@ -80,9 +80,7 @@ test('consent checkbox is visibly before Send and never preselected',async({page
 test('API workflow promise appears without claiming a live provider connection',async({page})=>{
  await page.goto(root+'/');
  await expect(page.locator('#integrations')).toContainText('existing CRM');
- await expect(page.locator('#integrations')).toContainText('familiar tools').catch(async()=>{
-  await expect(page.locator('#integrations')).toContainText('daily workspace');
- });
+ await expect(page.locator('#integrations')).toContainText('daily workspace');
  await expect(page.locator('#integrations')).toContainText('Live connector compatibility is verified');
  await page.goto(base);
  await expect(page.locator('#api-fit')).toContainText('API workflow');
