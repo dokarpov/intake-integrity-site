@@ -79,7 +79,7 @@ test('no GET endpoint or arbitrary body, CC, BCC or sender can deliver mail',()=
  assert.equal(t.records.length,0);
  t.post({...valid,subject:'ATTACK',body:'spam!',cc:'all@example.com',from:'evil@example.com'});
  assert.equal(t.records.length,1);
- assert.equal(t.records[0].subject,'Your Acorde workload estimate');
+ assert.equal(t.records[0].subject,'Your Acorde snapshot: ~16 h/month to investigate');
  assert.doesNotMatch(t.records[0].body,/spam!/);
  assert.equal(t.records[0].cc,undefined);
  assert.equal(t.records[0].from,undefined);
@@ -103,7 +103,7 @@ test('manual mode does not add current tool fee and exactly 100 workers scale as
  const t=setup();
  t.post({...valid,workers:'100',toolMonthly:'2000'});
  assert.match(t.records[0].body,/Estimated time spent on checks: 320 hours\/month/);
- assert.match(t.records[0].body,/Current tool fee\/month \(if any\): €0/);
+ assert.match(t.records[0].body,/Existing tool subscription: €0\/month/);
 });
 test('duplicate requests are throttled and limited to a safe daily cap',()=>{
  const t=setup();
