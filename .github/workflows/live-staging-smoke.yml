@@ -63,9 +63,13 @@ jobs:
           grep -Fq 'href="./privacy.html"' /tmp/acorde-smoke/calculator.body
           grep -Fq 'utm_source' /tmp/acorde-smoke/ui.body
           grep -Fq 'tally.so/r/5XbAeE' /tmp/acorde-smoke/ui.body
-          grep -Fq 'How much team time gets' /tmp/acorde-smoke/comparison.body
-          grep -Fq 'No, we check manually' /tmp/acorde-smoke/comparison.body
-          grep -Fq 'Yes, we have a tool' /tmp/acorde-smoke/comparison.body
+          grep -Fq 'How much time goes into duplicate checks?' /tmp/acorde-smoke/comparison.body
+          grep -Fq 'No paid tool' /tmp/acorde-smoke/comparison.body
+          grep -Fq 'We use a tool' /tmp/acorde-smoke/comparison.body
+          grep -Fq 'data-expand="workers"' /tmp/acorde-smoke/comparison.body
+          grep -Fq 'data-expand="toolMonthly"' /tmp/acorde-smoke/comparison.body
+          grep -Fq 'id="tool-inline-effect"' /tmp/acorde-smoke/comparison.body
+          grep -Fq 'Estimated review time' /tmp/acorde-smoke/comparison.body
           grep -Fq 'id="workers"' /tmp/acorde-smoke/comparison.body
           grep -Fq 'id="newsletter"' /tmp/acorde-smoke/comparison.body
           grep -Fq 'id="mailer-state"' /tmp/acorde-smoke/comparison.body
@@ -74,7 +78,7 @@ jobs:
           if grep -Fq 'tally.so/r/ArK9ZD' /tmp/acorde-smoke/comparison.body; then echo 'FAIL: old Tally newsletter route'; exit 1; fi
           grep -Fq 'calculateScenario' /tmp/acorde-smoke/costs.body
           grep -Fq 'trustedMailerUrl' /tmp/acorde-smoke/costui.body
-          grep -Fq 'trustedMailerUrl' /tmp/acorde-smoke/costui.body
+          grep -Fq 'RANGE_SCALES' /tmp/acorde-smoke/costui.body
           grep -Fq 'Nothing is uploaded' /tmp/acorde-smoke/privacy.body
           grep -iq '^x-robots-tag:.*noindex' /tmp/acorde-smoke/home.headers
           grep -iq '^x-content-type-options: nosniff' /tmp/acorde-smoke/calculator.headers
