@@ -105,6 +105,7 @@ function formatReport(p){
     '- Total records in scope: '+v.records+'/month',
     '- Records needing a check: '+v.affected+'/month',
     '- Estimated time spent on checks: '+v.hours+' hours/month',
+    '- Existing tool subscription: '+v.softwareMonthly+'/month',
     '- Estimated current staff + existing-tool cost: '+v.currentMonthly+'/month',
     '',
     'WHAT MAY BE AT STAKE',
@@ -156,9 +157,11 @@ function formatHtmlReport(p){
     '<p style="font-size:15px;color:#555;line-height:1.7;margin:0 0 20px;">This is a starting hypothesis about record checks across your team, not a measured saving. Here is how to make it useful.</p>'+
     '<table role="presentation" cellspacing="0" cellpadding="0" style="width:100%;border-collapse:collapse;margin:16px 0 22px;">'+
       row('People handling records',String(v.r.workers))+
+      row('Current process',v.currentMode)+
       row('Records per person / workday',String(v.r.recordsPerWorkerDay))+
       row('Records needing a second look',String(v.r.issueRate)+'%')+
       row('Possible exceptions / month',v.affected+' of '+v.records)+
+      row('Existing tool subscription / month',v.softwareMonthly)+
       row('Existing tool + attention cost / month',v.currentMonthly)+
     '</table>'+
     '<div style="background:#f5f5f5;border-left:3px solid #242424;padding:18px 18px 15px;margin:20px 0 26px;">'+
