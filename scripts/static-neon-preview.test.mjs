@@ -24,7 +24,13 @@ test('homepage, calculator, private policy and JS are served with correct status
  assert.match(comparison,/id="newsletter"/);
  assert.ok(comparison.indexOf('id="software-controls"')<comparison.indexOf('id="workers"'));
  assert.match(comparison,/data-expand="workers"/);
- assert.match(comparison,/id="mailer-state"/);
+ assert.doesNotMatch(comparison,/data-expand="issueRate"/);
+ assert.doesNotMatch(comparison,/TESTING PREVIEW/);
+ assert.doesNotMatch(comparison,/id="mailer-state"/);
+ assert.match(comparison,/Request a paid audit/);
+ assert.match(comparison,/id="audit-link"/);
+ assert.match(comparison,/id="email-form"[^>]*hidden/);
+ assert.doesNotMatch(comparison,/header nav|Acorde · free estimate/);
  assert.ok(comparison.indexOf('id="current-overhead"')<comparison.indexOf('id="email-form"'));
  assert.ok(comparison.indexOf('id="email-form"')<comparison.indexOf('</aside>'));
  assert.doesNotMatch(comparison,/<section class="(?:api-fit|convert|next)"/);
