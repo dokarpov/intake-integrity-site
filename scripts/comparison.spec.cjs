@@ -49,7 +49,7 @@ test('7 people, 40 daily records and 10% exactly match screenshot scenario',asyn
  await expect(page.locator('#freed-hours')).toHaveText('46.7 h');
  await expect(page.locator('#freed-value')).toHaveText('€1,307');
  await expect(page.locator('#current-overhead')).toHaveText('€2,613');
- await expect(page.locator('#model-explanation')).toContainText('7 × 40 × 20 days × 10% × 10 min = 93.3 h');
+ await expect(page.locator('.estimate-note')).toContainText('20 workdays');
 });
 test('tool choice reveals fee slider directly beneath the choice and above team sliders',async({page})=>{
  await page.goto(base);
@@ -132,12 +132,69 @@ test('when mail sender is disconnected, consent stays visible and copy works',as
  await expect(page.locator('#newsletter')).toBeDisabled();
  await expect(page.locator('#mailer-state')).toContainText('one-time Google account authorization');
  await expect(page.locator('#copy')).toBeVisible();
+ await expect(page.locator('#copy')).not.toHaveClass(/secondary/);
  const order=await page.locator('#email-form').evaluate(form=>{
   const checkbox=form.querySelector('#newsletter');
   const button=form.querySelector('#send');
   return Boolean(checkbox&&button&&(checkbox.compareDocumentPosition(button)&Node.DOCUMENT_POSITION_FOLLOWING));
  });
  expect(order).toBe(true);
+});
+test('email form is inside the result card with no intervening promotional sections',async({page})=>{
+ await page.goto(base);
+ const structure=await page.locator('#results').evaluate(card=>{
+  const form=card.querySelector('#email-form');
+  const cost=card.querySelector('.cost-row');
+  const note=card.querySelector('.estimate-note');
+  return {
+   formInCard:Boolean(form),
+   costBeforeForm:Boolean(form&&cost&&(cost.compareDocumentPosition(form)&Node.DOCUMENT_POSITION_FOLLOWING)),
+   gap:form&&cost?Math.round(form.getBoundingClientRect().top-cost.getBoundingClientRect().bottom):Infinity,
+   noteBeforeForm:Boolean(form&&note&&(note.compareDocumentPosition(form)&Node.DOCUMENT_POSITION_FOLLOWING))
+  };
+ });
+ expect(structure.formInCard).toBe(true);
+ expect(structure.costBeforeForm).toBe(true);
+ expect(structure.noteBeforeForm).toBe(true);
+ expect(structure.gap).toBeLessThan(100);
+ await expect(page.locator('.convert')).toHaveCount(0);
+ await expect(page.locator('section.api-fit')).toHaveCount(0);
+ await expect(page.locator('section.next')).toHaveCount(0);
+ await expect(page.locator('#send-result')).toHaveCount(0);
+ await expect(page.locator('#email-form')).toHaveCount(1);
+ await expect(page.locator('#copy')).toBeEnabled();
+ await expect(page.locator('#audit-link')).toHaveAttribute('href',/tally\.so/);
+});
+test('mobile result leads directly to copy and email actions without another scroll section',async({browser})=>{
+ for(const width of [320,375,390]){
+  const context=await browser.newContext({viewport:{width,height:844}});
+  const page=await context.newPage();
+  await page.goto(base);
+  const report=await page.evaluate(()=>{
+   const card=document.getElementById('results');
+   const form=document.getElementById('email-form');
+   const copy=document.getElementById('copy');
+   const newsletter=document.getElementById('newsletter');
+   const send=document.getElementById('send');
+   const cb=new DOMRect();
+   const rect=card.getBoundingClientRect(),fr=form.getBoundingClientRect();
+   return {
+    formWithin:rect.top<=fr.top&&fr.bottom<=rect.bottom,
+    separatePromoBlocks:document.querySelectorAll('main > .api-fit, main > .convert, main > .next').length,
+    rightBeforeForm:fr.top-card.querySelector('.estimate-note').getBoundingClientRect().bottom,
+    checkboxBeforeSend:Boolean(newsletter.compareDocumentPosition(send)&Node.DOCUMENT_POSITION_FOLLOWING),
+    copyEnabled:!copy.disabled,
+    horizontalOverflow:document.documentElement.scrollWidth>innerWidth
+   };
+  });
+  expect(report.formWithin).toBe(true);
+  expect(report.separatePromoBlocks).toBe(0);
+  expect(report.rightBeforeForm).toBeLessThan(40);
+  expect(report.checkboxBeforeSend).toBe(true);
+  expect(report.copyEnabled).toBe(true);
+  expect(report.horizontalOverflow).toBe(false);
+  await context.close();
+ }
 });
 test('configured sender POSTs only the scenario; unsubscribed by default',async({page})=>{
  const script='https://script.google.com/macros/s/AKfycTESTCODE/exec';
@@ -193,7 +250,7 @@ test('marketing API workflow text does not claim verified connector',async({page
  await expect(page.locator('#integrations')).toContainText('Live connector compatibility is verified');
  await page.goto(base);
  await expect(page.locator('#api-fit')).toContainText('existing CRM');
- await expect(page.locator('#api-fit')).toContainText('Compatibility is confirmed');
+ await expect(page.locator('#api-fit')).toContainText('connect via API');
 });
 test('only allowlisted UTMs enter the separate paid-audit form',async({page})=>{
  await page.goto(base+'?utm_source=linkedin&utm_campaign=nov');
