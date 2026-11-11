@@ -25,6 +25,9 @@ test('homepage, calculator, private policy and JS are served with correct status
  assert.ok(comparison.indexOf('id="software-controls"')<comparison.indexOf('id="workers"'));
  assert.match(comparison,/data-expand="workers"/);
  assert.match(comparison,/id="mailer-state"/);
+ assert.ok(comparison.indexOf('id="current-overhead"')<comparison.indexOf('id="email-form"'));
+ assert.ok(comparison.indexOf('id="email-form"')<comparison.indexOf('</aside>'));
+ assert.doesNotMatch(comparison,/<section class="(?:api-fit|convert|next)"/);
  assert.doesNotMatch(comparison,/tally\.so\/r\/ArK9ZD/);
  const privacy=await (await get('/privacy.html')).text();
  assert.match(privacy,/Privacy/);
