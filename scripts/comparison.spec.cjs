@@ -130,7 +130,7 @@ test('when mail sender is disconnected, consent stays visible and copy works',as
  await expect(page.locator('#consent-control')).toBeVisible();
  await expect(page.locator('#newsletter')).not.toBeChecked();
  await expect(page.locator('#newsletter')).toBeDisabled();
- await expect(page.locator('#mailer-state')).toContainText('one-time Google account authorization');
+ await expect(page.locator('#mailer-state')).toContainText('Copy your estimate instead');
  await expect(page.locator('#copy')).toBeVisible();
  await expect(page.locator('#copy')).not.toHaveClass(/secondary/);
  const order=await page.locator('#email-form').evaluate(form=>{
