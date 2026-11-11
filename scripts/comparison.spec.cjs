@@ -202,6 +202,18 @@ test('mobile CTA is large, adjacent to the result, and no unused form consumes s
   await context.close();
  }
 });
+test('copy estimate works without a sender and confirms success beside the button',async({page})=>{
+ await page.addInitScript(()=>{
+  Object.defineProperty(navigator,'clipboard',{configurable:true,value:{writeText:async(text)=>{window.__copiedReport=text;}}});
+ });
+ await page.goto(base);
+ await expect(page.locator('#email-form')).toBeHidden();
+ await page.locator('#copy').click();
+ await expect(page.locator('#copy-status')).toContainText('Copied estimate');
+ const content=await page.evaluate(()=>window.__copiedReport);
+ expect(content).toContain('Review time: 16 hours/month');
+ expect(content).toContain('Value of this time: €224/month');
+});
 test('configured sender POSTs only the scenario; unsubscribed by default',async({page})=>{
  const script='https://script.google.com/macros/s/AKfycTESTCODE/exec';
  await page.route('**/mailer-config.mjs',route=>route.fulfill({
