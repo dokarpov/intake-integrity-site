@@ -38,7 +38,7 @@ export default {async fetch(request){
   if(!path||path.endsWith("/"))path+="index.html";
   if(!Object.hasOwn(files,path))return new Response("Not found",{status:404,headers:head});
   let body=files[path];
-  if(path.endsWith(".html"))body=body.replace(/<head>/i,"<head>"+meta).replace(/<body([^>]*)>/i,(_,attrs)=>"<body"+attrs+">"+banner);
+  if(path.endsWith(".html"))body=body.replace(/<head>/i,"<head>"+meta).replace(/<body([^>]*)>/i,(_,attrs)=>"<body"+attrs+">"+(path==="comparison.html"?"":banner));
   const type=mimes[path.split(".").pop()]||"application/octet-stream";
   return new Response(request.method==="HEAD"?null:body,{status:200,headers:{...head,"Content-Type":type}});
 }};
