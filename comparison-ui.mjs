@@ -33,6 +33,7 @@ function trustedMailerUrl(){
 const mailerUrl=trustedMailerUrl();
 function updateDeliveryGate(){
  $('send').disabled=!mailerUrl;
+ $('copy').classList.toggle('secondary',Boolean(mailerUrl));
  // Keep the optional consent visible directly above Send, including before activation.
  $('newsletter').disabled=!mailerUrl;
  $('mailer-state').textContent=mailerUrl
