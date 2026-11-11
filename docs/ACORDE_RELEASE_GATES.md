@@ -10,6 +10,14 @@ The customer-facing estimate uses **three prefilled sliders** (staff, records pe
 
 For email: the calculator now has a **Tally-free direct-mail transport** implemented as Google Apps Script, with server-side recalculation, bounded send quotas, a fixed no-spam report, and separately confirmed optional consent. [Owner activation and test instructions](GOOGLE_MAIL_SENDER.md). The mail sender executes under the owner's Google account, **but still requires the owner to authorize/deploy Apps Script and configure `mailer-config.mjs`**. Until activation, the automatic sending action stays disabled and copy-only; never claim actual delivery. Automated newsletters are not implemented; only a private confirmed opt-in ledger is designed. Tally is no longer involved in report sending or subscription; existing paid-audit enquiry service remains separate and unchanged. The user-facing form displays the **optional unchecked newsletter checkbox directly ABOVE Send**. It appears disabled when the owner-authorized sender is unavailable; a report request alone never subscribes someone. The email is now short: estimate, proposed deduplication API workflow and simple CRM/source reply. No five-record or multi-day diagnostic task. [API-first CRM-native integration contract](API_FIRST_CRM_INTEGRATION.md) documents the proposed one-source/one-CRM pilot and its separate provider verification gate. No live connector claims.
 
+## Customer-facing UX rule — 11 November 2026
+
+User-validated rule: **If the element is not needed to understand the decision or complete the next action, remove it.** Small text, repeated explanations, ornamental headers and inactive controls are not useful conversion content. Primary business actions must be unmistakably more prominent than supporting actions.
+
+For the calculator: user selects current process + three sliders → sees relevant figures → full-width **Request a paid audit** button immediately beneath results. Secondary **Copy estimate** is available; calculation assumptions open only on request. Once owner-authorized sending is live, enable an optional email form below the primary action with newsletter opt-in visibly unchecked. **Do not display unusable email controls or descriptions of internal infrastructure** before integration. Keep legal privacy access in the form when collecting data. Remove redundant navigation, staging banners and marketing copy from the calculator; the staging environment remains protected by noindex/security headers.
+
+Validate the visual hierarchy at real mobile widths 320/375/390, including the action button's size and its distance from the result. Successful technical tests alone do not establish that an important action is noticeable. Hold production promotion for owner visual approval.
+
 ## Acceptance matrix — claim only with proof
 
 | Priority | Gate | Minimum repeatable acceptance criteria | Current evidence / blocker |
