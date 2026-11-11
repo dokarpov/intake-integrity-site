@@ -152,6 +152,7 @@ button:disabled{opacity:.5;cursor:not-allowed}
  .stat{padding:11px}
  .cost-row{margin-top:10px}
 }
+.copy-status{font-size:12px;color:#555;margin:0;text-align:center;min-height:0;line-height:1.35}
 </style>
 </head>
 <body><div class="wrap">
@@ -205,6 +206,7 @@ button:disabled{opacity:.5;cursor:not-allowed}
 <div class="conversion">
 <a class="action primary-cta" id="audit-link" target="_blank" rel="noopener noreferrer" href="https://tally.so/r/5XbAeE">Request a paid audit</a>
 <button type="button" id="copy" class="copy-action">Copy estimate</button>
+<p id="copy-status" class="copy-status" role="status" aria-live="polite"></p>
 </div>
 <button type="button" id="assumptions-toggle" class="assumptions-action" aria-controls="estimate-assumptions" aria-expanded="false">Calculation assumptions</button>
 <p id="estimate-assumptions" hidden>20 workdays · 10 min per check · €28 per hour · 50% reduction scenario. Estimated time value.</p>
