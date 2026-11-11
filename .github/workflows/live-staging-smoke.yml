@@ -67,12 +67,17 @@ jobs:
           grep -Fq 'No paid tool' /tmp/acorde-smoke/comparison.body
           grep -Fq 'We use a tool' /tmp/acorde-smoke/comparison.body
           grep -Fq 'data-expand="workers"' /tmp/acorde-smoke/comparison.body
+          if grep -Fq 'data-expand="issueRate"' /tmp/acorde-smoke/comparison.body; then echo 'FAIL: redundant rate expansion'; exit 1; fi
           grep -Fq 'data-expand="toolMonthly"' /tmp/acorde-smoke/comparison.body
           grep -Fq 'id="tool-inline-effect"' /tmp/acorde-smoke/comparison.body
           grep -Fq 'Estimated review time' /tmp/acorde-smoke/comparison.body
           grep -Fq 'id="workers"' /tmp/acorde-smoke/comparison.body
           grep -Fq 'id="newsletter"' /tmp/acorde-smoke/comparison.body
-          grep -Fq 'id="mailer-state"' /tmp/acorde-smoke/comparison.body
+          grep -Fq 'class="action primary-cta"' /tmp/acorde-smoke/comparison.body
+          grep -Fq 'Request a paid audit' /tmp/acorde-smoke/comparison.body
+          grep -Fq 'id="email-form"' /tmp/acorde-smoke/comparison.body
+          if grep -Fq 'TESTING PREVIEW' /tmp/acorde-smoke/comparison.body; then echo 'FAIL: noisy preview banner'; exit 1; fi
+          if grep -Fq 'id="mailer-state"' /tmp/acorde-smoke/comparison.body; then echo 'FAIL: nonfunctional sender shown'; exit 1; fi
           grep -Fq 'id="consent-control"' /tmp/acorde-smoke/comparison.body
           grep -Fq 'export const MAILER_URL' /tmp/acorde-smoke/mailconfig.body
           if grep -Fq 'tally.so/r/ArK9ZD' /tmp/acorde-smoke/comparison.body; then echo 'FAIL: old Tally newsletter route'; exit 1; fi
