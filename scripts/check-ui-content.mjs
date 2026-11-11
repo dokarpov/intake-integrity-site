@@ -48,5 +48,8 @@ assert.match(comp,/id="newsletter"[^>]*name="newsletter"[^>]*value="yes"/,'conse
 assert.ok(!/id="newsletter"[^>]*checked/.test(comp),'newsletter must not be preselected');
 const home=readFileSync('index.html','utf8');
 assert.ok(home.includes('id="integrations"')&&home.includes('existing CRM'),'describe CRM-native integration');
-assert.ok(comp.includes('id="api-fit"')&&comp.includes('proposed API integration'),'describe integrated product value');
+assert.ok(comp.includes('id="api-fit"')&&comp.includes('Acorde can connect via API'),'describe integration in one compact line');
+assert.ok(comp.indexOf('id="results"')<comp.indexOf('id="email-form"') && comp.indexOf('id="email-form"')<comp.indexOf('</aside>'),'email form must be inside live result card');
+assert.ok(!/<section class="(?:api-fit|convert|next)"/.test(comp),'no promotional sections before result capture');
+assert.ok(comp.indexOf('id="current-overhead"')<comp.indexOf('id="email-form"'),'email capture directly follows the result');
 console.log('Acorde UI content and progressive disclosure gates PASS');
