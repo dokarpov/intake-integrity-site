@@ -96,6 +96,26 @@ button:disabled{opacity:.5;cursor:not-allowed}
 .api-fit{padding:19px 0}.api-fit h2{font-size:22px}
 .next{flex-direction:column;align-items:flex-start}.next .action{width:100%}
 }
+
+/* The capture flow sits inside the live result card: no intermediary section. */
+.result .email-form{background:transparent;border:0;border-top:1px solid var(--line);border-radius:0;padding:15px 0 0;margin:17px 0 0}
+.result .email-form h3{font-size:20px;letter-spacing:-.045em;margin:0 0 11px}
+.result .email-form .email-line input{width:100%;height:45px;border:1px solid #bdbdbd;padding:10px 12px;border-radius:5px;background:#fff;color:var(--ink);font-size:16px}
+.result .email-form .optin{margin:11px 0 0;gap:8px}
+.result .email-form .optin label{font-size:11px;font-weight:400;line-height:1.45}
+.result .result-actions{display:grid;grid-template-columns:1fr 1fr;gap:9px;margin-top:12px}
+.result .result-actions .action{width:100%;padding:10px 5px;min-height:44px;margin:0;font-size:12px}
+.result .result-actions .action.secondary{background:#fff;color:var(--ink)}
+.result .mail-hint{margin:9px 0 0!important;font-size:11px!important;color:#777!important}
+.result .api-mini{margin:14px 0 0;color:#666;font-size:11px;line-height:1.5}
+.result .api-mini a{font-weight:700;white-space:nowrap}
+.sr-only{position:absolute!important;width:1px!important;height:1px!important;overflow:hidden!important;clip:rect(0,0,0,0)!important;white-space:nowrap!important}
+@media(max-width:620px){
+.result{padding:17px}
+.result .email-form{margin-top:13px;padding-top:13px}
+.result .result-actions{gap:7px}
+.result .result-actions .action{font-size:11px}
+}
 </style>
 </head>
 <body><div class="wrap">
@@ -148,32 +168,19 @@ button:disabled{opacity:.5;cursor:not-allowed}
 </div>
 <div class="cost-row"><span>Current monthly cost</span><b id="current-overhead">€448</b></div>
 <p id="software-explain" class="cost-detail">€448 staff review + €0 existing software</p>
-<p class="formula" id="model-explanation">5 × 12 × 20 days × 8% × 10 min = 16 h</p>
-<p class="estimate-note">*Illustrative 50% reduction. Assumes 20 workdays, 10 min per check and €28 per staff hour. Staff-time value is not cash saved.</p>
-</aside>
-</div>
-<section class="api-fit" id="api-fit" aria-labelledby="api-heading">
-<div class="eyebrow">Works with your CRM · proposed API integration</div>
-<h2 id="api-heading">Fewer duplicate checks, same sales tools</h2>
-<p>Acorde can be scoped to check likely duplicates and route uncertain matches within your existing CRM. Compatibility is confirmed before setup.</p>
-</section>
-<section class="convert" id="send-result" aria-label="Email estimate and optional updates">
-<div>
-<div class="eyebrow">Your results</div><h2>Send this estimate by email</h2>
-<p>Figures and integration options, in one email.</p>
-</div>
-<form id="email-form" class="email-form" method="POST" novalidate>
-<label for="recipient">Your email address</label>
-<div class="email-line"><input type="email" name="email" id="recipient" autocomplete="email" placeholder="you@company.com" required maxlength="254"></div>
-<div class="optin" id="consent-control"><input type="checkbox" id="newsletter" name="newsletter" value="yes"><label for="newsletter">I agree to receive occasional practical emails about CRM data quality and duplicate records. Optional; confirmation by email. I can unsubscribe anytime.</label></div>
-<button class="action send-action" type="submit" id="send" disabled>Send my estimate</button>
-<p id="mailer-state" class="mail-hint" role="status">Direct email delivery is not connected yet. You can copy the estimate below.</p>
+<p class="estimate-note">*Example: 20 workdays, 10 min per check, €28/hour and 50% fewer reviews. Time value is illustrative.</p>
+<form id="email-form" class="email-form" method="POST" novalidate aria-label="Get your estimate">
+<h3>Keep this estimate</h3>
+<div class="email-line"><label for="recipient" class="sr-only">Your email address</label><input type="email" name="email" id="recipient" autocomplete="email" placeholder="Email address" required maxlength="254"></div>
+<div class="optin" id="consent-control"><input type="checkbox" id="newsletter" name="newsletter" value="yes"><label for="newsletter">Send me occasional useful CRM tips. Optional; confirm by email. Unsubscribe anytime.</label></div>
+<div class="result-actions"><button class="action send-action" type="submit" id="send" disabled>Email estimate</button><button type="button" class="action secondary" id="copy">Copy estimate</button></div>
+<p id="mailer-state" class="mail-hint" role="status">Email delivery is being connected. Copy works now.</p>
 <label class="trap" for="companyFax" aria-hidden="true">Leave blank</label><input class="trap" type="text" id="companyFax" name="companyFax" autocomplete="off" tabindex="-1" aria-hidden="true">
-<div class="actions"><button type="button" class="action secondary" id="copy">Copy estimate</button></div>
 <p id="email-status" role="status" class="status"></p>
 </form>
-</section>
-<section class="next"><div><h2>Check CRM compatibility</h2><p>Start with one enquiry source and your current CRM.</p></div><a class="action" id="audit-link" target="_blank" rel="noopener noreferrer" href="https://tally.so/r/5XbAeE">Request a workflow audit</a></section>
+<p id="api-fit" class="api-mini">Acorde can connect via API to your existing CRM. <a id="audit-link" target="_blank" rel="noopener noreferrer" href="https://tally.so/r/5XbAeE">Request a paid audit</a></p>
+</aside>
+</div>
 </main><div class="footer">Acorde · scenario calculator for exploration only · <a href="./privacy.html">Privacy and data use</a></div></div>
 <script type="module" src="./comparison-ui.mjs"></script>
 </body></html>
