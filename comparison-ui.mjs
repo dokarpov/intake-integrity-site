@@ -32,20 +32,16 @@ function trustedMailerUrl(){
 }
 const mailerUrl=trustedMailerUrl();
 function updateDeliveryGate(){
+ $('email-form').hidden=!mailerUrl;
  $('send').disabled=!mailerUrl;
- $('copy').classList.toggle('secondary',Boolean(mailerUrl));
- // Keep the optional consent visible directly above Send, including before activation.
  $('newsletter').disabled=!mailerUrl;
- $('mailer-state').textContent=mailerUrl
-  ? 'Email sending is available.'
-  : 'Email sending is not connected yet. Copy your estimate instead.';
 }
 // Slider max values control drag precision, not company-size eligibility.
 // "More +" extends the scale without resetting the selected value.
 const RANGE_SCALES={
  workers:[20,100,1000,10000],
  recordsPerWorkerDay:[40,200,1000,10000],
- issueRate:[20,50,100],
+ issueRate:[50],
  toolMonthly:[500,2000,20000,1000000]
 };
 function rangeLabel(id,max){
@@ -71,7 +67,13 @@ function render(){
 function setMode(next){
  const changed=mode!==next;
  mode=next;
- for(const button of document.querySelectorAll('[data-baseline]')){
+ $('assumptions-toggle').addEventListener('click',()=>{
+ const button=$('assumptions-toggle'),details=$('estimate-assumptions');
+ const open=button.getAttribute('aria-expanded')==='true';
+ button.setAttribute('aria-expanded',String(!open));
+ details.hidden=open;
+});
+for(const button of document.querySelectorAll('[data-baseline]')){
   button.setAttribute('aria-pressed',String(button.dataset.baseline===mode));
  }
  const software=$('software-controls');
