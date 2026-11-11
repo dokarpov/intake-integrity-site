@@ -146,12 +146,26 @@ $('email-form').addEventListener('submit',event=>{
 });
 $('copy').addEventListener('click',async()=>{
  const report=reportText(values());
+ let copied=false;
  try{
-  await navigator.clipboard.writeText(report);
-  $('email-status').textContent='Copied your estimate and assumptions.';
- }catch{
-  $('email-status').textContent='Copy is unavailable in this browser. Try selecting the results above.';
+  if(navigator.clipboard?.writeText){
+   await navigator.clipboard.writeText(report);
+   copied=true;
+  }
+ }catch{ /* Legacy copy fallback below */ }
+ if(!copied){
+  const field=document.createElement('textarea');
+  field.value=report;
+  field.setAttribute('readonly','');
+  field.style.position='fixed';
+  field.style.opacity='0';
+  document.body.append(field);
+  field.focus();
+  field.select();
+  try{copied=Boolean(document.execCommand?.('copy'));}catch{copied=false;}
+  field.remove();
  }
+ $('copy-status').textContent=copied?'Copied estimate':'Copy unavailable in this browser';
 });
 const audit=new URL('https://tally.so/r/5XbAeE');
 audit.searchParams.set('offer','audit');
