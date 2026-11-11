@@ -36,8 +36,8 @@ function updateDeliveryGate(){
  // Keep the optional consent visible directly above Send, including before activation.
  $('newsletter').disabled=!mailerUrl;
  $('mailer-state').textContent=mailerUrl
-  ? 'Email sending is connected. You will see a confirmation once the request is accepted.'
-  : 'Direct sending needs a one-time Google account authorization. No report will be sent yet. Use Copy estimate instead.';
+  ? 'Email sending is available.'
+  : 'Email sending is not connected yet. Copy your estimate instead.';
 }
 // Slider max values control drag precision, not company-size eligibility.
 // "More +" extends the scale without resetting the selected value.
@@ -64,8 +64,6 @@ function render(){
  $('mode-caption').textContent=mode==='tool'?'With your current tool':'Manual checks';
  $('software-explain').textContent=euro(r.currentStaffCost)+' staff review + '+euro(r.currentSoftware)+' existing tool';
  $('tool-inline-effect').textContent='Adds '+euro(r.currentSoftware)+'/month to cost. Review rate stays as selected.';
- $('model-explanation').textContent=v.workers+' × '+v.recordsPerWorkerDay+' × '+ASSUMPTIONS.workingDays+
-   ' days × '+v.issueRate+'% × '+ASSUMPTIONS.minutesPerAffectedRecord+' min = '+number(r.attentionHours)+' h';
  for(const id of sliders)setProgress($(id));
  return r;
 }
@@ -122,7 +120,7 @@ $('email-form').addEventListener('submit',event=>{
  event.preventDefault();
  const address=$('recipient').value.trim();
  if(!mailerUrl){
-  $('email-status').textContent='Automatic emailing is not connected yet. Use Copy estimate instead.';
+  $('email-status').textContent='Email sending is not connected yet. Copy your estimate instead.';
   return;
  }
  if(!$('recipient').checkValidity()||!address){
