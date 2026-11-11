@@ -1,0 +1,98 @@
+name: Acorde calculator staging QA
+on:
+  push:
+    branches:
+      - 'testing/**'
+    paths:
+      - 'index.html'
+      - 'calculator.html'
+      - 'scripts/check-ui-content.mjs'
+      - 'calculator-engine.mjs'
+      - 'calculator-ui.mjs'
+      - 'comparison.html'
+      - 'comparison-engine.mjs'
+      - 'comparison-ui.mjs'
+      - 'mailer-config.mjs'
+      - 'mail/Code.gs'
+      - 'scripts/apps-script-mailer.test.mjs'
+      - 'scripts/comparison-engine.test.mjs'
+      - 'scripts/comparison.spec.cjs'
+      - 'staging-server.mjs'
+      - 'package.json'
+      - 'scripts/staging-server.test.mjs'
+      - 'scripts/build-staging-neon-preview.mjs'
+      - 'scripts/static-neon-preview.test.mjs'
+      - 'scripts/revenue-calculator.test.mjs'
+      - 'scripts/revenue-calculator.spec.cjs'
+      - 'scripts/check_public.py'
+      - '.github/workflows/calculator-staging.yml'
+  pull_request:
+    branches:
+      - main
+    paths:
+      - 'index.html'
+      - 'calculator.html'
+      - 'scripts/check-ui-content.mjs'
+      - 'calculator-engine.mjs'
+      - 'calculator-ui.mjs'
+      - 'comparison.html'
+      - 'comparison-engine.mjs'
+      - 'comparison-ui.mjs'
+      - 'mailer-config.mjs'
+      - 'mail/Code.gs'
+      - 'scripts/apps-script-mailer.test.mjs'
+      - 'scripts/comparison-engine.test.mjs'
+      - 'scripts/comparison.spec.cjs'
+      - 'staging-server.mjs'
+      - 'package.json'
+      - 'scripts/staging-server.test.mjs'
+      - 'scripts/build-staging-neon-preview.mjs'
+      - 'scripts/static-neon-preview.test.mjs'
+      - 'scripts/revenue-calculator.test.mjs'
+      - 'scripts/revenue-calculator.spec.cjs'
+      - 'scripts/check_public.py'
+      - '.github/workflows/calculator-staging.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  functional:
+    runs-on: ubuntu-latest
+    timeout-minutes: 12
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Test calculation accuracy and public privacy rules
+        run: |
+          node --test scripts/revenue-calculator.test.mjs scripts/comparison-engine.test.mjs scripts/apps-script-mailer.test.mjs scripts/staging-server.test.mjs
+          node --test mvp/engine.test.mjs mvp/scenarios-12.test.mjs
+          python3 scripts/check_public.py
+          node scripts/check-ui-content.mjs
+          node --check calculator-engine.mjs
+          node --check calculator-ui.mjs
+          node --check comparison-engine.mjs
+          node --check comparison-ui.mjs
+          node --check mailer-config.mjs
+          node --check staging-server.mjs
+      - name: Generate and verify isolated staging bundle
+        run: |
+          node scripts/build-staging-neon-preview.mjs
+          node --check dist/staging-function/index.mjs
+          node --test scripts/static-neon-preview.test.mjs
+      - name: Install browser test dependencies
+        run: |
+          npm install --no-save @playwright/test
+          npx playwright install --with-deps chromium
+      - name: Run static preview server
+        run: |
+          python3 -m http.server 4173 --bind 127.0.0.1 > /tmp/acorde-calculator.log 2>&1 &
+          for i in $(seq 1 30); do
+            if curl --fail --silent http://127.0.0.1:4173/calculator.html >/dev/null; then exit 0; fi
+            sleep 1
+          done
+          cat /tmp/acorde-calculator.log
+          exit 1
+      - name: Browser QA of conversion funnel
+        run: npx playwright test scripts/revenue-calculator.spec.cjs scripts/comparison.spec.cjs --browser chromium --workers=1 --reporter=line

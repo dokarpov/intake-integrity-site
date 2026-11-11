@@ -17,13 +17,13 @@ jobs:
         with:
           node-version: '22'
       - name: Run simulated intake regression scenarios
-        run: node --test mvp/engine.test.mjs mvp/scenarios-12.test.mjs
+        run: node --test mvp/engine.test.mjs mvp/scenarios-12.test.mjs scripts/revenue-calculator.test.mjs
       - name: Scan publishable files
         run: python3 scripts/check_public.py
       - name: Check public artifact allowlist
         run: |
           mkdir -p dist
-          cp index.html decision-lab.html setup.html dist/
+          cp index.html privacy.html calculator.html calculator-engine.mjs calculator-ui.mjs decision-lab.html setup.html dist/
           mkdir -p dist/preview
           cp preview/index.html preview/operator.html preview/tokens.css preview/integrations.html dist/preview/
           mkdir -p dist/mvp
@@ -32,7 +32,7 @@ jobs:
           cp testing/integrity/index.html testing/integrity/engine.mjs testing/integrity/policy.mjs dist/testing/integrity/
           mkdir -p dist/testing/story
           cp testing/story/index.html dist/testing/story/
-          test "$(find dist -type f | wc -l)" -eq 13
+          test "$(find dist -type f | wc -l)" -eq 17
   deploy:
     needs: verify
     environment:
@@ -49,7 +49,7 @@ jobs:
         run: |
           python3 scripts/check_public.py
           mkdir -p dist/preview
-          cp index.html decision-lab.html setup.html dist/
+          cp index.html privacy.html calculator.html calculator-engine.mjs calculator-ui.mjs decision-lab.html setup.html dist/
           cp preview/index.html preview/operator.html preview/tokens.css preview/integrations.html dist/preview/
           mkdir -p dist/mvp
           cp mvp/index.html mvp/engine.mjs dist/mvp/
@@ -57,7 +57,7 @@ jobs:
           cp testing/integrity/index.html testing/integrity/engine.mjs testing/integrity/policy.mjs dist/testing/integrity/
           mkdir -p dist/testing/story
           cp testing/story/index.html dist/testing/story/
-          test "$(find dist -type f | wc -l)" -eq 13
+          test "$(find dist -type f | wc -l)" -eq 17
       - uses: actions/configure-pages@v5
       - uses: actions/upload-pages-artifact@v3
         with:

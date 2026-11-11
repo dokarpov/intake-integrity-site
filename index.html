@@ -10,172 +10,214 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
 <style>
-:root{color-scheme:light;--bg:#fff;--ink:#222;--muted:#555;--soft:#777;--rule:#e3e3e3;--faint:#f8f8f8;--display:"Space Grotesk",Arial,sans-serif;--body:"DM Sans",Arial,sans-serif}
+
+:root{--ink:#242424;--muted:#606060;--soft:#767676;--border:#dedede;--display:"Space Grotesk",Arial,sans-serif;--body:"DM Sans",Arial,sans-serif}
 *,*::before,*::after{box-sizing:border-box}
-html{scroll-behavior:smooth;-webkit-text-size-adjust:100%;text-size-adjust:100%;background:#fff}
-body{margin:0;min-width:320px;background:#fff;color:var(--ink);font:400 16px/1.54 var(--body);-webkit-font-smoothing:antialiased}
-button,input,textarea,select{font:inherit}button{cursor:pointer}
-button:disabled{cursor:not-allowed;opacity:.58}
-:focus-visible{outline:2px solid #222;outline-offset:4px}
-.container{width:min(100% - 72px,1100px);margin-inline:auto}
-header{height:76px;display:flex;align-items:center;justify-content:space-between;gap:15px;border-bottom:1px solid var(--rule)}
-.logo{font:700 20px/1 var(--display);letter-spacing:-.075em;text-decoration:none;color:var(--ink)}
-.logo span{color:#999}
-.small-label{font-size:11px;letter-spacing:.075em;text-transform:uppercase;font-weight:700;color:#727272}
-.hero{padding:83px 0 81px;display:grid;grid-template-columns:minmax(0,1.2fr) minmax(0,.8fr);gap:70px;align-items:center}
-h1,h2,h3,p{margin-top:0}
-h1,h2,h3{font-family:var(--display);font-weight:600;letter-spacing:-.055em;text-wrap:balance}
-h1{font-size:clamp(44px,5.2vw,70px);line-height:1.045;max-width:650px;margin:18px 0 24px}
-h1 span{color:#777}
-.hero p{max-width:580px;font-size:18px;line-height:1.65;color:var(--muted);margin:0 0 27px}
-.primary{appearance:none;border:1px solid #222;border-radius:7px;background:#222;color:#fff;padding:12px 20px;font-weight:700;font-size:14px;min-height:48px;display:inline-flex;align-items:center;justify-content:center;text-decoration:none;text-align:center}
-.primary:hover{background:#404040}.primary:focus-visible{outline-color:#555}
-.plain-link{appearance:none;border:0;background:none;padding:8px 0;color:#555;text-decoration:underline;text-underline-offset:4px;font-size:13px;font-weight:600}
-.hero-evidence{border-left:1px solid #d4d4d4;padding:4px 0 4px 26px}
-.hero-evidence p{font-size:14px;margin:11px 0 0;color:#565656;line-height:1.65}
-.hero-evidence b{font-family:var(--display);font-size:17px;font-weight:600;line-height:1.3;letter-spacing:-.03em}
-.hero-claim{margin-top:23px;padding-top:18px;border-top:1px solid var(--rule);color:#666;font-size:12px}
-.experience{padding:61px 0 87px;border-top:1px solid var(--rule);scroll-margin-top:15px}
-.experience-heading{max-width:700px;margin-bottom:32px}
-h2{font-size:clamp(32px,3.35vw,46px);line-height:1.14;margin:12px 0 11px}
-.experience-heading p{font-size:15px;color:var(--muted);line-height:1.65;margin:0}
-.flow{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.03fr);gap:0;border:1px solid #dcdcdc;border-radius:9px;overflow:hidden}
-.intake,.decision{padding:clamp(21px,3.2vw,35px);min-width:0}
-.intake{border-right:1px solid #e0e0e0}.panel-heading{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:22px}
-.panel-heading strong{font:600 17px/1.25 var(--display);letter-spacing:-.035em}
-.case-count{font:500 11px/1.4 ui-monospace,SFMono-Regular,Consolas,monospace;color:#666;white-space:nowrap}
-.field{margin:0 0 17px}
-.field label{display:block;font-size:12px;color:#4b4b4b;font-weight:700;margin-bottom:6px}
-.field input,.field textarea,.field select{display:block;border:1px solid #cfcfcf;background:#fff;color:#222;border-radius:5px;padding:11px 12px;width:100%;min-width:0;min-height:45px;font-size:15px;line-height:1.48}
-.field textarea{min-height:90px;resize:vertical}
-.field input:focus,.field textarea:focus,.field select:focus{border-color:#444;outline:0;box-shadow:0 0 0 2px #dedede}
-.provenance{font-size:12px;color:#6a6a6a;line-height:1.52;margin:0 0 23px}
-.intake-footer{border-top:1px solid var(--rule);padding-top:18px;display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap}
-.intake-footer .primary{width:100%}
-.status{font:600 11px/1.4 ui-monospace,SFMono-Regular,Consolas,monospace;color:#5d5d5d;letter-spacing:.02em;text-transform:uppercase}
-.decision h3{font-size:clamp(24px,2.7vw,33px);line-height:1.16;margin:0 0 11px}
-.summary{font-size:14px;line-height:1.63;color:var(--muted);margin:0 0 20px}
-.result-body[hidden],.review[hidden],.hold-note[hidden],#action-button[hidden]{display:none!important}
-.history{border-top:1px solid var(--rule);padding-top:18px;margin-top:22px}
-.history h4{font:600 15px/1.3 var(--display);letter-spacing:-.035em;margin:0 0 17px}
-.detail{display:grid;grid-template-columns:116px minmax(0,1fr);gap:12px;padding:10px 0;border-top:1px solid #ededed;align-items:start;font-size:13px;line-height:1.55}
-.detail:first-of-type{border-top:0}
-.detail dt{color:#777;margin:0}.detail dd{margin:0;color:#242424;overflow-wrap:anywhere;font-weight:500}
-.intent{padding:16px 0;border-top:1px solid var(--rule);border-bottom:1px solid var(--rule);font-size:14px;line-height:1.58;overflow-wrap:anywhere}
-.intent b{display:block;font-size:11px;color:#777;text-transform:uppercase;letter-spacing:.07em;margin-bottom:5px}
-.evidence{font-size:12px;color:#666;line-height:1.6;margin:16px 0 0}
-.review{border-top:1px solid #ddd;margin-top:21px;padding-top:19px}
-.review h4{font:600 16px/1.3 var(--display);letter-spacing:-.035em;margin:0 0 9px}
-.review p{font-size:13px;line-height:1.57;color:#555;margin:0 0 16px}
-.candidate-list{display:grid;gap:11px;margin:16px 0 22px}
-.candidate{border:1px solid #dedede;border-radius:6px;padding:13px}
-.candidate strong{display:block;font:600 14px/1.35 var(--display)}
-.candidate p{margin:5px 0 0;font-size:12px;line-height:1.5}
-.verify{display:flex;align-items:flex-start;gap:9px;font-size:13px;color:#444;line-height:1.48;margin:8px 0 17px}
-.verify input{width:17px;height:17px;flex:0 0 17px;accent-color:#222;margin:2px 0}
-.review .primary{width:100%}
-.hold-note{padding:12px 0 0;color:#666;font-size:12px;line-height:1.6}
-.history-toggle{margin-top:29px;border-top:1px solid var(--rule);padding:15px 0}
-.history-toggle summary{cursor:pointer;font-size:13px;font-weight:700;color:#444;list-style:none}
-.history-toggle summary::after{content:"";display:inline-block;margin-left:9px;border-bottom:1px solid;border-right:1px solid;width:7px;height:7px;transform:rotate(45deg);vertical-align:3px}
-.history-toggle[open] summary::after{transform:rotate(225deg);vertical-align:0}
-.event{font-size:12px;padding:10px 0;border-bottom:1px solid #eee;line-height:1.5;color:#555}
-.endnote{padding:31px 0 50px;color:#6b6b6b;font-size:12px;line-height:1.7;border-top:1px solid #e5e5e5}
-.endnote strong{color:#333}
-.footerline{display:flex;justify-content:space-between;gap:26px;flex-wrap:wrap}
-@media(max-width:850px){.hero{grid-template-columns:1fr;gap:32px;padding:60px 0 64px}.hero-evidence{max-width:600px}h1{font-size:clamp(40px,7.4vw,60px)}}
-@media(max-width:640px){
-.container{width:calc(100% - 36px)}
-header{height:66px}.logo{font-size:19px}
-.hero{padding:48px 0 52px;gap:30px}
-h1{font-size:clamp(37px,9.6vw,46px);line-height:1.075;letter-spacing:-.055em;margin:14px 0 19px}
-.hero p{font-size:16px;line-height:1.58;margin-bottom:22px}
-.hero-evidence{padding-left:15px}.hero-evidence b{font-size:15px}
-.hero-evidence p{font-size:13px}
-.experience{padding:49px 0 63px}
-h2{font-size:clamp(29px,7.3vw,36px)}
-.experience-heading p{font-size:14px}
-.flow{grid-template-columns:1fr;border-radius:7px}
-.intake,.decision{padding:21px 19px}
-.intake{border-right:none;border-bottom:1px solid #e0e0e0}
-.panel-heading{margin-bottom:18px}
-.detail{grid-template-columns:99px minmax(0,1fr);gap:10px}
-.endnote{padding:25px 0 38px}
+html{background:#fff;scroll-behavior:smooth;-webkit-text-size-adjust:100%}
+body{margin:0;min-width:320px;background:#fff;color:var(--ink);font:400 15px/1.48 var(--body);-webkit-font-smoothing:antialiased;overflow-x:hidden}
+button,input,textarea,select{font:inherit}button{cursor:pointer}button:disabled{cursor:not-allowed;opacity:.58}
+a{color:inherit}:focus-visible{outline:2px solid #111;outline-offset:3px}
+.shell{width:min(calc(100% - 48px),1040px);margin-inline:auto}
+h1,h2,h3,h4,p{margin-top:0}h1,h2,h3,h4{font-family:var(--display);font-weight:600;letter-spacing:-.045em}
+.topbar{height:58px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;gap:16px}
+.logo{font:700 20px/1 var(--display);letter-spacing:-.065em}
+.site-nav-link{font-size:12px;text-decoration:underline;text-underline-offset:4px;font-weight:700;white-space:nowrap}
+.eyebrow,.step{font-size:10px;text-transform:uppercase;letter-spacing:.09em;color:#747474;font-weight:700}
+.intro{padding:28px 0 23px;max-width:750px}
+.intro h1{font-size:clamp(34px,4.5vw,56px);line-height:1.06;margin:10px 0 12px}
+.intro h1 span{color:#777}
+.intro p{margin:0;font-size:14px;line-height:1.55;color:var(--muted);max-width:650px}
+.loss-entrance{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,.86fr);gap:30px;border:1px solid var(--border);border-radius:8px;padding:23px 26px;margin:0 0 27px;align-items:center}
+.loss-copy h2{font-size:clamp(25px,2.9vw,34px);line-height:1.13;margin:6px 0 8px}
+.loss-copy h2 span{color:#777}
+.loss-copy p{font-size:13px;color:#626262;line-height:1.55;margin:0 0 13px}
+.loss-cta,.primary-action{display:inline-flex;align-items:center;justify-content:center;min-height:43px;background:#242424;border:1px solid #242424;border-radius:5px;color:white;text-decoration:none;font-weight:700;font-size:13px;padding:10px 17px;text-align:center}
+.loss-cta:hover,.primary-action:hover{background:#454545}
+.loss-action-group{display:flex;flex-wrap:wrap;align-items:center;gap:11px}
+.loss-compare{font-size:12px;font-weight:700;color:#333;text-underline-offset:4px;line-height:1.4;display:inline-flex;min-height:43px;align-items:center}
+@media(max-width:620px){.loss-action-group{align-items:flex-start;flex-direction:column;gap:6px}.loss-compare{min-height:30px}}
+.loss-foot{font-size:11px;color:#777;margin-top:9px}
+.loss-paths{border-left:1px solid var(--border);padding-left:25px}
+.loss-path-label{font-size:11px;color:#777;margin-bottom:8px}
+.loss-paths>a{display:flex;align-items:center;gap:10px;text-decoration:none;padding:9px 0;border-bottom:1px solid #ececec;min-height:40px}
+.loss-paths>a:last-of-type{border-bottom:0}
+.loss-paths>a span{font:600 10px var(--body);color:#858585;width:17px}
+.loss-paths>a b{font:600 14px var(--display);letter-spacing:-.025em}
+.loss-paths>a small{font-size:11px;color:#777;margin-left:auto;text-align:right}
+.loss-paths>a:hover b{text-decoration:underline}
+.loss-paths>p{display:none}
+.queue-title{display:flex;justify-content:space-between;align-items:baseline;gap:14px;padding:0 0 13px}
+.queue-title h2{font:600 clamp(23px,2.8vw,31px)/1.17 var(--display);letter-spacing:-.04em;margin:0}
+.queue-title p{font-size:12px;color:#777;margin:5px 0 0}
+.demo-tag{font-size:10px;color:#6e6e6e;border:1px solid var(--border);border-radius:20px;padding:5px 10px;white-space:nowrap}
+.workspace{border:1px solid var(--border);border-radius:8px;overflow:hidden;background:#fff}
+.inbox{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));border-bottom:1px solid var(--border)}
+.case-btn{min-width:0;min-height:71px;border:0;border-right:1px solid var(--border);border-radius:0;background:#fafafa;text-align:left;color:var(--ink);padding:12px 14px;display:flex;flex-direction:column;align-items:flex-start;justify-content:center;gap:2px}
+.case-btn:last-child{border-right:0}
+.case-btn[aria-pressed=true]{background:#fff;box-shadow:inset 0 3px #242424}
+.case-btn:hover:not([aria-pressed=true]){background:#f1f1f1}
+.case-kind{font-size:10px;font-weight:700;color:#777;letter-spacing:.015em}
+.case-btn strong{font:600 14px/1.27 var(--display);letter-spacing:-.025em}
+.case-btn small{font-size:11px;color:#777;line-height:1.3}
+.work-detail{padding:22px 27px 24px}
+.case-pane[hidden],#try[hidden],#proof[hidden]{display:none!important}
+.case-heading-row{display:flex;align-items:baseline;justify-content:space-between;gap:12px}
+.case-pane h3,.try-pane h3{font:600 clamp(22px,2.5vw,29px)/1.18 var(--display);margin:0 0 5px;letter-spacing:-.045em}
+#case-reason,.try-pane>p{font-size:13px;color:#777;margin:0 0 15px}
+.case-body{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.3fr);gap:24px;align-items:start}
+.incoming-note{font-size:13px;color:#474747;line-height:1.55;border:1px solid #e7e7e7;background:#fafafa;border-radius:5px;padding:12px 14px}
+.incoming-note b{display:block;font-size:10px;text-transform:uppercase;letter-spacing:.06em;color:#777;margin-bottom:5px}
+.case-subhead{font:600 14px var(--display);letter-spacing:-.025em;margin:0 0 9px}
+.candidates{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px;margin:0 0 9px}
+.candidate{min-width:0;border:1px solid var(--border);border-radius:5px;padding:11px 12px}
+.candidate b{font:600 13px/1.35 var(--display);display:block}
+.candidate small{display:block;font-size:11px;color:#6a6a6a;margin-top:4px}
+.small-note{font-size:12px;color:#666;line-height:1.5;margin:10px 0}
+.details-row{display:flex;justify-content:space-between;gap:14px;border-bottom:1px solid #eee;padding:5px 0;font-size:12px}
+.details-row dt{color:#777}.details-row dd{margin:0;font-weight:500;text-align:right}
+.case-actions{margin-top:15px;display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+.case-actions .small-note{flex:1 1 220px;margin:0}
+#feedback{margin:10px 0 0}
+#proof{border-top:1px solid var(--border);margin:17px 0 0;padding-top:17px;max-width:630px}
+.form-field{margin:0 0 12px}.form-field label{font-size:12px;font-weight:700;color:#444;display:block;margin-bottom:5px}
+.form-field input,.form-field textarea,.form-field select{width:100%;background:#fff;border:1px solid #c8c8c8;border-radius:5px;padding:10px 11px;font-size:14px;min-height:43px}
+.form-field textarea{min-height:70px;resize:vertical}
+.verify{display:flex;align-items:flex-start;gap:8px;font-size:12px;margin:7px 0 11px}
+.verify input{width:16px;height:16px;accent-color:#242424;margin:2px 0;flex:0 0 16px}
+.try-pane form{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:0 14px;max-width:720px}
+.try-pane .form-field:nth-child(3){grid-column:span 2}
+.try-pane form>.primary-action{justify-self:start;grid-column:span 2}
+.history{margin-top:18px;border-top:1px solid var(--border);padding-top:13px}
+.history-heading{display:flex;justify-content:space-between;align-items:baseline;gap:16px}
+.history h3{font:600 15px var(--display);margin:0 0 7px}
+.history .hint{font-size:11px;color:#777}
+#audit-items{max-height:115px;overflow:auto}
+.audit-line{border-top:1px solid #ededed;padding:7px 0;font-size:11px;color:#666;line-height:1.5}
+.footer{border-top:1px solid var(--border);padding:16px 0 26px;font-size:11px;line-height:1.6;color:#777;margin-top:22px}
+.footer a{text-decoration:underline}
+.reset{border:0;background:none;text-decoration:underline;color:#777;font-size:11px;margin-left:10px;padding:3px}
+@media(max-width:760px){
+.shell{width:calc(100% - 32px)}
+.intro{padding:23px 0 19px}
+.intro h1{font-size:clamp(32px,8.3vw,43px)}
+.loss-entrance{grid-template-columns:1fr;gap:11px;padding:18px 17px;margin-bottom:22px}
+.loss-copy h2{font-size:clamp(25px,6.4vw,30px)}
+.loss-copy p{margin-bottom:10px}
+.loss-paths{border-left:0;border-top:1px solid var(--border);padding:9px 0 0}
+.loss-path-label{display:none}
+.loss-paths>a{padding:7px 0}
+.loss-paths>a small{font-size:10px}
+.queue-title{align-items:flex-start}
+.case-body{grid-template-columns:1fr;gap:11px}
+.work-detail{padding:18px 16px}
+.case-btn{padding:12px 10px;min-height:73px}
+.case-btn strong{font-size:13px}
+}
+@media(max-width:440px){
+.intro h1{font-size:35px}
+.intro p{font-size:13px}
+.loss-entrance{padding:16px}
+.loss-copy h2{font-size:27px}
+.loss-cta{width:100%}
+.loss-foot{font-size:10px}
+.loss-paths>a small{max-width:44%;overflow:hidden;white-space:nowrap;text-overflow:ellipsis}
+.demo-tag{display:none}
+.inbox{grid-template-columns:repeat(2,minmax(0,1fr))}
+.case-btn{min-height:63px;padding:10px 12px}
+.case-btn:nth-child(2){border-right:0}
+.case-btn:nth-child(-n+2){border-bottom:1px solid var(--border)}
+.case-btn strong{font-size:13px}
+.case-btn small{font-size:10px}
+.case-pane h3,.try-pane h3{font-size:22px}
+.candidates{grid-template-columns:1fr;gap:7px}
+.candidate{padding:9px 11px}
+.try-pane form{grid-template-columns:1fr}
+.try-pane .form-field:nth-child(3),.try-pane form>.primary-action{grid-column:1}
+.try-pane form>.primary-action{width:100%}
 }
 @media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}}
 
-/* Application boundary: quiet, neutral, visually separate from the public narrative. */
-.workspace{border:1px solid #e3e3e3;border-radius:14px;overflow:hidden;background:#fff;isolation:isolate}
-@media(max-width:640px){.workspace{border-radius:10px}.shell{max-width:100%;overflow-x:clip}}
-.site-nav-link{color:#222;text-decoration:underline;text-underline-offset:4px;font:600 13px/1.4 var(--body)}.site-nav-link:focus-visible{outline:2px solid #222;outline-offset:4px}@media(max-width:420px){.site-nav-link{font-size:12px}.topbar{gap:12px}} </style>
-<style id="exception-first">
-:root{--ink:#242424;--muted:#616161;--line:#e4e4e4}
-html,body{background:#fff!important;color:var(--ink);-webkit-text-size-adjust:100%;text-size-adjust:100%}
-body{overflow-x:hidden;font-family:"DM Sans",Arial,sans-serif}
-.shell{width:min(calc(100% - 76px),1110px);margin:0 auto}
-.topbar{border-bottom:1px solid var(--line);height:72px;display:flex;align-items:center}
-.logo{font:700 20px "Space Grotesk",Arial,sans-serif;letter-spacing:-.075em}.logo span{color:#999}
-.intro{padding:55px 0 31px;max-width:650px;background:#fff}
-.intro h1{font:600 clamp(40px,5vw,63px)/1.07 "Space Grotesk",Arial,sans-serif;letter-spacing:-.057em;margin:14px 0 16px}
-.intro h1 span{color:#777}
-.intro p{font-size:16px;line-height:1.62;color:#555;margin:0}
-.eyebrow{font-size:11px;letter-spacing:.08em;text-transform:uppercase;font-weight:700;color:#777}
-.queue-title{display:flex;gap:15px;justify-content:space-between;align-items:baseline;flex-wrap:wrap;border-bottom:1px solid var(--line);padding:14px 0 19px}
-.queue-title h2{font:600 23px "Space Grotesk",Arial,sans-serif;letter-spacing:-.04em;margin:0}
-.queue-title p{font-size:13px;color:#666;margin:0}
-.workspace{display:grid;grid-template-columns:minmax(0,.9fr) minmax(0,1.1fr);gap:37px;align-items:start}
-.inbox{min-width:0}.case-btn{width:100%;display:block;background:#fff;border:0;border-bottom:1px solid var(--line);text-align:left;border-radius:0;color:#242424;padding:18px 10px 19px 0}
-.case-btn[aria-current=true]{box-shadow:inset 3px 0 #242424;padding-left:13px}
-.case-btn:hover{background:#fafafa}
-.case-kind{display:block;color:#777;font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.025em}
-.case-btn strong{display:block;font:600 18px "Space Grotesk",Arial,sans-serif;letter-spacing:-.035em;margin:5px 0}
-.case-btn small{color:#656565;display:block;font-size:13px;line-height:1.55}
-.case-pane{min-width:0;border-bottom:1px solid var(--line);padding:27px 0 35px}
-.case-pane[hidden],#proof[hidden]{display:none!important}
-.case-pane h3{font:600 clamp(23px,2.5vw,31px)/1.17 "Space Grotesk",Arial,sans-serif;letter-spacing:-.047em;margin:0 0 11px}
-.case-pane p{font-size:14px;line-height:1.6;color:#5a5a5a}
-.incoming-note{border-top:1px solid var(--line);border-bottom:1px solid var(--line);padding:15px 0;margin:19px 0;font-size:14px;line-height:1.6}
-.incoming-note b{display:block;font-size:11px;color:#777;text-transform:uppercase;letter-spacing:.06em;margin-bottom:5px}
-.case-subhead{font:600 16px "Space Grotesk",Arial,sans-serif;letter-spacing:-.035em;margin:22px 0 10px}
-.candidates{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;margin-bottom:17px}
-.candidate{border:1px solid var(--line);padding:13px;border-radius:5px;min-width:0;font-size:13px;line-height:1.5}
-.candidate b{display:block;font:600 15px "Space Grotesk",Arial,sans-serif}.candidate small{display:block;color:#666;margin-top:5px}
-.details-row{display:grid;grid-template-columns:95px minmax(0,1fr);gap:12px;border-bottom:1px solid #ededed;padding:10px 0;font-size:13px;line-height:1.5}
-.details-row dt{color:#777}.details-row dd{margin:0;overflow-wrap:anywhere}
-.primary-action{min-height:47px;background:#242424;color:#fff;border:1px solid #242424;border-radius:6px;padding:11px 19px;font-weight:700;font-size:14px}
-.primary-action:hover{background:#444}
-.case-actions{margin-top:21px}
-.form-field{margin:0 0 16px}.form-field label{display:block;font-size:12px;font-weight:700;margin-bottom:6px;color:#444}
-.form-field input,.form-field textarea,.form-field select{border:1px solid #cacaca;background:#fff;color:#222;display:block;width:100%;padding:11px 12px;border-radius:5px;font-size:15px}
-.form-field textarea{min-height:82px}
-.verify{display:flex;gap:9px;align-items:flex-start;font-size:13px;line-height:1.5;color:#444;margin-bottom:16px}
-.verify input{flex:0 0 17px;width:17px;height:17px;margin:2px 0;accent-color:#222}
-#proof{border-top:1px solid var(--line);margin-top:20px;padding-top:19px}
-.small-note{font-size:12px;color:#686868;line-height:1.65;margin:15px 0}
-.utilities{display:flex;flex-wrap:wrap;gap:25px;padding:25px 0 35px;border-top:1px solid var(--line)}
-.utilities details{flex:1 1 275px;min-width:0}.utilities summary{cursor:pointer;font-size:14px;font-weight:700}.utilities p{font-size:13px;color:#666;line-height:1.65}
-.utilities form{margin-top:18px}.audit-line{border-bottom:1px solid #eee;padding:10px 0;font-size:12px;color:#555;line-height:1.5}
-.footer{border-top:1px solid var(--line);padding:25px 0 50px;font-size:12px;line-height:1.7;color:#6a6a6a}
-.reset{border:0;background:transparent;color:#666;text-decoration:underline;text-underline-offset:3px;font-size:12px;margin-left:12px}
-@media(max-width:900px){.workspace{grid-template-columns:1fr;gap:0}.case-pane{padding-top:24px}.intro{padding:43px 0 26px}}
-@media(max-width:620px){.shell{width:calc(100% - 38px)}.topbar{height:66px}.logo{font-size:19px}.intro{padding:37px 0 26px}.intro h1{font-size:clamp(36px,9.2vw,46px)}.intro p{font-size:14px}.queue-title h2{font-size:20px}.queue-title p{font-size:12px}.case-btn strong{font-size:17px}.case-pane h3{font-size:25px}.candidates{grid-template-columns:1fr}.primary-action{width:100%}.details-row{grid-template-columns:90px minmax(0,1fr)}}
-</style></head>
+.queue-tools{display:flex;align-items:center;gap:12px}.queue-tools .reset{font-size:12px;color:#444;padding:6px 0;margin:0;white-space:nowrap}.header-privacy{font-size:12px;color:#666;text-decoration:none}
+@media(max-width:440px){.queue-title{gap:6px;align-items:center}.queue-title h2{font-size:22px}.queue-tools{gap:10px}.queue-tools .reset,.header-privacy{font-size:11px}}
+.recent-enquiries{display:flex;flex-wrap:wrap;align-items:center;gap:10px;margin:0 0 18px;padding:0 0 16px;border-bottom:1px solid var(--line)}.recent-enquiries[hidden]{display:none}.recent-enquiries label{font-size:12px;font-weight:700;color:#555}.recent-enquiries select{flex:1 1 180px;min-width:0;min-height:42px;border:1px solid #cfcfcf;border-radius:5px;background:#fff;padding:9px 10px;color:#242424;font:inherit;font-size:13px}.recent-enquiries button{border:1px solid #242424;border-radius:5px;background:#fff;color:#242424;padding:9px 12px;font-weight:700;font-size:12px;min-height:42px}@media(max-width:620px){.recent-enquiries label{width:100%}.recent-enquiries button{flex:0 0 auto}}
+
+.api-bridge{border-top:1px solid var(--border);border-bottom:1px solid var(--border);padding:26px 0;margin:0 0 26px;display:grid;grid-template-columns:minmax(0,1.2fr) minmax(0,.8fr);gap:30px;align-items:center}
+.api-bridge h2{font-size:clamp(22px,2.6vw,31px);line-height:1.18;margin:9px 0}
+.api-bridge p{font-size:13px;line-height:1.6;color:#555;margin:0}
+.api-bridge .bridge-note{font-size:11px;color:#777;margin-top:9px}
+.bridge-steps{display:grid;grid-template-columns:1fr;gap:8px;counter-reset:steps}
+.bridge-steps span{display:block;border:1px solid var(--border);border-radius:5px;padding:11px 12px;font-size:12px;font-weight:600}
+.bridge-steps span::before{counter-increment:steps;content:counter(steps,decimal-leading-zero);font-size:10px;margin-right:12px;color:#777}
+@media(max-width:760px){.api-bridge{grid-template-columns:1fr;gap:16px;padding:21px 0}.bridge-steps{gap:6px}}
+</style>
+</head>
 <body><div class="shell">
-<header class="topbar"><div class="logo">acorde</div><a class="site-nav-link" href="./mvp/">Explore scenarios</a></header>
-<main><section class="intro"><div class="eyebrow">Before your CRM changes</div><h1>Keep the conversation.<br><span>Not another contact.</span></h1>
-<p>Each incoming enquiry should find the right customer and preserve previous commitments. When identity is uncertain, the system holds the decision rather than guessing.</p></section>
-<section class="queue-title"><h2 id="attention">Needs attention</h2><p id="attention-desc">Only the cases that need a person.</p></section>
-<div class="workspace"><div class="inbox" id="inbox" role="group" aria-label="Cases requiring attention"></div>
-<article class="case-pane" id="case-pane" aria-live="polite"><h3 id="case-heading"></h3><p id="case-reason"></p>
-<div class="incoming-note"><b>Incoming enquiry</b><span id="case-message"></span></div>
-<div id="context"></div><div id="case-actions" class="case-actions"></div><div id="proof" hidden></div><p id="feedback" class="small-note" role="status"></p></article></div>
-<div class="utilities"><details id="try"><summary>Try an incoming enquiry</summary><p>Use fictional details; the system chooses the route automatically.</p>
-<form id="form"><div class="form-field"><label for="new-name">Name</label><input id="new-name" required maxlength="120" value="Alex Morgan"></div>
-<div class="form-field"><label for="new-email">Email</label><input id="new-email" type="email" required maxlength="254" value="alex@example.com"></div>
-<div class="form-field"><label for="new-message">Enquiry</label><textarea id="new-message" required maxlength="1000">Following up on our earlier quote.</textarea></div>
-<button class="primary-action" type="submit">Check enquiry</button></form></details>
-<details id="audit"><summary>Decision history</summary><div id="audit-items"></div></details></div></main>
-<footer class="footer">Illustrative customer records. No real customer data or CRM changes.<button id="reset" class="reset" type="button">Reset example</button></footer>
+<header class="topbar"><div class="logo" aria-label="Acorde">acorde</div><a class="site-nav-link" href="#workflows">Try the demo</a></header>
+<main>
+<section class="intro"><div class="eyebrow">Customer identity and revenue leakage</div>
+<h1>Keep the conversation.<br><span>Not another contact.</span></h1>
+<p>Acorde's proposed API workflow checks likely duplicates and routes uncertain customer matches for review around your existing CRM. Sales and account managers continue in their familiar tools. Explore the fictional decision flow below.</p></section>
+<section class="loss-entrance" id="revenue-loss" aria-labelledby="loss-title">
+  <div class="loss-copy">
+    <div class="eyebrow">01 / Free diagnostic</div>
+    <h2 id="loss-title">What are missed handoffs <span>costing you?</span></h2>
+    <p>Estimate the potential cost of lost enquiries, orders or operational requests. Adjust every assumption.</p>
+    <div class="loss-action-group"><a class="loss-cta" href="./calculator.html">Calculate revenue at risk</a><a class="loss-compare" href="./comparison.html">How much duplicate-record work costs</a></div>
+    
+  </div>
+  <div class="loss-paths" aria-label="Calculator workflows">
+    <div class="loss-path-label">Choose a starting scenario</div>
+    <a href="./calculator.html?mode=sales"><span>01</span><b>Sales enquiries</b><small>Missed follow-up</small></a>
+    <a href="./calculator.html?mode=orders"><span>02</span><b>Orders</b><small>Failed handoffs</small></a>
+    <a href="./calculator.html?mode=operations"><span>03</span><b>Operations</b><small>Unowned requests</small></a>
+  </div>
+</section>
+<section class="queue-title" id="workflows" aria-label="Interactive product demonstration">
+ <div><h2 id="attention">Explore the decisions</h2><p id="attention-desc">Choose a situation or submit a fictional enquiry.</p></div>
+ <div class="queue-tools"><button type="button" id="reset" class="reset">Reset</button><a href="./privacy.html" class="header-privacy">Privacy</a></div>
+</section>
+<div class="workspace">
+ <div class="inbox" id="inbox" role="group" aria-label="Choose an interactive scenario"></div>
+ <div class="work-detail">
+  <article class="case-pane" id="case-pane" aria-live="polite">
+   <div id="recent-enquiries" class="recent-enquiries" hidden><label for="recent-select">Your test enquiries</label><select id="recent-select" aria-label="Switch to a previous test enquiry"></select><button type="button" id="new-enquiry-action">New enquiry</button></div>
+   <div class="case-heading-row"><h3 id="case-heading"></h3></div>
+   <p id="case-reason"></p>
+   <div class="case-body">
+    <div class="incoming-note"><b>Incoming enquiry</b><span id="case-message"></span></div>
+    <div id="context"></div>
+   </div>
+   <div id="case-actions" class="case-actions"></div><div id="proof" hidden></div>
+   <p id="feedback" class="small-note" role="status"></p>
+  </article>
+  <section class="try-pane" id="try" hidden aria-labelledby="try-title">
+   <h3 id="try-title">Try a new enquiry</h3><p>Use fictional details to check how the workflow routes an uncertain customer.</p>
+   <form id="form">
+    <div class="form-field"><label for="new-name">Name</label><input id="new-name" required maxlength="120" value="Alex Morgan"></div>
+    <div class="form-field"><label for="new-email">Email</label><input id="new-email" type="email" required maxlength="254" value="alex@example.com"></div>
+    <div class="form-field"><label for="new-message">Enquiry</label><textarea id="new-message" required maxlength="1000">Following up on our earlier quote.</textarea></div>
+    <button class="primary-action" type="submit">Check this enquiry</button>
+   </form>
+  </section>
+ </div>
+</div>
+<section class="history" id="audit" aria-labelledby="history-title">
+ <div class="history-heading"><h3 id="history-title">Decision history</h3><span class="hint">Visible in this demo · No CRM writes</span></div>
+ <div id="audit-items" role="log" aria-live="polite"></div>
+</section>
+<section class="api-bridge" id="integrations" aria-labelledby="api-bridge-title">
+  <div>
+    <div class="eyebrow">Designed to integrate by API</div>
+    <h2 id="api-bridge-title">Keep your CRM and your team’s workflow</h2>
+    <p>Connect an enquiry source, check likely duplicates, route uncertain identity matches for review and pass decisions back to the CRM your team already uses. Sales and account managers don't need another daily workspace.</p>
+    <p class="bridge-note">A focused integration starts with one source and one CRM. Live connector compatibility is verified before setup.</p>
+  </div>
+  <div class="bridge-steps" aria-label="Proposed API integration sequence">
+    <span>Existing enquiry source</span><span>Duplicate check and review</span><span>Your existing CRM</span>
+  </div>
+</section>
+</main>
+
 </div><script>
 'use strict';
 const KEY='intake-exceptions-v1',$=id=>document.getElementById(id),el=(t,c,v)=>{const n=document.createElement(t);if(c)n.className=c;if(v!=null)n.textContent=v;return n},normalize=x=>String(x||'').trim().toLowerCase();
@@ -192,21 +234,56 @@ cases:[
 ledger:{'delivery-203':{contactId:'CRM-10632',attempts:1,writes:1}},
 audit:[{event:'Verified account match',detail:'Alex Morgan linked to CRM-10042; earlier commitments preserved.'}]});
 let state;try{let s=JSON.parse(localStorage.getItem(KEY));state=s?.version===1&&Array.isArray(s.cases)&&Array.isArray(s.customers)&&s.ledger?s:seeded()}catch{state=seeded()}
-let selected='',editing=false,feedback='';
+let selected='',editing=false,feedback='',activeTab='case';
 const candidates=email=>state.customers.filter(c=>normalize(c.email)===normalize(email));
 const waiting=()=>state.cases.filter(c=>['review','new','delivery_unknown','delivery_check'].includes(c.status));
 const log=(event,detail)=>state.audit.unshift({event,detail});
 const save=()=>{try{localStorage.setItem(KEY,JSON.stringify(state))}catch{}render()};
 function line(area,label,value){const r=el('dl','details-row');r.append(el('dt',null,label),el('dd',null,value));area.append(r)}
-function queue(){const open=waiting(),list=$('inbox');list.replaceChildren();$('attention').textContent=open.length?open.length+' need attention':'No decisions waiting';$('attention-desc').textContent=open.length?'Only cases that require a decision.':'All example cases resolved.';
-if(!open.length){selected='';$('case-pane').hidden=true;return}if(!open.some(x=>x.id===selected))selected=open[0].id;$('case-pane').hidden=false;
-for(const item of open){const b=el('button','case-btn');b.type='button';b.dataset.id=item.id;b.setAttribute('aria-current',String(item.id===selected));b.append(el('span','case-kind',item.status==='review'?'Identity conflict':item.status==='new'?'New customer approval':'Delivery exception'),el('strong',null,item.name+' · '+item.email),el('small',null,item.status==='review'?'Confirm customer identity and ownership':item.status==='new'?'Check contact permission before creation':'Reconcile the original delivery receipt'));b.addEventListener('click',()=>{selected=item.id;editing=false;feedback='';render();if(innerWidth<=900)$('case-pane').scrollIntoView({block:'start'})});list.append(b)}
+function queue(){
+ const defaults=['ENQ-201','ENQ-202','ENQ-203'];
+ const core=defaults.map(id=>state.cases.find(c=>c.id===id)).filter(Boolean);
+ const recent=state.cases.filter(c=>!defaults.includes(c.id)&&c.id!=='ENQ-200');
+ const pending=core;
+ const list=$('inbox');list.replaceChildren();
+ $('attention').textContent='See how Acorde handles exceptions';
+ $('attention-desc').textContent='Select a scenario or try an enquiry. No account needed.';
+ if(![...pending,...recent].some(x=>x.id===selected))selected=pending[0]?.id||recent[0]?.id||'';
+ const picker=$('recent-select'),switcher=$('recent-enquiries');
+ picker.replaceChildren();
+ const placeholder=el('option',null,'Select a test enquiry');placeholder.value='';picker.append(placeholder);
+ for(const item of recent){const option=el('option',null,item.id+' · '+item.name+' · '+item.status.replaceAll('_',' '));option.value=item.id;picker.append(option)}
+ picker.value=recent.some(item=>item.id===selected)?selected:'';
+ switcher.hidden=!recent.length;
+ const type=(item)=>{
+  const name=item.id==='ENQ-201'?'Identity':item.id==='ENQ-202'?'New customer':item.id==='ENQ-203'?'Delivery':'New enquiry';
+  const detail=['linked','created','delivered'].includes(item.status)?'Completed':
+    item.status==='review'?'Two matches':item.status==='new'?'Consent check':
+    item.status==='delivery_unknown'?'Lost receipt':'Review pending';
+  return [name,detail];
+ };
+ pending.forEach((item,index)=>{
+  const [name,description]=type(item),b=el('button','case-btn');
+  b.type='button';b.dataset.id=item.id;b.setAttribute('aria-pressed',String(activeTab==='case'&&item.id===selected));
+  b.setAttribute('aria-label',name+': '+item.name);
+  b.append(el('span','case-kind',String(index+1).padStart(2,'0')+' / Scenario'),el('strong',null,name),el('small',null,description));
+  b.addEventListener('click',()=>{activeTab='case';selected=item.id;editing=false;feedback='';render()});
+  list.append(b);
+ });
+ const newTab=el('button','case-btn');
+ newTab.type='button';newTab.id='new-enquiry-tab';newTab.setAttribute('aria-pressed',String(activeTab==='try'||activeTab==='custom'));
+ newTab.setAttribute('aria-controls','try');
+ newTab.append(el('span','case-kind','+ / Interactive'),el('strong',null,'Try an enquiry'),el('small',null,'Use fictional inputs'));
+ newTab.addEventListener('click',()=>{activeTab='try';editing=false;feedback='';render()});
+ list.append(newTab);
+ $('case-pane').hidden=activeTab==='try'||!selected;
+ $('try').hidden=activeTab!=='try';
 }
 function showContext(item){const root=$('context');root.replaceChildren();const matches=candidates(item.email);root.append(el('h4','case-subhead',matches.length>1?'Possible customer records':matches.length===1?'Existing customer context':'Customer lookup'));
 if(!matches.length){root.append(el('p','small-note','No customer found. The original message and source are retained.'));return}
 const grid=el('div','candidates');for(const c of matches){const card=el('div','candidate');card.append(el('b',null,c.name+' · '+c.company),el('small',null,'Owner: '+c.owner+' · '+c.id));grid.append(card)}root.append(grid);
 if(matches.length===1){const c=matches[0];line(root,'Last contact',c.last);line(root,'Promise',c.promise);line(root,'Next action',c.next)}
-else root.append(el('p','small-note','A shared identifier is not identity proof. No record or owner has been selected.'));
+else root.append(el('p','small-note',item.status==='linked'&&item.contactId?'Verified destination: '+item.contactId+'. The two customer records remain separate.':'A shared identifier is not identity proof. No record or owner has been selected.'));
 }
 function resolve(item){const dest=item.status==='new'?'new':$('destination')?.value,verified=$('verified')?.checked,permission=$('permission')?.checked,evidence=$('evidence')?.value.trim()||'';
 if(!dest||!verified||evidence.length<12||(dest==='new'&&!permission)){feedback='Independent verification and any required permission must be confirmed.';$('feedback').textContent=feedback;return}
@@ -214,7 +291,7 @@ if(dest!=='new'&&!candidates(item.email).some(c=>c.id===dest)){feedback='Choose 
 if(dest==='new'){if(item.status==='new'&&candidates(item.email).length){feedback='Matching customer appeared. Review identity first.';$('feedback').textContent=feedback;return}
 const id='CRM-'+state.seq++;state.customers.push({id,name:item.name,email:item.email,company:'Not provided',owner:'Unassigned',last:item.source,promise:'Respond to enquiry',next:'Assign owner and respond'});item.status='created';item.contactId=id;log('New contact approved',item.id+' · '+id+' · permission checked')}
 else{item.status='linked';item.contactId=dest;log('Identity verified',item.id+' · '+dest+' · independent check recorded')}
-selected='';editing=false;feedback='';save();
+selected=item.id;editing=false;feedback='';save();
 }
 function showProof(item){const root=$('proof');root.replaceChildren();root.hidden=!editing;if(!editing)return;
 if(item.status==='review'){const f=el('div','form-field'),label=el('label',null,'Verified destination'),select=el('select');label.htmlFor='destination';select.id='destination';const initial=el('option',null,'Select after verification');initial.value='';select.append(initial);
@@ -227,18 +304,40 @@ const sync=()=>{const dest=item.status==='new'?'new':$('destination').value;cons
 for(const [x,event] of [[ta,'input'],[v,'change'],[p,'change']])x.addEventListener(event,sync);
 if(item.status==='review')$('destination').addEventListener('change',sync);sync();btn.addEventListener('click',()=>resolve(item));
 }
-function details(){const item=state.cases.find(x=>x.id===selected);if(!item)return;
-$('case-heading').textContent=item.status==='review'?'Identity needs review':item.status==='new'?'New customer approval':item.status==='delivery_check'?'Delivery remains on hold':'Check delivery outcome';
+function details(){if(activeTab==='try')return;const item=state.cases.find(x=>x.id===selected);if(!item)return;
+$('case-heading').textContent=item.status==='review'?'Identity needs review':item.status==='new'?'New customer approval':item.status==='delivery_check'?'Delivery remains on hold':item.status==='linked'?'Identity verified':item.status==='created'?'New customer approved':item.status==='delivered'?'Delivery reconciled':'Check delivery outcome';
 $('case-reason').textContent=item.reason;$('case-message').textContent=item.message+' ('+item.source+')';showContext(item);
 const actions=$('case-actions');actions.replaceChildren();
-if(item.status==='delivery_unknown'){const b=el('button','primary-action','Check delivery receipt');b.type='button';b.addEventListener('click',()=>{const r=state.ledger[item.key];if(!r){item.status='delivery_check';item.reason='Receipt unknown; blind retry blocked';log('Delivery held',item.id+' · no safe receipt available')}else{r.attempts++;item.status='delivered';item.contactId=r.contactId;log('Delivery reconciled',item.id+' · one original simulated write; safe replay confirmed')}selected='';editing=false;feedback='';save()});actions.append(b,el('p','small-note','In this example the previous write succeeded but its acknowledgement was lost. Looking up the original delivery key avoids a duplicate.'))}
+if(item.status==='delivery_unknown'){const b=el('button','primary-action','Check delivery receipt');b.type='button';b.addEventListener('click',()=>{const r=state.ledger[item.key];if(!r){item.status='delivery_check';item.reason='Receipt unknown; blind retry blocked';log('Delivery held',item.id+' · no safe receipt available')}else{r.attempts++;item.status='delivered';item.contactId=r.contactId;log('Delivery reconciled',item.id+' · one original simulated write; safe replay confirmed')}selected=item.id;editing=false;feedback='';save()});actions.append(b,el('p','small-note','In this example the previous write succeeded but its acknowledgement was lost. Looking up the original delivery key avoids a duplicate.'))}
 else if(item.status==='delivery_check')actions.append(el('p','small-note','The receipt is still unknown. No blind retry is attempted.'));
+else if(['linked','created','delivered'].includes(item.status)){
+ const copy=item.status==='delivered'?'Original delivery receipt verified; no duplicate write was made.':
+  item.status==='created'?'New contact approved after a fictional consent check.':
+  'Identity verified for '+item.contactId+'. Original customer records remain separate.';
+ actions.append(el('p','small-note',copy));
+}
 else if(!editing){const b=el('button','primary-action',item.status==='review'?'Review identity':'Review new record');b.type='button';b.addEventListener('click',()=>{editing=true;details()});actions.append(b)}
 showProof(item);$('feedback').textContent=feedback;
 }
 function render(){queue();details();$('audit-items').replaceChildren(...state.audit.map(x=>el('div','audit-line',x.event+': '+x.detail)))}
 $('form').addEventListener('submit',event=>{event.preventDefault();const name=$('new-name').value.trim(),email=normalize($('new-email').value),message=$('new-message').value.trim();if(!name||!email||!message)return;
 const matches=candidates(email),reason=matches.length>1?'Multiple customer records share this email':matches.length===1?'Email alone is not independent identity proof':'No existing customer matches',status=matches.length?'review':'new',id='ENQ-'+state.seq++;
-state.cases.unshift({id,name,email,message,status,source:'Example intake',reason});log('Enquiry checked',id+' · '+reason);selected=id;editing=false;feedback='';save();$('try').open=false;$('case-pane').scrollIntoView({block:'start'})});
-$('reset').addEventListener('click',()=>{state=seeded();selected='';editing=false;feedback='';save()});render();
-</script></body></html>
+state.cases.unshift({id,name,email,message,status,source:'Example intake',reason});log('Enquiry checked',id+' · '+reason);selected=id;activeTab='custom';editing=false;feedback='';save();$('case-pane').scrollIntoView({block:'start',behavior:'smooth'})});
+$('recent-select').addEventListener('change',event=>{const id=event.target.value;if(!state.cases.some(item=>item.id===id))return;selected=id;activeTab='custom';editing=false;feedback='';render()});
+$('new-enquiry-action').addEventListener('click',()=>{activeTab='try';editing=false;feedback='';render()});
+$('reset').addEventListener('click',()=>{state=seeded();selected='';activeTab='case';editing=false;feedback='';save()});render();
+</script>
+<script id="acorde-source-pass-through">
+(()=>{
+  const incoming=new URLSearchParams(location.search),allowed=['utm_source','utm_medium','utm_campaign'];
+  const kept=new URLSearchParams();
+  for(const key of allowed){const value=incoming.get(key);if(value&&/^[a-zA-Z0-9_. -]{1,64}$/.test(value))kept.set(key,value)}
+  if(!kept.size)return;
+  for(const anchor of document.querySelectorAll('a[href^="./calculator.html"],a[href^="./comparison.html"]')){
+    const dest=new URL(anchor.getAttribute('href'),location.href);
+    for(const [key,value] of kept)dest.searchParams.set(key,value);
+    anchor.href=dest.pathname+dest.search;
+  }
+})();
+</script>
+</body></html>

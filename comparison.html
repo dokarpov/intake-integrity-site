@@ -1,0 +1,226 @@
+<!doctype html>
+<html lang="en"><head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#fff">
+<meta name="description" content="Three simple sliders to estimate the time spent checking duplicate customer records and possible room for improvement.">
+<title>Acorde — How much time do duplicate records take?</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{--ink:#242424;--muted:#686868;--line:#dfdfdf;--display:"Space Grotesk",Arial,sans-serif;--body:"DM Sans",Arial,sans-serif}
+*{box-sizing:border-box}html{background:white;color:var(--ink);-webkit-text-size-adjust:100%}
+body{margin:0;min-width:320px;font:400 15px/1.48 var(--body);-webkit-font-smoothing:antialiased}
+a{color:inherit;text-underline-offset:4px}button,input{font:inherit}button{cursor:pointer;color:var(--ink);-webkit-appearance:none;appearance:none}
+[hidden]{display:none!important}:focus-visible{outline:2px solid var(--ink);outline-offset:3px}
+.wrap{width:min(1050px,calc(100% - 48px));margin:auto}
+.nav{height:61px;border-bottom:1px solid var(--line);display:flex;align-items:center;justify-content:space-between;gap:12px}
+.logo{font:700 22px var(--display);letter-spacing:-.09em;text-decoration:none}
+.links{display:flex;gap:15px;font-size:11px;font-weight:600}
+.eyebrow{color:#777;font-size:10px;letter-spacing:.08em;text-transform:uppercase;font-weight:700}
+h1,h2,h3{font-family:var(--display);line-height:1.15;letter-spacing:-.045em;margin:0}
+.intro{padding:25px 0 21px}
+.intro h1{font-size:clamp(31px,4.9vw,49px);max-width:850px;margin:8px 0}
+.intro p{margin:0;color:var(--muted);font-size:13px}
+.comparison-layout{display:grid;grid-template-columns:minmax(0,1.04fr) minmax(0,.96fr);gap:16px;align-items:start;margin-bottom:27px}
+.controls,.result{border:1px solid var(--line);border-radius:8px;padding:23px;min-width:0}
+.controls h2{font-size:23px;margin-bottom:14px}
+.modes{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:15px}
+.modes button{border:1px solid #c9c9c9;background:white;border-radius:6px;padding:12px 10px;min-height:51px;font-size:13px;font-weight:700;line-height:1.28;outline-offset:2px}
+.modes button[aria-pressed=true]{border:2px solid var(--ink);background:#f2f2f2;padding:11px 9px}
+.slider{padding:12px 0 13px;border-bottom:1px solid #ededed}
+.slider:last-child{border:0;padding-bottom:0}
+.slider-top{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:5px}
+.slider label{font-size:13px;line-height:1.4;font-weight:700}
+.slider output{font:600 24px var(--display);white-space:nowrap;letter-spacing:-.045em}
+.slider input[type=range]{appearance:none;-webkit-appearance:none;display:block;width:100%;height:27px;padding:0;margin:0;background:transparent;cursor:pointer;touch-action:pan-y}
+.slider input[type=range]::-webkit-slider-runnable-track{height:5px;border-radius:5px;background:linear-gradient(to right,#242424 var(--progress,0%),#e1e1e1 var(--progress,0%))}
+.slider input[type=range]::-moz-range-track{height:5px;background:#ddd;border-radius:5px}
+.slider input[type=range]::-moz-range-progress{height:5px;background:#242424}
+.slider input[type=range]::-webkit-slider-thumb{appearance:none;-webkit-appearance:none;background:#242424;width:21px;height:21px;margin-top:-8px;border:3px solid #fff;box-shadow:0 0 0 1px #242424;border-radius:50%}
+.slider input[type=range]::-moz-range-thumb{width:16px;height:16px;border:3px solid #fff;background:#242424;border-radius:50%}
+.scale{display:flex;justify-content:space-between;align-items:center;gap:10px;color:#777;font-size:11px;min-height:25px}
+.scale-end{display:inline-flex;align-items:center;gap:9px}
+.expand{white-space:nowrap;background:#fff;color:var(--ink);border:1px solid #cfcfcf;border-radius:5px;padding:3px 7px;min-height:29px;min-width:60px;font-size:11px;font-weight:700}
+.expand:hover{background:#efefef}
+.software-slider{background:#f7f7f7;border:1px solid #dadada;border-radius:6px;padding:11px 12px;margin-bottom:7px}
+.software-slider .slider{border:0;padding:0}
+.tool-effect{color:#4a4a4a;font-weight:600;font-size:11px;margin:2px 0 0}
+.result h2{font-size:21px;margin:7px 0 11px}
+.huge{font:600 clamp(51px,6vw,75px)/1.04 var(--display);letter-spacing:-.08em}
+.huge #attention-hours{font:600 clamp(51px,6vw,75px)/1.04 var(--display);letter-spacing:-.08em;color:var(--ink)}.huge span:last-child{font:500 14px var(--body);letter-spacing:0;color:#777;margin-left:7px}
+.huge-sub{color:#666;font-size:12px;margin:6px 0 21px}
+.result-grid{display:grid;grid-template-columns:1fr 1fr;gap:9px}
+.stat{border:1px solid #e0e0e0;border-radius:6px;padding:13px;min-width:0}
+.stat b{display:block;font:600 clamp(22px,2.5vw,30px)/1.15 var(--display);letter-spacing:-.06em;overflow-wrap:anywhere}
+.stat span{display:block;font-size:11px;color:#666;line-height:1.4;margin-top:6px}
+.cost-row{border-top:1px solid var(--line);margin-top:17px;padding-top:13px;display:flex;align-items:center;justify-content:space-between;gap:12px}
+.cost-row span{font-size:12px;font-weight:600}
+.cost-row b{font:600 22px var(--display);letter-spacing:-.04em}
+.cost-detail{margin:3px 0 0;font-size:11px;color:#666}
+.estimate-note{color:#777;font-size:11px;line-height:1.55;margin:17px 0 0}
+.formula{color:#777;font-size:11px;line-height:1.5;margin:5px 0 0}
+.api-fit{border-top:1px solid var(--line);padding:24px 0;max-width:850px}
+.api-fit h2{font-size:25px;margin:6px 0}
+.api-fit p{color:#666;font-size:13px;max-width:750px;margin:0}
+.convert{border-top:1px solid var(--line);padding:27px 0 30px;display:grid;grid-template-columns:minmax(0,1fr) minmax(0,.88fr);gap:26px}
+.convert h2{font-size:25px;margin:7px 0}
+.convert p{font-size:12px;color:#666;margin:0}
+.email-form{border:1px solid var(--line);border-radius:7px;padding:19px;background:#f8f8f8;min-width:0}
+.email-form label{display:block;font-size:12px;font-weight:700;margin:0 0 7px}
+.email-line input{width:100%;height:46px;padding:10px 12px;border:1px solid #c7c7c7;border-radius:5px;background:white;font-size:16px;color:var(--ink)}
+.action{border:1px solid var(--ink);background:var(--ink);color:white;border-radius:5px;text-decoration:none;padding:11px 15px;min-height:45px;font-size:12px;font-weight:700;display:inline-flex;align-items:center;justify-content:center;text-align:center}
+.action.secondary{background:white;color:var(--ink)}
+.action:hover{opacity:.87}.actions{margin-top:10px}
+.send-action{width:100%;margin-top:12px}
+.optin{display:flex;gap:10px;align-items:flex-start;margin-top:14px}
+.optin input{appearance:auto;-webkit-appearance:checkbox;flex:0 0 19px;width:19px;height:19px;margin:0;accent-color:#242424}
+.optin label{font-size:11px;line-height:1.5;font-weight:400;margin:0}
+.mail-hint,.status{font-size:11px!important;line-height:1.4!important;color:#777!important;margin:9px 0 0!important}
+.next{border-top:1px solid var(--line);padding:22px 0 26px;display:flex;justify-content:space-between;align-items:center;gap:15px}
+.next h2{font-size:22px}.next p{font-size:12px;color:#666;margin:4px 0 0}
+.footer{border-top:1px solid var(--line);color:#888;font-size:11px;padding:17px 0 26px}
+.trap{position:absolute!important;left:-10000px!important;top:auto!important;width:1px!important;height:1px!important;overflow:hidden!important}
+button:disabled{opacity:.5;cursor:not-allowed}
+@media(max-width:800px){
+.wrap{width:calc(100% - 30px)}.comparison-layout{grid-template-columns:1fr;gap:12px}
+.result{position:static}.convert{grid-template-columns:1fr;gap:13px}
+}
+@media(max-width:620px){
+.nav{height:57px}.links{gap:11px}.intro{padding:19px 0 17px}.intro h1{font-size:clamp(30px,8.1vw,39px)}.intro p{font-size:12px}
+.controls,.result{padding:17px}.controls h2{font-size:20px;margin-bottom:12px}
+.modes{margin-bottom:9px}.modes button{min-height:50px;font-size:12px;padding:10px 6px}
+.modes button[aria-pressed=true]{padding:9px 5px}
+.slider{padding:9px 0}.slider label{font-size:12px}.slider output{font-size:22px}
+.result h2{font-size:20px}.huge #attention-hours{font-size:58px}.stat{padding:12px}.stat b{font-size:24px}
+.api-fit{padding:19px 0}.api-fit h2{font-size:22px}
+.next{flex-direction:column;align-items:flex-start}.next .action{width:100%}
+}
+
+/* The capture flow sits inside the live result card: no intermediary section. */
+.result .email-form{background:transparent;border:0;border-top:1px solid var(--line);border-radius:0;padding:15px 0 0;margin:17px 0 0}
+.result .email-form h3{font-size:20px;letter-spacing:-.045em;margin:0 0 11px}
+.result .email-form .email-line input{width:100%;height:45px;border:1px solid #bdbdbd;padding:10px 12px;border-radius:5px;background:#fff;color:var(--ink);font-size:16px}
+.result .email-form .optin{margin:11px 0 0;gap:8px}
+.result .email-form .optin label{font-size:11px;font-weight:400;line-height:1.45}
+.result .result-actions{display:grid;grid-template-columns:1fr 1fr;gap:9px;margin-top:12px}
+.result .result-actions .action{width:100%;padding:10px 5px;min-height:44px;margin:0;font-size:12px}
+.result .result-actions .action.secondary{background:#fff;color:var(--ink)}
+.result .mail-hint{margin:9px 0 0!important;font-size:11px!important;color:#777!important}
+.result .api-mini{margin:14px 0 0;color:#666;font-size:11px;line-height:1.5}
+.result .api-mini a{font-weight:700;white-space:nowrap}
+.sr-only{position:absolute!important;width:1px!important;height:1px!important;overflow:hidden!important;clip:rect(0,0,0,0)!important;white-space:nowrap!important}
+@media(max-width:620px){
+.result{padding:17px}
+.result .email-form{margin-top:13px;padding-top:13px}
+.result .result-actions{gap:7px}
+.result .result-actions .action{font-size:11px}
+}
+
+/* One obvious action after the result. No disabled email form or marketing copy. */
+.nav{height:48px;border-bottom:0}
+.intro{padding:9px 0 16px}
+.intro h1{font-size:clamp(29px,4vw,45px);line-height:1.12;margin:0;max-width:770px}
+.comparison-layout{margin-bottom:18px}
+.controls,.result{padding:19px}
+.controls h2{margin-bottom:10px}
+.modes{margin-bottom:7px}
+.slider{padding:8px 0 9px}
+.huge-sub{margin:6px 0 14px}
+.stat{padding:11px}
+.cost-row{margin-top:12px;padding-top:11px}
+.cost-detail{margin-bottom:0}
+.conversion{margin-top:15px;display:flex;flex-direction:column;align-items:stretch;gap:2px}
+.conversion .primary-cta{width:100%;background:#242424;border-radius:6px;color:#fff;min-height:52px;padding:12px 15px;font-size:16px;font-weight:700;line-height:1.3;text-align:center}
+.copy-action,.assumptions-action{background:none;border:0;padding:9px 8px;color:#666;font-size:12px;text-decoration:underline;text-underline-offset:3px;cursor:pointer;align-self:center}
+.copy-action{min-height:39px}
+.assumptions-action{display:block;font-size:11px;margin:0 auto;color:#888}
+#estimate-assumptions{color:#666;font-size:11px;line-height:1.45;margin:0;padding:6px 0 0}
+.result .email-form{margin-top:6px;padding:13px 0 0}
+.result .email-form .send-action{width:100%;min-height:48px}
+.privacy-inline{display:block;text-align:center;font-size:11px;color:#777;margin-top:10px}
+@media(max-width:620px){
+ .nav{height:42px}
+ .intro{padding:4px 0 12px}
+ .intro h1{font-size:clamp(29px,7vw,38px)}
+ .controls,.result{padding:15px}
+ .controls h2{margin-bottom:8px}
+ .slider{padding:7px 0 8px}
+ .result .email-form{margin-top:5px}
+ .result .primary-cta{font-size:16px}
+ .result-grid{gap:7px}
+ .stat{padding:11px}
+ .cost-row{margin-top:10px}
+}
+.copy-status{font-size:12px;color:#555;margin:0;text-align:center;min-height:0;line-height:1.35}
+</style>
+</head>
+<body><div class="wrap">
+<header class="nav"><a class="logo" href="./">acorde</a></header>
+<main>
+<section class="intro" aria-labelledby="main-heading">
+<h1 id="main-heading">How much time goes into duplicate checks?</h1>
+</section>
+<div class="comparison-layout">
+<section class="controls" aria-labelledby="controls-title">
+<h2 id="controls-title">Your current process</h2>
+<div class="modes" role="group" aria-label="Paid deduplication tool">
+<button type="button" data-baseline="manual" aria-pressed="true">No paid tool</button>
+<button type="button" data-baseline="tool" aria-pressed="false">We use a tool</button>
+</div>
+<div id="software-controls" class="software-slider" hidden aria-live="polite">
+<div class="slider">
+<div class="slider-top"><label for="toolMonthly">Your tool costs / month</label><output for="toolMonthly" id="tool-value">€150</output></div>
+<input id="toolMonthly" type="range" min="0" max="500" step="25" value="150">
+<div class="scale"><span>€0</span><div class="scale-end"><span id="toolMonthly-max-label">€500</span><button type="button" class="expand" data-expand="toolMonthly" aria-label="Extend tool fee slider range">More range</button></div></div>
+</div>
+<p id="tool-inline-effect" class="tool-effect">Adds €150/month to cost. Review rate stays as selected.</p>
+</div>
+<div class="slider">
+<div class="slider-top"><label for="workers">People handling records</label><output for="workers" id="workers-value">5</output></div>
+<input id="workers" type="range" min="1" max="20" step="1" value="5">
+<div class="scale"><span>1</span><div class="scale-end"><span id="workers-max-label">20</span><button class="expand" type="button" data-expand="workers" aria-label="Extend team size slider range">More range</button></div></div>
+</div>
+<div class="slider">
+<div class="slider-top"><label for="recordsPerWorkerDay">Records per person / day</label><output for="recordsPerWorkerDay" id="records-value">12</output></div>
+<input id="recordsPerWorkerDay" type="range" min="1" max="40" step="1" value="12">
+<div class="scale"><span>1</span><div class="scale-end"><span id="recordsPerWorkerDay-max-label">40</span><button class="expand" type="button" data-expand="recordsPerWorkerDay" aria-label="Extend daily records slider range">More range</button></div></div>
+</div>
+<div class="slider">
+<div class="slider-top"><label for="issueRate">Need a second check</label><output for="issueRate" id="rate-value">8%</output></div>
+<input id="issueRate" type="range" min="0" max="50" step="1" value="8">
+<div class="scale"><span>0%</span><span id="issueRate-max-label">50%</span></div>
+</div>
+</section>
+<aside class="result" id="results" aria-live="polite" aria-atomic="false">
+<div class="eyebrow" id="mode-caption">Manual checks</div>
+<h2>Estimated review time</h2>
+<div class="huge"><span id="attention-hours">16 h</span><span>/month</span></div>
+<p class="huge-sub" id="attention-summary">96 of 1,200 records may need a check</p>
+<div class="result-grid">
+<div class="stat"><b id="freed-hours">8 h</b><span>Time freed at 50% fewer checks*</span></div>
+<div class="stat"><b id="freed-value">€224</b><span>Value of that time / month*</span></div>
+</div>
+<div class="cost-row"><span>Current monthly cost</span><b id="current-overhead">€448</b></div>
+<p id="software-explain" class="cost-detail">€448 staff review + €0 existing software</p>
+<div class="conversion">
+<a class="action primary-cta" id="audit-link" target="_blank" rel="noopener noreferrer" href="https://tally.so/r/5XbAeE">Request a paid audit</a>
+<button type="button" id="copy" class="copy-action">Copy estimate</button>
+<p id="copy-status" class="copy-status" role="status" aria-live="polite"></p>
+</div>
+<button type="button" id="assumptions-toggle" class="assumptions-action" aria-controls="estimate-assumptions" aria-expanded="false">Calculation assumptions</button>
+<p id="estimate-assumptions" hidden>20 workdays · 10 min per check · €28 per hour · 50% reduction scenario. Estimated time value.</p>
+<form id="email-form" class="email-form" method="POST" novalidate aria-label="Email this estimate" hidden>
+<h3>Email the estimate</h3>
+<div class="email-line"><label for="recipient" class="sr-only">Your email address</label><input type="email" name="email" id="recipient" autocomplete="email" placeholder="Email address" required maxlength="254"></div>
+<div class="optin" id="consent-control"><input type="checkbox" id="newsletter" name="newsletter" value="yes"><label for="newsletter">Send me occasional useful CRM tips. Optional; confirm by email. Unsubscribe anytime.</label></div>
+<button class="action send-action" type="submit" id="send" disabled>Send estimate</button>
+<a class="privacy-inline" href="./privacy.html">Privacy</a>
+<label class="trap" for="companyFax" aria-hidden="true">Leave blank</label><input class="trap" type="text" id="companyFax" name="companyFax" autocomplete="off" tabindex="-1" aria-hidden="true">
+<p id="email-status" role="status" class="status"></p>
+</form>
+</aside>
+</div>
+</main></div>
+<script type="module" src="./comparison-ui.mjs"></script>
+</body></html>
