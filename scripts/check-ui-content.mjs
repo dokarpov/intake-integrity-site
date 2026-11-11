@@ -34,9 +34,13 @@ assert.ok(comp.includes('id="send"')&&comp.includes('id="newsletter"')&&comp.inc
 assert.ok(!/type="number"|<select\b/.test(comp),'simple calculator must use sliders, not numeric text entry or dropdowns');
 assert.ok(comp.includes('id="attention-hours"')&&comp.includes('id="freed-hours"')&&comp.includes('id="freed-value"'));
 assert.ok(!comp.includes('tally.so/r/ArK9ZD'),'no Tally subscription funnel in calculator');
-assert.ok(comp.includes('id="mailer-state"'),'mail send availability must be explicit');
+assert.ok(comp.includes('id="email-form"')&&comp.includes('novalidate aria-label="Email this estimate" hidden'),'unconfigured email offer must be hidden');
+assert.ok(comp.includes('class="action primary-cta"')&&comp.includes('Request a paid audit'),'audit must have a prominent full-width CTA');
+assert.ok(!comp.includes('id="mailer-state"'),'do not show sender infrastructure text to visitors');
+assert.ok(!comp.includes('class="footer"')&&!comp.includes('header nav'),'remove distracting chrome');
+assert.ok(!comp.includes('Acorde · free estimate')&&!comp.includes('Move the sliders'),'remove empty promotional copy');
 assert.ok(comp.indexOf('id="software-controls"')<comp.indexOf('id="workers"'),'tool cost must appear immediately after choice');
-for(const key of ['workers','recordsPerWorkerDay','issueRate','toolMonthly']){
+for(const key of ['workers','recordsPerWorkerDay','toolMonthly']){
  assert.ok(comp.includes('data-expand="'+key+'"'),'slider '+key+' must offer a wider scale');
 }
 assert.ok(!comp.includes('Annual value of'),'remove redundant annual panel');
@@ -48,8 +52,10 @@ assert.match(comp,/id="newsletter"[^>]*name="newsletter"[^>]*value="yes"/,'conse
 assert.ok(!/id="newsletter"[^>]*checked/.test(comp),'newsletter must not be preselected');
 const home=readFileSync('index.html','utf8');
 assert.ok(home.includes('id="integrations"')&&home.includes('existing CRM'),'describe CRM-native integration');
-assert.ok(comp.includes('id="api-fit"')&&comp.includes('Acorde can connect via API'),'describe integration in one compact line');
+assert.ok(!comp.includes('id="api-fit"')&&!comp.includes('class="api-mini"'),'drop the buried small CTA');
+assert.ok(comp.indexOf('id="current-overhead"')<comp.indexOf('id="audit-link"'),'paid audit must follow results');
+assert.ok(comp.indexOf('id="audit-link"')<comp.indexOf('id="email-form"'),'primary action must come before optional email');
 assert.ok(comp.indexOf('id="results"')<comp.indexOf('id="email-form"') && comp.indexOf('id="email-form"')<comp.indexOf('</aside>'),'email form must be inside live result card');
 assert.ok(!/<section class="(?:api-fit|convert|next)"/.test(comp),'no promotional sections before result capture');
-assert.ok(comp.indexOf('id="current-overhead"')<comp.indexOf('id="email-form"'),'email capture directly follows the result');
+assert.ok(comp.indexOf('id="current-overhead"')<comp.indexOf('id="audit-link"'),'primary audit action follows cost result');
 console.log('Acorde UI content and progressive disclosure gates PASS');
