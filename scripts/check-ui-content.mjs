@@ -31,6 +31,7 @@ const comp=readFileSync('comparison.html','utf8');
 assert.ok(comp.includes('data-baseline="manual"')&&comp.includes('data-baseline="tool"'));
 assert.ok(comp.includes('id="workers"')&&comp.includes('id="recordsPerWorkerDay"')&&comp.includes('id="issueRate"'));
 assert.ok(comp.includes('id="send"')&&comp.includes('id="newsletter"')&&comp.includes('id="consent-control"'));
+assert.ok(comp.includes('id="copy-status"')&&comp.includes('role="status"'),'copy feedback must be visible outside the hidden email form');
 assert.ok(!/type="number"|<select\b/.test(comp),'simple calculator must use sliders, not numeric text entry or dropdowns');
 assert.ok(comp.includes('id="attention-hours"')&&comp.includes('id="freed-hours"')&&comp.includes('id="freed-value"'));
 assert.ok(!comp.includes('tally.so/r/ArK9ZD'),'no Tally subscription funnel in calculator');
