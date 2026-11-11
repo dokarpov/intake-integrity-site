@@ -31,6 +31,7 @@ test('one-screen estimator starts with defaults, compact results and no math for
  await expect(page.locator('#software-controls')).toBeHidden();
  await expect(page.locator('#workers')).toHaveAttribute('max','20');
  await expect(page.locator('#recordsPerWorkerDay')).toHaveAttribute('max','40');
+ await expect(page.locator('#issueRate')).toHaveAttribute('max','50');
  await expect(page.locator('input[type="number"]')).toHaveCount(0);
  await expect(page.locator('select')).toHaveCount(0);
  await expect(page.locator('input[type="range"]')).toHaveCount(4);
@@ -38,6 +39,9 @@ test('one-screen estimator starts with defaults, compact results and no math for
  await expect(page.locator('#potential-year')).toHaveCount(0);
  await expect(page.locator('.example-note')).toHaveCount(0);
  await expect(page.locator('.controls .slider')).toHaveCount(4);
+ await expect(page.locator('#audit-link')).toBeVisible();
+ await expect(page.locator('header nav')).toHaveCount(0);
+ await expect(page.locator('.footer')).toHaveCount(0);
 });
 test('7 people, 40 daily records and 10% exactly match screenshot scenario',async({page})=>{
  await page.goto(base);
@@ -49,7 +53,7 @@ test('7 people, 40 daily records and 10% exactly match screenshot scenario',asyn
  await expect(page.locator('#freed-hours')).toHaveText('46.7 h');
  await expect(page.locator('#freed-value')).toHaveText('€1,307');
  await expect(page.locator('#current-overhead')).toHaveText('€2,613');
- await expect(page.locator('.estimate-note')).toContainText('20 workdays');
+ await expect(page.locator('#estimate-assumptions')).toBeHidden();
 });
 test('tool choice reveals fee slider directly beneath the choice and above team sliders',async({page})=>{
  await page.goto(base);
@@ -95,7 +99,7 @@ test('slider scales expand in-place without dropping values or imposing old max 
  await expect(page.locator('#recordsPerWorkerDay')).toHaveAttribute('max','200');
  await slide(page,'recordsPerWorkerDay',100);
  await expect(page.locator('#records-value')).toHaveText('100');
- await expand(page,'issueRate');
+ await expect(page.locator('[data-expand="issueRate"]')).toHaveCount(0);
  await expect(page.locator('#issueRate')).toHaveAttribute('max','50');
  await slide(page,'issueRate',35);
  await expect(page.locator('#rate-value')).toHaveText('35%');
@@ -114,85 +118,87 @@ test('zero review rate yields zero time, while existing fee stays in cost',async
  await page.locator('[data-baseline="tool"]').click();
  await expect(page.locator('#current-overhead')).toHaveText('€150');
 });
-test('source assumptions are available once without repeated long paragraphs',async({page})=>{
+test('calculation assumptions are available on demand, not in the main conversion flow',async({page})=>{
  await page.goto(base);
- await expect(page.locator('.estimate-note')).toContainText('20 workdays');
- await expect(page.locator('.estimate-note')).toContainText('€28');
- await expect(page.locator('.estimate-note')).toContainText('50%');
- await expect(page.locator('.how')).toHaveCount(0);
- await expect(page.locator('body')).not.toContainText('30–70%');
- await expect(page.locator('body')).not.toContainText('Annual value');
- await expect(page.locator('body')).not.toContainText('How did we calculate this?');
+ await expect(page.locator('#estimate-assumptions')).toBeHidden();
+ await expect(page.locator('#assumptions-toggle')).toHaveAttribute('aria-expanded','false');
+ await page.locator('#assumptions-toggle').click();
+ await expect(page.locator('#estimate-assumptions')).toBeVisible();
+ await expect(page.locator('#estimate-assumptions')).toContainText('20 workdays');
+ await expect(page.locator('#estimate-assumptions')).toContainText('€28');
+ await page.locator('#assumptions-toggle').click();
+ await expect(page.locator('#estimate-assumptions')).toBeHidden();
 });
-test('when mail sender is disconnected, consent stays visible and copy works',async({page})=>{
+test('primary paid audit dominates the result; disconnected email stays hidden',async({page})=>{
  await page.goto(base);
- await expect(page.locator('#send')).toBeDisabled();
- await expect(page.locator('#consent-control')).toBeVisible();
- await expect(page.locator('#newsletter')).not.toBeChecked();
- await expect(page.locator('#newsletter')).toBeDisabled();
- await expect(page.locator('#mailer-state')).toContainText('Copy your estimate instead');
+ const cta=page.locator('#audit-link');
+ await expect(cta).toBeVisible();
+ await expect(cta).toContainText('Request a paid audit');
+ await expect(cta).toHaveAttribute('href',/tally\.so/);
  await expect(page.locator('#copy')).toBeVisible();
- await expect(page.locator('#copy')).not.toHaveClass(/secondary/);
- const order=await page.locator('#email-form').evaluate(form=>{
-  const checkbox=form.querySelector('#newsletter');
-  const button=form.querySelector('#send');
-  return Boolean(checkbox&&button&&(checkbox.compareDocumentPosition(button)&Node.DOCUMENT_POSITION_FOLLOWING));
- });
- expect(order).toBe(true);
-});
-test('email form is inside the result card with no intervening promotional sections',async({page})=>{
- await page.goto(base);
- const structure=await page.locator('#results').evaluate(card=>{
-  const form=card.querySelector('#email-form');
-  const cost=card.querySelector('.cost-row');
-  const note=card.querySelector('.estimate-note');
+ await expect(page.locator('#copy')).toBeEnabled();
+ await expect(page.locator('#email-form')).toBeHidden();
+ await expect(page.locator('#newsletter')).not.toBeChecked();
+ await expect(page.locator('#send')).toBeDisabled();
+ const ui=await page.locator('#results').evaluate(card=>{
+  const cost=card.querySelector('.cost-row'),cta=card.querySelector('#audit-link');
+  const costRect=cost.getBoundingClientRect(),ctaRect=cta.getBoundingClientRect();
   return {
-   formInCard:Boolean(form),
-   costBeforeForm:Boolean(form&&cost&&(cost.compareDocumentPosition(form)&Node.DOCUMENT_POSITION_FOLLOWING)),
-   gap:form&&cost?Math.round(form.getBoundingClientRect().top-cost.getBoundingClientRect().bottom):Infinity,
-   noteBeforeForm:Boolean(form&&note&&(note.compareDocumentPosition(form)&Node.DOCUMENT_POSITION_FOLLOWING))
+   inCard:card.contains(cta),
+   afterResult:ctaRect.top>costRect.bottom,
+   gap:ctaRect.top-costRect.bottom,
+   height:ctaRect.height,
+   widthRatio:ctaRect.width/card.getBoundingClientRect().width,
+   hasPrivacyNav:!!document.querySelector('header nav'),
+   hasFooter:!!document.querySelector('.footer'),
+   hasPreviewBanner:document.body.textContent.includes('TESTING PREVIEW'),
+   hasInertCopy:!!document.querySelector('#copy:disabled')
   };
  });
- expect(structure.formInCard).toBe(true);
- expect(structure.costBeforeForm).toBe(true);
- expect(structure.noteBeforeForm).toBe(true);
- expect(structure.gap).toBeLessThan(100);
- await expect(page.locator('.convert')).toHaveCount(0);
- await expect(page.locator('section.api-fit')).toHaveCount(0);
- await expect(page.locator('section.next')).toHaveCount(0);
- await expect(page.locator('#send-result')).toHaveCount(0);
- await expect(page.locator('#email-form')).toHaveCount(1);
- await expect(page.locator('#copy')).toBeEnabled();
- await expect(page.locator('#audit-link')).toHaveAttribute('href',/tally\.so/);
+ expect(ui.inCard).toBe(true);
+ expect(ui.afterResult).toBe(true);
+ expect(ui.gap).toBeLessThan(90);
+ expect(ui.height).toBeGreaterThanOrEqual(50);
+ expect(ui.widthRatio).toBeGreaterThan(0.78);
+ expect(ui.hasPrivacyNav).toBe(false);
+ expect(ui.hasFooter).toBe(false);
+ expect(ui.hasPreviewBanner).toBe(false);
+ expect(ui.hasInertCopy).toBe(false);
 });
-test('mobile result leads directly to copy and email actions without another scroll section',async({browser})=>{
+test('mobile CTA is large, adjacent to the result, and no unused form consumes space',async({browser})=>{
  for(const width of [320,375,390]){
-  const context=await browser.newContext({viewport:{width,height:844}});
+  const context=await browser.newContext({viewport:{width,height:844},reducedMotion:'reduce'});
   const page=await context.newPage();
   await page.goto(base);
-  const report=await page.evaluate(()=>{
-   const card=document.getElementById('results');
-   const form=document.getElementById('email-form');
-   const copy=document.getElementById('copy');
-   const newsletter=document.getElementById('newsletter');
-   const send=document.getElementById('send');
-   const cb=new DOMRect();
-   const rect=card.getBoundingClientRect(),fr=form.getBoundingClientRect();
+  const ui=await page.evaluate(()=>{
+   const card=document.querySelector('#results'),cta=document.querySelector('#audit-link'),
+     copy=document.querySelector('#copy'),assumption=document.querySelector('#estimate-assumptions');
+   const rect=cta.getBoundingClientRect(),cardRect=card.getBoundingClientRect();
    return {
-    formWithin:rect.top<=fr.top&&fr.bottom<=rect.bottom,
-    separatePromoBlocks:document.querySelectorAll('main > .api-fit, main > .convert, main > .next').length,
-    rightBeforeForm:fr.top-card.querySelector('.estimate-note').getBoundingClientRect().bottom,
-    checkboxBeforeSend:Boolean(newsletter.compareDocumentPosition(send)&Node.DOCUMENT_POSITION_FOLLOWING),
-    copyEnabled:!copy.disabled,
-    horizontalOverflow:document.documentElement.scrollWidth>innerWidth
+    inside:card.contains(cta),
+    widthRatio:rect.width/cardRect.width,
+    ctaHeight:rect.height,
+    auditBolder:parseFloat(getComputedStyle(cta).fontSize)>parseFloat(getComputedStyle(copy).fontSize),
+    noInertEmail:document.querySelector('#email-form').hidden,
+    noBanner:!document.body.textContent.includes('TESTING PREVIEW'),
+    noNav:!document.querySelector('header nav'),
+    noKicker:!document.querySelector('.intro .eyebrow'),
+    noIntroCopy:!document.querySelector('.intro p'),
+    noVisibleAssumptions:assumption.hidden,
+    noHorizontalScroll:document.documentElement.scrollWidth<=window.innerWidth
    };
   });
-  expect(report.formWithin).toBe(true);
-  expect(report.separatePromoBlocks).toBe(0);
-  expect(report.rightBeforeForm).toBeLessThan(40);
-  expect(report.checkboxBeforeSend).toBe(true);
-  expect(report.copyEnabled).toBe(true);
-  expect(report.horizontalOverflow).toBe(false);
+  expect(ui.inside).toBe(true);
+  expect(ui.widthRatio).toBeGreaterThan(0.80);
+  expect(ui.ctaHeight).toBeGreaterThanOrEqual(50);
+  expect(ui.auditBolder).toBe(true);
+  expect(ui.noInertEmail).toBe(true);
+  expect(ui.noBanner).toBe(true);
+  expect(ui.noNav).toBe(true);
+  expect(ui.noKicker).toBe(true);
+  expect(ui.noIntroCopy).toBe(true);
+  expect(ui.noVisibleAssumptions).toBe(true);
+  expect(ui.noHorizontalScroll).toBe(true);
   await context.close();
  }
 });
@@ -209,6 +215,7 @@ test('configured sender POSTs only the scenario; unsubscribed by default',async(
   await route.fulfill({status:200,contentType:'text/html',body:'<h1>Your report was sent for delivery</h1>'});
  });
  await page.goto(base);
+ await expect(page.locator('#email-form')).toBeVisible();
  await expect(page.locator('#send')).toBeEnabled();
  await expect(page.locator('#newsletter')).not.toBeChecked();
  await expect(page.locator('#newsletter')).toBeEnabled();
@@ -249,8 +256,8 @@ test('marketing API workflow text does not claim verified connector',async({page
  await expect(page.locator('#integrations')).toContainText('existing CRM');
  await expect(page.locator('#integrations')).toContainText('Live connector compatibility is verified');
  await page.goto(base);
- await expect(page.locator('#api-fit')).toContainText('existing CRM');
- await expect(page.locator('#api-fit')).toContainText('connect via API');
+ await expect(page.locator('#audit-link')).toBeVisible();
+ await expect(page.locator('.api-mini')).toHaveCount(0);
 });
 test('only allowlisted UTMs enter the separate paid-audit form',async({page})=>{
  await page.goto(base+'?utm_source=linkedin&utm_campaign=nov');
@@ -275,7 +282,8 @@ for(const width of [320,375,390,768,1440]){
   await expand(page,'workers');
   await slide(page,'workers',100);
   await expect(page.locator('#attention-hours')).toHaveText('320 h');
-  await expect(page.locator('#consent-control')).toBeVisible();
+  await expect(page.locator('#email-form')).toBeHidden();
+  await expect(page.locator('#audit-link')).toBeVisible();
   expect(await page.evaluate(()=>document.documentElement.scrollWidth>innerWidth)).toBe(false);
   expect(errors).toEqual([]);
   await context.close();
