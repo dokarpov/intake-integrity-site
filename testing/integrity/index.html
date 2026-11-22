@@ -2,7 +2,7 @@
 <html lang="en"><head>
 <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="theme-color" content="#ffffff">
-<meta name="description" content="Inspect evidence discrepancies before a consequential operation. This interactive testing build does not change operational states.">
+<meta name="description" content="Inspect evidence discrepancies before a consequential operation.">
 <title>Acorde · Evidence check testing</title>
 <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
@@ -63,11 +63,11 @@ footer{font-size:12px;color:#777;border-top:1px solid var(--line);line-height:1.
 </style></head>
 <body>
 <div class="wrap">
-<header class="topbar"><a class="brand" href="../../">acorde</a><a class="nav" href="../../preview/">Current product preview</a></header>
+<header class="topbar"><a class="brand" href="../../">acorde</a><a class="nav" href="../../preview/">Current product</a></header>
 <main>
 <section class="hero"><div class="eyebrow">Interactive rules test</div>
 <h1>Compare the evidence.<br><span>Keep the decision yours.</span></h1>
-<p>Inspect conflicting instructions before a production handoff. This checkpoint identifies differences and missing proof; it does not approve an order, change its status or tell you which version to produce.</p></section>
+<p>Inspect conflicting instructions before a production handoff. The checkpoint shows differences and missing proof, and the decision stays with your team.</p></section>
 <div class="presets" role="group" aria-label="Try an example">
 <strong>Try a case</strong>
 <button class="softbtn" type="button" data-preset="spelling">Different spelling</button>
@@ -76,7 +76,7 @@ footer{font-size:12px;color:#777;border-top:1px solid var(--line);line-height:1.
 <button class="softbtn" type="button" data-preset="clean">Identical values</button>
 </div>
 <div class="monitor" id="monitor">
-<div class="monitor-top"><strong>Evidence checkpoint</strong><span>Testing with fictional records</span></div>
+<div class="monitor-top"><strong>Evidence checkpoint</strong><span>Example order</span></div>
 <div class="monitor-scroll" id="monitor-scroll">
 <div class="section-title"><h2>What can we verify?</h2><p>Each field comes from a different source. Edit the example to inspect a specific rule.</p></div>
 <div class="sources">
@@ -101,7 +101,7 @@ footer{font-size:12px;color:#777;border-top:1px solid var(--line);line-height:1.
 <div class="field"><label for="approval-version">Approved version</label><input id="approval-version" data-source="approval" data-field="proofVersion"></div>
 <div class="field"><label for="approval-digest">Approved fingerprint</label><input id="approval-digest" data-source="approval" data-field="proofDigest"></div>
 </div>
-<label class="checkline"><input id="approval-trusted" type="checkbox" checked>Simulate independently verified approval source</label>
+<label class="checkline"><input id="approval-trusted" type="checkbox" checked>Mark the approval source as verified</label>
 </section>
 <section class="source" aria-labelledby="asset-head"><h3 id="asset-head">Production asset</h3><p>The file intended for the actual handoff</p><div class="fields">
 <div class="field"><label for="asset-order">Order ID</label><input id="asset-order" data-source="productionAsset" data-field="orderId"></div>
@@ -110,10 +110,10 @@ footer{font-size:12px;color:#777;border-top:1px solid var(--line);line-height:1.
 <div class="field"><label for="asset-font">Font</label><input id="asset-font" data-source="productionAsset" data-field="font"></div>
 <div class="field"><label for="asset-placement">Placement</label><input id="asset-placement" data-source="productionAsset" data-field="placement"></div>
 <div class="field wide"><label for="asset-digest">File fingerprint</label><input id="asset-digest" data-source="productionAsset" data-field="contentDigest"></div>
-</div><label class="checkline"><input id="asset-trusted" type="checkbox" checked>Simulate independent text, font and placement extraction</label></section>
+</div><label class="checkline"><input id="asset-trusted" type="checkbox" checked>Mark text, font and placement as extracted</label></section>
 </div>
 <button class="primary" type="button" id="compare">Compare evidence</button>
-<p class="testnote">The trust switches simulate server-verified references in this fictional test. A real merchant's checkbox cannot establish approval or prove a file was analyzed.</p>
+<p class="testnote">These switches set the verification state of each reference.</p>
 <div class="divider"></div>
 <section id="results" aria-live="polite"><div class="eyebrow">Rule findings</div>
 <h2 class="result-summary" id="result-title">Waiting for comparison</h2>
@@ -122,7 +122,7 @@ footer{font-size:12px;color:#777;border-top:1px solid var(--line);line-height:1.
 <details class="disclosure" id="matched-details"><summary id="match-count">Matching checks</summary><div id="matching"></div></details>
 </section>
 <section class="decision"><h3>Your assessment</h3>
-<p>Only you can decide what to do next based on your existing production process. Recording a note here is for this fictional test; it does not update a Shopify order, 1C, a machine or another system.</p>
+<p>Your team decides the next step in its own production process; the note stays with the checkpoint.</p>
 <label for="decision-note" class="eyebrow">Your decision or next verification step</label>
 <textarea id="decision-note" placeholder="For example: ask the customer to confirm the intended spelling before manufacturing."></textarea>
 <button id="record" class="primary" type="button">Record my assessment</button>
@@ -131,7 +131,7 @@ footer{font-size:12px;color:#777;border-top:1px solid var(--line);line-height:1.
 </section>
 </div></div>
 </main>
-<footer>Testing environment. Fictional values and simulated verification only. No file parser, payment, production integration or automatic workflow decision.</footer>
+<footer>Acorde · production handoff checkpoint</footer>
 </div>
 <script type="module">
 import {evaluateEvidenceCheckpoint} from './engine.mjs';

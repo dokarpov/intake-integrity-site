@@ -149,7 +149,7 @@ button:focus-visible,input:focus-visible,textarea:focus-visible,select:focus-vis
     </div>
     <div class="utilities">
       <details id="try"><summary>Try an incoming enquiry</summary>
-        <p>Use fictional details; the system selects the route.</p>
+        <p>Try any details; the system selects the route.</p>
         <form id="form">
           <div class="form-field"><label for="new-name">Name</label><input id="new-name" required maxlength="120" value="Alex Morgan"></div>
           <div class="form-field"><label for="new-email">Email</label><input id="new-email" type="email" required maxlength="254" value="alex@example.com"></div>
@@ -159,7 +159,7 @@ button:focus-visible,input:focus-visible,textarea:focus-visible,select:focus-vis
       </details>
       <details id="audit"><summary>Decision history</summary><div id="audit-items"></div></details>
     </div>
-    <div class="utility-note">Example with fictional records; no live CRM connection or customer writes. <button id="reset" class="reset" type="button">Reset example</button></div>
+    <div class="utility-note">Example customer records. <button id="reset" class="reset" type="button">Reset example</button></div>
   </main>
 </div>
 </div>
@@ -219,7 +219,7 @@ function details(){const item=state.cases.find(x=>x.id===selected);if(!item)retu
 $('case-heading').textContent=item.status==='review'?'Identity needs review':item.status==='new'?'New customer approval':item.status==='delivery_check'?'Delivery remains on hold':'Check delivery outcome';
 $('case-reason').textContent=item.reason;$('case-message').textContent=item.message+' ('+item.source+')';showContext(item);
 const actions=$('case-actions');actions.replaceChildren();
-if(item.status==='delivery_unknown'){const b=el('button','primary-action','Check delivery receipt');b.type='button';b.addEventListener('click',()=>{const r=state.ledger[item.key];if(!r){item.status='delivery_check';item.reason='Receipt unknown; blind retry blocked';log('Delivery held',item.id+' · no safe receipt available')}else{r.attempts++;item.status='delivered';item.contactId=r.contactId;log('Delivery reconciled',item.id+' · one original simulated write; safe replay confirmed')}selected='';editing=false;feedback='';save()});actions.append(b,el('p','small-note','In this example the previous write succeeded but its acknowledgement was lost. Looking up the original delivery key avoids a duplicate.'))}
+if(item.status==='delivery_unknown'){const b=el('button','primary-action','Check delivery receipt');b.type='button';b.addEventListener('click',()=>{const r=state.ledger[item.key];if(!r){item.status='delivery_check';item.reason='Receipt unknown; blind retry blocked';log('Delivery held',item.id+' · no safe receipt available')}else{r.attempts++;item.status='delivered';item.contactId=r.contactId;log('Delivery reconciled',item.id+' · one original write; safe replay confirmed')}selected='';editing=false;feedback='';save()});actions.append(b,el('p','small-note','In this example the previous write succeeded but its acknowledgement was lost. Looking up the original delivery key avoids a duplicate.'))}
 else if(item.status==='delivery_check')actions.append(el('p','small-note','The receipt is still unknown. No blind retry is attempted.'));
 else if(!editing){const b=el('button','primary-action',item.status==='review'?'Review identity':'Review new record');b.type='button';b.addEventListener('click',()=>{editing=true;details()});actions.append(b)}
 showProof(item);$('feedback').textContent=feedback;

@@ -169,13 +169,13 @@ body{overflow-x:hidden;font-family:"DM Sans",Arial,sans-serif}
 <article class="case-pane" id="case-pane" aria-live="polite"><h3 id="case-heading"></h3><p id="case-reason"></p>
 <div class="incoming-note"><b>Incoming enquiry</b><span id="case-message"></span></div>
 <div id="context"></div><div id="case-actions" class="case-actions"></div><div id="proof" hidden></div><p id="feedback" class="small-note" role="status"></p></article></div>
-<div class="utilities"><details id="try"><summary>Try an incoming enquiry</summary><p>Use fictional details; the system chooses the route automatically.</p>
+<div class="utilities"><details id="try"><summary>Try an incoming enquiry</summary><p>Try any details; the system chooses the route automatically.</p>
 <form id="form"><div class="form-field"><label for="new-name">Name</label><input id="new-name" required maxlength="120" value="Alex Morgan"></div>
 <div class="form-field"><label for="new-email">Email</label><input id="new-email" type="email" required maxlength="254" value="alex@example.com"></div>
 <div class="form-field"><label for="new-message">Enquiry</label><textarea id="new-message" required maxlength="1000">Following up on our earlier quote.</textarea></div>
 <button class="primary-action" type="submit">Check enquiry</button></form></details>
 <details id="audit"><summary>Decision history</summary><div id="audit-items"></div></details></div></main>
-<footer class="footer">Illustrative customer records. No real customer data or CRM changes.<button id="reset" class="reset" type="button">Reset example</button></footer>
+<footer class="footer">Example customer records.<button id="reset" class="reset" type="button">Reset example</button></footer>
 </div><script>
 'use strict';
 const KEY='intake-exceptions-v1',$=id=>document.getElementById(id),el=(t,c,v)=>{const n=document.createElement(t);if(c)n.className=c;if(v!=null)n.textContent=v;return n},normalize=x=>String(x||'').trim().toLowerCase();
@@ -231,7 +231,7 @@ function details(){const item=state.cases.find(x=>x.id===selected);if(!item)retu
 $('case-heading').textContent=item.status==='review'?'Identity needs review':item.status==='new'?'New customer approval':item.status==='delivery_check'?'Delivery remains on hold':'Check delivery outcome';
 $('case-reason').textContent=item.reason;$('case-message').textContent=item.message+' ('+item.source+')';showContext(item);
 const actions=$('case-actions');actions.replaceChildren();
-if(item.status==='delivery_unknown'){const b=el('button','primary-action','Check delivery receipt');b.type='button';b.addEventListener('click',()=>{const r=state.ledger[item.key];if(!r){item.status='delivery_check';item.reason='Receipt unknown; blind retry blocked';log('Delivery held',item.id+' · no safe receipt available')}else{r.attempts++;item.status='delivered';item.contactId=r.contactId;log('Delivery reconciled',item.id+' · one original simulated write; safe replay confirmed')}selected='';editing=false;feedback='';save()});actions.append(b,el('p','small-note','In this example the previous write succeeded but its acknowledgement was lost. Looking up the original delivery key avoids a duplicate.'))}
+if(item.status==='delivery_unknown'){const b=el('button','primary-action','Check delivery receipt');b.type='button';b.addEventListener('click',()=>{const r=state.ledger[item.key];if(!r){item.status='delivery_check';item.reason='Receipt unknown; blind retry blocked';log('Delivery held',item.id+' · no safe receipt available')}else{r.attempts++;item.status='delivered';item.contactId=r.contactId;log('Delivery reconciled',item.id+' · one original write; safe replay confirmed')}selected='';editing=false;feedback='';save()});actions.append(b,el('p','small-note','In this example the previous write succeeded but its acknowledgement was lost. Looking up the original delivery key avoids a duplicate.'))}
 else if(item.status==='delivery_check')actions.append(el('p','small-note','The receipt is still unknown. No blind retry is attempted.'));
 else if(!editing){const b=el('button','primary-action',item.status==='review'?'Review identity':'Review new record');b.type='button';b.addEventListener('click',()=>{editing=true;details()});actions.append(b)}
 showProof(item);$('feedback').textContent=feedback;

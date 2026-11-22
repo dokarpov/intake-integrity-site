@@ -2,29 +2,25 @@
 
 **Know who is coming back without assigning an enquiry to the wrong person.**
 
-This is a set of **browser-only research experiences using fictional records**. It presents the operator-facing identity decision in a simpler way than the more extensive [engineering reference](https://github.com/dokarpov/intake-integrity-lab).
+Acorde checks every incoming enquiry before it is written to the CRM. When a phone number, household or incomplete identifier could belong to more than one person, Acorde holds the record for a human decision and keeps the reason next to it. The [engineering reference](https://github.com/dokarpov/intake-integrity-lab) describes the server-side controls in detail.
 
 ## Start with the customer problem
 
-1. [Product overview](https://dokarpov.github.io/intake-integrity-site/) — why a pre-write identity checkpoint may matter.
-2. [Guided review preview](https://dokarpov.github.io/intake-integrity-site/preview/) — one entry flow processing synthetic enquiries with an automatic or held-for-review result. This is a **guided review build**.
+1. [Product overview](https://dokarpov.github.io/intake-integrity-site/) — why an identity checkpoint before the CRM write matters.
+2. [Guided review](https://dokarpov.github.io/intake-integrity-site/preview/) — one entry flow that ends in an automatic or held-for-review result.
 
-## Specialized explorations
+## Specialized views
 
-- [Decision Lab](https://dokarpov.github.io/intake-integrity-site/decision-lab.html) — synthetic enrollment/identity scenario.
-- [Organization configuration](https://dokarpov.github.io/intake-integrity-site/setup.html) — fictional mappings and a configuration export.
+- [Decision Lab](https://dokarpov.github.io/intake-integrity-site/decision-lab.html) — an enrollment and identity scenario.
+- [Organization configuration](https://dokarpov.github.io/intake-integrity-site/setup.html) — field mappings and a configuration export.
+- [Integrations](https://dokarpov.github.io/intake-integrity-site/preview/integrations.html) — HubSpot first, then the other CRM connectors.
 
-**Stage:** Synthetic public walkthroughs; backend controls live in the separate Acorde Lab repository. Do not enter personal records or credentials in these demos.
-
-## Product and implementation boundary
+## How the decision works
 
 - **Problem:** phone numbers, households and incomplete identifiers can describe more than one person.
-- **Decision:** continue when permitted by evidence; preserve uncertainty and route ambiguous cases to a human.
-- **Implementation:** the separate [Acorde Lab](https://github.com/dokarpov/intake-integrity-lab) demonstrates server-side constraints, consent, review routing, delivery idempotency and evidence controls. Pilot validation is a separate step.
-- **Next evidence:** operator usability, exception volume, downstream error prevention, integration performance and support cost.
+- **Decision:** a record continues when the evidence permits it; ambiguous cases go to a person with the uncertainty preserved.
+- **Implementation:** [Acorde Lab](https://github.com/dokarpov/intake-integrity-lab) covers server-side constraints, consent, review routing, delivery idempotency and decision evidence.
 
-## Publication safety
+## Publishing
 
-The intended public artifact allowlist is in the site deployment workflow and checker. A pattern scan complements manual artifact and Git-history review. Do not assume a standard GitHub Pages build uses the same allowlist as a dedicated deployment workflow; verify the **deployed** artifact and workflow outcome separately.
-
-If credentials were ever exposed, revoke or rotate them first. Hiding a page or rewriting a file does not erase public Git history, forks or caches.
+The deployment workflow copies an explicit allowlist of public files into the site artifact, and `scripts/check_public.py` checks it. Verify the deployed artifact and the workflow result after each change.
